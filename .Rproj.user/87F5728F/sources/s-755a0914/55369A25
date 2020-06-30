@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1593486312345.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2135547555",
+    "id" : "55369A25",
+    "lastKnownWriteTime" : 1593486384,
+    "last_content_update" : 1593486384692,
+    "path" : "~/mutations/vrnmf/R/volnmf_estimate.R",
+    "project_path" : "R/volnmf_estimate.R",
+    "properties" : {
+        "cursorPosition" : "223,0",
+        "scrollLine" : "47",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

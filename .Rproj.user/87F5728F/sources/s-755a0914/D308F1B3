@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1593487833897.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3628314810",
+    "id" : "D308F1B3",
+    "lastKnownWriteTime" : 1593485940,
+    "last_content_update" : 1593485940,
+    "path" : "~/mutations/vrnmf/R/update_simplex.R",
+    "project_path" : "R/update_simplex.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

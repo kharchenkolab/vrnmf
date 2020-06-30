@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1593487822864.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3283931802",
+    "id" : "1BC9AC89",
+    "lastKnownWriteTime" : 1593485675,
+    "last_content_update" : 1593485675,
+    "path" : "~/mutations/vrnmf/R/update_volume.R",
+    "project_path" : "R/update_volume.R",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

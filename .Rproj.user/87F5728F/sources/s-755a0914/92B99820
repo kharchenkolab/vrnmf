@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1593487844717.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2033963184",
+    "id" : "92B99820",
+    "lastKnownWriteTime" : 1593486293,
+    "last_content_update" : 1593488059272,
+    "path" : "~/mutations/vrnmf/R/vpreprocess.R",
+    "project_path" : "R/vpreprocess.R",
+    "properties" : {
+        "cursorPosition" : "19,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

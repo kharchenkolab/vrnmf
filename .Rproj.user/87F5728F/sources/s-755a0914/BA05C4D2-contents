@@ -1,0 +1,1139 @@
+# prepare matrices
+P <- P0/max((P0)) 
+dimr <- svd(P)
+Pclean <- dimr$u[,1:n.reduce]%*%diag(dimr$d)[1:n.reduce,1:n.reduce]%*%t(dimr$v[,1:n.reduce])
+B <- -dimr$u[,1:n.reduce]%*%sqrt(diag(dimr$d)[1:n.reduce,1:n.comp])
+
+# initialization
+res <- AnchorFree(P0,n.comp = 14,init=NULL,init.type=init.type,n.iter=30)
+C <- res$C
+Q <- diag(1,n.comp) # would it be good init?
+R <- diag(1,n.comp) # weird..
+
+
+
+# assign initial values
+N <- 192
+Ctrue <- matrix( runif(N*14,0,1),nrow=N ,ncol=14)
+Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+Rtrue <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+X <- Ctrue%*%Rtrue
+
+C.prev <- matrix(runif(N*14,-10,10),N,14)
+C.prev <- apply(C.prev,2,function(x) x/sum(x) )
+
+R <- Rtrue
+vl <- eigen(R%*%t(R))$values 
+rh <- 0.05/sqrt(vl[1]*vl[length(vl)])
+rh <- 50*sqrt(min(eigen(R%*%t(R))$values )/max(eigen(R%*%t(R))$values))
+C <- volnmf.update.C(X, R, C.prev = C.prev,err.cut = 1e-10,n.iter=2e+3,rho=rh)#,rh=0.1)
+plot(C[,1],Ctrue[,1],pch=19,cex=0.2);abline(a=0,b=1,col="red")
+sum((C-Ctrue)^2)/sum((C)^2)
+#colSums((C-Ctrue)^2)/colSums((C)^2)
+eigen(R%*%t(R))$values 
+( eigen( solve(R)%*%t(solve(R)) )$values  )
+rh
+
+xx <- volnmf.procrustes(C,C.prev)
+
+R <- matrix(runif(14*14,0,1),14,14)
+str(R)
+xx <- volnmf.det(Ctrue, X, R, w.vol=1e-1, err.cut = 1e-30, n.iter = 1e+3)
+str(xx)
+
+volnmf.main <- function(){
+  
+  nr <- 192
+  ncl <- 14
+  n.reduce <- n.comp <- ncl
+  
+  C <- matrix(runif(nr*ncl,0,1 ),nrow=nr,ncol=ncl)
+  C[ sample(nrow(C)*ncol(C),nrow(C)*ncol(C)*0.5) ] <- 0
+  C <- apply(C,2,function(x) (x)/sum(x) ) 
+  #H <- matrix( runif(ncl*1e+4,0,1),nrow=ncl,ncol=1e+4)
+  H <- matrix( runif(ncl*ncl,0,1),nrow=ncl,ncol=ncl)
+  M <- C%*%H; 
+  Mcov <- M%*%t(M)
+  C0 <- C
+
+  inds <- c(1,2)
+  ft <- lm( M[,inds] ~ C - 1 )
+  plot(M[,inds],cex=0.5,pch=19,)
+  points(H[,inds],col="red",cex=1,pch=19)
+  points(ft$coefficients,col="green",cex=1,pch=19)
+  
+  
+  res <- AnchorFree(Mcov,n.reduce=14,n.comp = 14,init=NULL,init.type="unif.pos",n.iter=20)
+  cr <- cor(res$C,C0)
+  crmax <- apply(cr,2,max)
+  c(sum(crmax)/length(crmax),sum(crmax  > 0.9),sum(res$E > 0)/length(res$E)) 
+  
+  # prepare matrices
+  Mcov <- P0
+  P <- Mcov/max((Mcov)) # how to normalize P to avoid inf problems?
+  dimr <- svd(P)
+  Pclean <- dimr$u[,1:n.reduce]%*%diag(dimr$d)[1:n.reduce,1:n.reduce]%*%t(dimr$v[,1:n.reduce])
+  B <- -dimr$u[,1:n.reduce]%*%sqrt(diag(dimr$d)[1:n.reduce,1:n.comp])
+  #B <- -dimr$u[,1:(n.reduce+15)]%*%sqrt(diag(dimr$d)[1:(n.reduce+15),1:(n.comp)])
+  
+  # run AnchorFree as initialization
+  #res <- AnchorFree(P0,n.comp = 14,init=NULL,init.type="unif.pos",n.iter=30)
+  C0 <- C1 <- resl[[inds[1]]]$C
+  C0 <- C1 <- consensus
+  i <- inds[1]
+  C0 <- C1 <- resl[[i]]$C
+  E <- resl[[i]]$E; svE <- svd(E)
+  Esq <- svE$u%*%sqrt(diag(svE$d));  Qe <- diag(1,nrow(E))
+  for (jj in 1:1000){
+    R <- pmax( Esq%*%Qe,0 )
+    Qe <- volnmf.procrustes(R,Esq)
+    #cat(sum((R-Esq%*%Qe)^2));cat('\n')
+  }
+  R0 <- R1 <- R
+  apply(abs(cor(C0,C0[xcompl,])),1,max) 
+  #C <- matrix(runif(nr*ncl,0,1 ),nrow=nr,ncol=ncl);C <- apply(C,2,function(x)x/sum(x))
+  
+  
+  C1 <- C0
+  R1 <- matrix(runif(ncol(C1)*ncol(C1),0,1),ncol(C1),ncol(C1))
+  Q1 <- diag(1,ncol(B))
+  Q2 <- volnmf.procrustes( C1,B)
+  Q3 <- volnmf.procrustes( C1%*%R1 ,B)
+  
+  C <- C1+rnorm(length(C1),0,1e-3)
+  C[C < 0] <- 0; C <- apply(C,2,function(x)x/sum(x))
+  plot(C[,1],C1[,1])
+  Q <- Q2
+  
+  
+  nr <- 192
+  ncl <- 10
+  n.reduce <- n.comp <- ncl
+  
+  ######### made simulations for col/row sums of C = 1
+  bound <- 1e-2
+  C <- matrix(runif(nr*ncl,0.0,1 ),nrow=nr,ncol=ncl)
+  C[ sample(nrow(C)*ncol(C),nrow(C)*ncol(C)*0.3) ] <- 0
+  #C1 <- C <- t(apply(C,1,function(x) (x)/sum(x) ))
+  #range( rowSums(C1) ); range( apply(C1,1,max) ); range( apply(C1,2,max) )
+  C1 <- C <- apply(C,2,function(x) (x)/sum(x)*bound )
+  range( colSums(C1) ); range( apply(C1,1,max) ); range( apply(C1,2,max) )
+  C2 <- apply(C1,2,function(x)x/sum(x))
+  #H <- matrix( runif(ncl*1e+4,0,1),nrow=ncl,ncol=1e+4)
+  H <- matrix( runif(ncl*ncl,0,1/bound),nrow=ncl,ncol=ncl)
+  eigen(t(H)%*%H)$values
+  B0 <- C1%*%H;
+  B <- B0 #+ rnorm(nrow(B0)*ncol(B0),0,7e-3)
+  vol.ref <- log(det(H%*%t(H)+delta*diag(1,nrow(H))))
+  #B1 <- B + rnorm(length(B),0,2e-3); B1[B1 < 0] <- 0
+  R1 <- matrix(runif(ncol(C1)*ncol(C1),0,1/bound),ncol(C1),ncol(C1))
+  eigen(t(R1)%*%R1)$values
+  ###########
+  
+  C <- C1
+  R <- R1
+  #nr <- 192; ncl <- 14
+  C <- matrix(runif(nr*ncl,0,1 ),nrow=nr,ncol=ncl)
+  C <- t(apply(C,1,function(x)x/sum(x)))
+  C <- apply(C,2,function(x)x/sum(x)*bound)
+  rownames(C) <- colnames(rate.new)
+  Q <- diag(1,ncol(C1))#
+  #Q <- volnmf.procrustes( C%*%R,B)
+  #B <- B1
+  
+  iter <- 1
+  #wvol <- 1e-5
+  rvec <- vector()
+  aff.mean <- vector()
+  wvol <- 0.006
+  
+  C = volres.nmf$C; R = volres.nmf$R; Q = volres.nmf$Q;
+  
+  wvol <- 6e-3 #0.001*1e-3
+  update.rule = 1
+  rho <- 1e+1
+  delta <- 1e-16
+  bound < - 1
+  wvol.model = "additive" # choose between 'no', 'multiplicative' and 'additive'
+  wvol.mult <- 1+2e-2
+  wvol.add <- wvol*1/(500)
+  wvol.update <- FALSE
+  #Ctemp1 <- C;  Rtemp1 <- R;  Qtemp1 <- Q
+  #C <- Ctemp1;  R <- Rtemp1;  Q <- Qtemp1
+  while (iter < 20000){
+    print(iter)
+    # optimize R
+    X <- B%*%Q
+    #C <- C0
+    #R <- matrix(runif(ncol(C)*ncol(C),0,1),ncol(C),ncol(C))
+    #X <- C0%*%R
+    #R <- volnmf.det(C, X, R, posit=FALSE, w.vol=1e-5, eigen.cut=1e-20,err.cut = 1e-16, n.iter = 1e+3)
+    #delta <- 1e-8
+    #wvol <- (1e-2)*sum((B%*%Q-C%*%R)^2)/abs(log(det(R%*%t(R)+delta*diag(1,nrow(R)))) )
+    #wvol <- (1e+5)*1e-8/abs(log(det(R%*%t(R)+delta*diag(1,nrow(R)))) )
+    #if (iter < 20){wvol <- 1e-9}else{ wvol <- 4e-4}
+    cat('\n')
+    cat(paste("wvol:",wvol,"\n"))
+    vol.prev <- log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+    #vol.prev <- det(R%*%t(R))
+    err.prev <- sum((B%*%Q-C%*%R)^2)
+    cat( paste("R before:",vol.prev,"\n"))
+    cat(c( err.prev + wvol*vol.prev, err.prev,wvol*vol.prev ));cat('\n')
+    R.prev <- R
+    
+    #wvol <- 1e-6
+    #R <- volnmf.logdet.eigen(C, X, R.prev, w.vol=wvol, delta=delta, rho = rho,
+    #                                err.cut = 1e-50, n.iter = 1e+3)
+    R <- volnmf.logdet(C, X, R.prev, posit=FALSE, nesterov=FALSE, beta=1e-4, w.vol=wvol, delta=delta, 
+                       eigen.cut=1e-20,err.cut = 1e-100, n.iter = 1e+3)
+    #R <- volnmf.det(C, X, R, posit=FALSE, w.vol=wvol, eigen.cut=1e-20,err.cut = 1e-16, n.iter = 1e+3)
+    #R <- R.prev
+    
+    
+    
+    eig <- eigen(R%*%t(R)+delta*diag(1,nrow(R)))$values
+    if (min(eig) < 1e-40) {
+      if (wvol.model=="multiplicative"){
+        wvol <- wvol/wvol.mult
+      }else if (wvol.model=="additive"){
+        wvol <- wvol - wvol.add 
+      }
+      R <- R.prev
+      wvol.update <- FALSE
+    }
+    if(wvol.update == TRUE){
+      if (wvol.model=="multiplicative"){
+        wvol <- wvol*wvol.mult
+      }else if (wvol.model=="additive"){
+        wvol <- wvol + wvol.add 
+      }
+    }  
+    
+    vol.post <- log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+    #vol.post <- det(R%*%t(R))
+    err.post <- sum((B%*%Q-C%*%R)^2)
+    print(( eigen(R%*%t(R))$values  ))
+    cat( paste("R after:",vol.post,"\n"))
+    cat(paste("vol delta:",vol.post-vol.prev,"\n"))
+    cat(c( err.post + wvol*vol.post,err.post,wvol*vol.post ));cat('\n')
+    rvec[iter] <- vol.post
+    
+    err.const <- 3e-2; derr.const <- 1e-4
+    w.factor <- 1.01
+    if (err.post > err.const & wvol > 1e-10){
+      #wvol <- wvol/w.factor
+      #err.const <- err.const + derr.const
+      print(c("ERR CONST:",err.const))
+      #R <- R.prev#(R+R.prev)/2
+    }else if (err.post < (err.const-derr.const)){
+      #wvol <- wvol*w.factor
+    }
+    
+    #if ( vol.post - vol.prev < -3e-1 ){
+    #  R <- R.prev
+    #  wvol <- wvol/2
+    #}
+    
+      #if ( sum((B%*%Q-C%*%R)^2) > 1e-6){
+    #  wvol <- wvol*0.5
+    #  R <- R.prev
+    #}
+    
+    #X1 <- C0%*%R
+    #str(X1)
+    #str(X)
+    #sum((X-X1)^2)/sum(X^2)
+    #plot( X1[,1],X[,1] )
+    
+    # optimize C
+    #C <- matrix(runif(nr*ncl,0,1 ),nrow=nr,ncol=ncl)
+    #C[ sample(nrow(C)*ncol(C),nrow(C)*ncol(C)*0.5) ] <- 0; C <- apply(C,2,function(x)x/sum(x))
+    C.prev <- C
+    #rh <- 50*sqrt(min(eigen(R%*%t(R))$values )/max(eigen(R%*%t(R))$values))
+    rh <- 1e+3
+    cat(c( sum((B%*%Q-C%*%R)^2),delta*log(det(R%*%t(R)+delta*diag(1,nrow(R)))) ));cat('\n')
+    if (update.rule==1){
+      #Clist <- volnmf.update.C(X, R, C.prev = C.prev,err.cut = 1e-40,n.iter=1e+4,
+      #                         rho=rh)#,rh=0.1)
+      
+      #Ctrue <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+      #Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+      #C.prev <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14);C.prev <- apply(C.prev,2,function(x) x/sum(x) )
+      #R <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+      #X0 <- Ctrue%*%R
+      #X <- X0 #+ rnorm(length(X0),0,0.002)
+      #plot(X0[,1],X[,1])
+      
+      #Clist <- volnmf.update.C(X, R, C.prev = C.prev,err.cut = 1e-40,n.iter=1e+4,
+      #                         rho=rh)#,rh=0.1)
+
+      #sum((C.prev%*%R-X)^2)
+      #sum((Clist$Chat%*%R-X)^2)
+      #sum((Clist$C%*%R-X)^2)
+      #sum((Clist$C-Ctrue)^2)
+      #plot(Ctrue[,1],Clist$Chat[,1])  
+      
+      #CC <- volnmf.update.Cx(X, R, C.prev = C.prev, n.iter = 2e+1,err.cut = 1e-20)
+      #plot(Ctrue[,1],CC1[,1])
+      #sqrt(sum((CC1-Ctrue)^2))
+      CC <- volnmf.update.C.eff(X, R, C.prev = C.prev, bound=bound,extrapolate=TRUE, err.cut = 1e-10,
+                                n.iter = 1e+2)
+      #plot(Ctrue[,1],CC[,1])
+      #sqrt(sum((CC-Ctrue)^2))
+        
+      #sum((CC%*%R-X)^2)
+      #sum((CC-Ctrue)^2)
+      #plot(Ctrue[,1],CC[,1])  
+
+    }else{
+      Clist <- volnmf.update.C1(X, R, C.prev = C.prev, meq=1, err.cut = 1e-20,n.iter=1e+4,
+                               rho=rh)#,rh=0.1)
+      CC <- Clist$C
+    }
+    #C1 <- Clist$C
+    #cat(c( sum((X-C1%*%R)^2)));cat('\n')
+    #sum(C1 < -1e-3)
+    #sum(Clist$Chat < -1e-3)
+    C <- CC#Clist$Chat
+    Chat <- CC#Clist$C
+    cat(c( sum((B%*%Q-C%*%R)^2),delta*log(det(R%*%t(R)+delta*diag(1,nrow(R)))) ));cat('\n')
+    #plot(Chat[,1],C[,1])
+    #sum(Chat < -1e-3)
+    #sum(C < -1e-3)
+    #plot(C1[,1],C[,1])
+    #sum(C > -1e-8)/length(C); sum(Chat > -1e-8)/length(Chat) 
+    #sum((C-C0)^2)/sum(C0^2); sum((Chat-C0)^2)/sum(C0^2)
+    
+    
+    # optimize Q
+    Q <- volnmf.procrustes( (C%*%R),B)
+    
+    err <- sum((C-C.prev)^2)/sum(C^2)
+    
+    rownames(C) <- colnames(rate.new)
+    #if (update.rule==2){
+    #  aff <- apply(cor(C,C1),1,max)
+    #}else { aff <- apply(cor(C,C2),1,max)}
+    aff <- apply(abs(cor(C,C[xcompl,])),1,max)
+    aff.mean[iter] <- mean(aff)
+
+    if (iter %% 100 == 0){
+      par(mfrow=c(2,1))
+      if (iter > 200 ) {indent <- 2}else{indent <- 2}
+      plot(indent:iter,rvec[-c(1:(indent-1))],pch=19,cex=0.1,ylim=c(min(c(vol.ref,rvec[-c(1:(indent-1))]),na.rm=T),max(rvec[-c(1:(indent-1))],na.rm=T)))
+      abline(h=vol.ref,col="red",lwd=1)
+      cmax <- mean(apply(abs(cor(C0,C0[xcompl,])),1,max) )
+      plot(indent:iter,aff.mean[-c(1:(indent-1))],pch=19,cex=0.1,ylim=c(min(c(aff.mean,cmax)),1))
+      abline(h=cmax,col="red",lwd=1)
+    }
+    
+    print(c(err,sum((B%*%Q-C%*%R)^2)/sum((B%*%Q)^2),mean(aff),log(det(R%*%t(R)+delta*diag(1,nrow(R)))),
+            #sum((C-C1)^2)/sum(C1^2),
+            sum(C>0)/length(C) ))
+    print(paste("mean aff:",mean(aff)))
+    print("aff:")
+    print(aff)
+    print(c( sum((B%*%Q-C%*%R)^2),delta*log(det(R%*%t(R)+delta*diag(1,nrow(R)))) ))
+    print("R*t(R) eigen values:")
+    print(eigen(R%*%t(R))$values)
+    print(eigen( R%*%t(R) + delta*diag(1,nrow(R)) )$values)
+    min(eigen( R%*%t(R) + delta*diag(1,nrow(R)) )$values)/max(eigen( R%*%t(R) + delta*diag(1,nrow(R)) )$values)
+    iter <- iter+1
+
+  }
+  ### end
+  
+  wvol <- 1e+7
+  cf <- 0.995
+  
+  C.prev <- C1
+  R.prev <- R1
+  
+  C <- volnmf.update.C.eff(X, R.prev, C.prev = C.prev, bound=bound,extrapolate=TRUE, err.cut = 1e-100,
+                            n.iter = 5e+3)
+  sum( (C.prev%*%R-X)^2)
+  sum( (C%*%R-X)^2)
+  
+  iters <- seq(1e+2,5e+4,3e+3)
+  Clist <- mclapply(iters,function(niter){
+    C <- volnmf.update.C.eff(X, R.prev, C.prev = C.prev, bound=bound,extrapolate=TRUE,
+                             err.cut = 1e-100,n.iter = niter)
+    sum( (C%*%R-X)^2)
+    
+    return( C )
+  },mc.cores = 30)
+  prox <- unlist(lapply(Clist,function(C){
+    (sum( (C%*%R-X)^2))
+  }))
+  plot(iters,prox,pch=19,cex=2)#,log="x")
+  
+  
+  
+  #wvol.vec <- 10^( seq(-50,-35,8/20) )
+  wvol.vec <- 10^( seq(-20,-5,8/20) )
+  Rvec <- mclapply( wvol.vec,function(wvol){
+    print(wvol)
+    R <- volnmf.logdet.eigen(C, X, R, w.vol=wvol, delta=delta, rho = rho,
+                             err.cut = 1e-20, n.iter = 1e+4)
+    log(det(t(R)%*%R+0*diag(1,nrow(R))))
+    #R <- volnmf.logdet(C, X, R.prev, posit=FALSE, nesterov=FALSE, majorate = FALSE, beta=1e-4,
+    #                   w.vol=wvol, delta=delta, 
+    #                 eigen.cut=1e-20,err.cut = 1e-100, n.iter = 5e+4)
+    #eigen(t(R)%*%R)$values
+
+    #R <- volnmf.det(C, X, R.prev, posit=FALSE, w.vol=wvol, eigen.cut=1e-20,err.cut = 1e-100,
+    #                n.iter = 3e+3)
+    #eigen(t(R)%*%R)$values
+    #det(t(R)%*%R)
+    #log(det(t(R)%*%R+delta*diag(1,nrow(R))))
+    #print( paste("det:",det(t(R)%*%R)) )
+    
+    return(R)
+  },mc.cores = 30)
+  R0 <- Rvec[[1]]; Rinf <- Rvec[[length(Rvec)]]
+  rdst <- do.call(rbind,lapply(Rvec,function(R){
+    sqrt( c(sum((R-R.prev)^2),sum((R-R0)^2),sum((R-Rinf)^2), 
+            log(det(t(R)%*%R+0*diag(1,nrow(R))))^2,
+            sum((C%*%R-X)^2)  ))
+  }))
+  par(mfrow=c(2,2))
+  plot(wvol.vec[-1],rdst[-1,1],xlab="lambda",ylab="dist to R_k",log="x")
+  #plot(wvol.vec[-1],rdst[-1,2],xlab="lambda",ylab="dist to R(lambda=0)",log="x")
+  plot(wvol.vec[-1],rdst[-1,3],xlab="lambda",ylab="dist to R(lambda=inf)",log="x")
+  plot(wvol.vec[-1],rdst[-1,5],xlab="lambda",ylab="CR-X",pch=19,cex=0.4,log="x")
+  db <- sqrt(sum((C%*%R.prev-X)^2))
+  abline(h=db,col="red",lwd=2)
+  plot(wvol.vec[-c(1:1)],rdst[-c(1:1),4],xlab="lambda",ylab="volume",pch=19,cex=0.4,log="xy")
+  dvol <- log(det(t(R.prev)%*%R.prev+delta*diag(1,nrow(R.prev))))
+  min( rdst[,4]-dvol )
+  abline(h=dvol,col="red",lwd=2)
+  
+  plot(wvol.vec[-c(1:1)],rdst[-c(1:1),4],xlab="lambda",ylab="volume",pch=19,cex=0.4,
+       xlim=c(1e-6,1e+0),log="xy")
+  
+  wvol <- 2e-5#7e-44
+  update.rule = 1
+  rho <- 1e-1
+  delta <- 1e-8
+  cf <- 0.995
+  #wvol <- 5e-7 #0.001*1e-3
+  while (iter < 200000){
+    #wvol <- wvol*cf
+    print(iter)
+    # optimize R
+    X <- B%*%Q
+    #C <- C0
+    #R <- matrix(runif(ncol(C)*ncol(C),0,1),ncol(C),ncol(C))
+    #X <- C0%*%R
+    #R <- volnmf.det(C, X, R, posit=FALSE, w.vol=1e-5, eigen.cut=1e-20,err.cut = 1e-16, n.iter = 1e+3)
+    delta <- 1e-5
+    #wvol <- (1e-2)*sum((B%*%Q-C%*%R)^2)/abs(log(det(R%*%t(R)+delta*diag(1,nrow(R)))) )
+    #wvol <- (1e+5)*1e-8/abs(log(det(R%*%t(R)+delta*diag(1,nrow(R)))) )
+    #if (iter < 20){wvol <- 1e-9}else{ wvol <- 4e-4}
+    cat('\n')
+    cat(paste("wvol:",wvol,"\n"))
+    vol.prev <- log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+    #vol.prev <- det(R%*%t(R))
+    err.prev <- sum((B%*%Q-C%*%R)^2)
+    cat( paste("R before:",vol.prev,"\n"))
+    cat(c( err.prev + wvol*vol.prev, err.prev,wvol*vol.prev ));cat('\n')
+    R.prev <- R
+    R <- volnmf.logdet.eigen(C, X, R, w.vol=wvol, delta=delta, rho = rho,
+                             err.cut = 1e-20, n.iter = 2e+2)
+    #R <- volnmf.logdet(C, X, R.prev, posit=FALSE, nesterov=FALSE, beta=1e-4, w.vol=wvol, delta=delta, 
+    #                     eigen.cut=1e-20,err.cut = 1e-100, n.iter = 1e+2)
+    #R <- volnmf.det(C, X, R, posit=FALSE, w.vol=wvol, eigen.cut=1e-20,err.cut = 1e-30, n.iter = 1e+2)
+    #R <- R.prev
+    vol.post <- log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+    #vol.post <- det(R%*%t(R))
+    err.post <- sum((B%*%Q-C%*%R)^2)
+    print(( eigen(R%*%t(R))$values  ))
+    cat( paste("R after:",vol.post,"\n"))
+    cat(paste("vol delta:",vol.post-vol.prev,"\n"))
+    cat(c( err.post + wvol*vol.post,err.post,wvol*vol.post ));cat('\n')
+    rvec[iter] <- vol.post
+    
+    err.const <- 3e-2; derr.const <- 1e-4
+    w.factor <- 1.01
+    if (err.post > err.const & wvol > 1e-10){
+      #wvol <- wvol/w.factor
+      #err.const <- err.const + derr.const
+      print(c("ERR CONST:",err.const))
+      #R <- R.prev#(R+R.prev)/2
+    }else if (err.post < (err.const-derr.const)){
+      #wvol <- wvol*w.factor
+    }
+    
+    #if ( vol.post - vol.prev < -3e-1 ){
+    #  R <- R.prev
+    #  wvol <- wvol/2
+    #}
+    
+    #if ( sum((B%*%Q-C%*%R)^2) > 1e-6){
+    #  wvol <- wvol*0.5
+    #  R <- R.prev
+    #}
+    
+    #X1 <- C0%*%R
+    #str(X1)
+    #str(X)
+    #sum((X-X1)^2)/sum(X^2)
+    #plot( X1[,1],X[,1] )
+    
+    # optimize C
+    #C <- matrix(runif(nr*ncl,0,1 ),nrow=nr,ncol=ncl)
+    #C[ sample(nrow(C)*ncol(C),nrow(C)*ncol(C)*0.5) ] <- 0; C <- apply(C,2,function(x)x/sum(x))
+    C.prev <- C
+    #rh <- 50*sqrt(min(eigen(R%*%t(R))$values )/max(eigen(R%*%t(R))$values))
+    rh <- 1e+3
+    cat(c( sum((B%*%Q-C%*%R)^2),delta*log(det(R%*%t(R)+delta*diag(1,nrow(R)))) ));cat('\n')
+    if (update.rule==1){
+      #Clist <- volnmf.update.C(X, R, C.prev = C.prev,err.cut = 1e-40,n.iter=1e+4,
+      #                         rho=rh)#,rh=0.1)
+      
+      #Ctrue <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+      #Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+      #C.prev <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14);C.prev <- apply(C.prev,2,function(x) x/sum(x) )
+      #R <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+      #X0 <- Ctrue%*%R
+      #X <- X0 #+ rnorm(length(X0),0,0.002)
+      #plot(X0[,1],X[,1])
+      
+      #Clist <- volnmf.update.C(X, R, C.prev = C.prev,err.cut = 1e-40,n.iter=1e+4,
+      #                         rho=rh)#,rh=0.1)
+      
+      #sum((C.prev%*%R-X)^2)
+      #sum((Clist$Chat%*%R-X)^2)
+      #sum((Clist$C%*%R-X)^2)
+      #sum((Clist$C-Ctrue)^2)
+      #plot(Ctrue[,1],Clist$Chat[,1])  
+      
+      #CC <- volnmf.update.Cx(X, R, C.prev = C.prev, n.iter = 2e+1,err.cut = 1e-20)
+      #plot(Ctrue[,1],CC1[,1])
+      #sqrt(sum((CC1-Ctrue)^2))
+      CC <- volnmf.update.C.eff(X, R, C.prev = C.prev, bound=bound,extrapolate=TRUE, err.cut = 1e-15,
+                                n.iter = 1e+2)
+      #plot(Ctrue[,1],CC[,1])
+      #sqrt(sum((CC-Ctrue)^2))
+      
+      #sum((CC%*%R-X)^2)
+      #sum((CC-Ctrue)^2)
+      #plot(Ctrue[,1],CC[,1])  
+      
+    }else{
+      Clist <- volnmf.update.C1(X, R, C.prev = C.prev, meq=1, err.cut = 1e-20,n.iter=1e+4,
+                                rho=rh)#,rh=0.1)
+      CC <- Clist$C
+    }
+    #C1 <- Clist$C
+    #cat(c( sum((X-C1%*%R)^2)));cat('\n')
+    #sum(C1 < -1e-3)
+    #sum(Clist$Chat < -1e-3)
+    C <- CC#Clist$Chat
+    Chat <- CC#Clist$C
+    cat(c( sum((B%*%Q-C%*%R)^2),delta*log(det(R%*%t(R)+delta*diag(1,nrow(R)))) ));cat('\n')
+    #plot(Chat[,1],C[,1])
+    #sum(Chat < -1e-3)
+    #sum(C < -1e-3)
+    #plot(C1[,1],C[,1])
+    #sum(C > -1e-8)/length(C); sum(Chat > -1e-8)/length(Chat) 
+    #sum((C-C0)^2)/sum(C0^2); sum((Chat-C0)^2)/sum(C0^2)
+    
+    
+    # optimize Q
+    #Q <- volnmf.procrustes( (C%*%R),B)
+    
+    err <- sum((C-C.prev)^2)/sum(C^2)
+    
+    rownames(C) <- colnames(rate.new)
+    aff <- apply(cor(C,C1),1,max)
+    #aff <- apply(abs(cor(C,C[xcompl,])),1,max)
+    aff.mean[iter] <- mean(aff)
+    
+    if (iter %% 100 == 0){
+      par(mfrow=c(2,1))
+      if (iter > 200 ) {indent <- 2}else{indent <- 2}
+      plot(indent:iter,rvec[-c(1:(indent-1))],pch=19,cex=0.1,ylim=c(min(c(vol.ref,rvec[-c(1:(indent-1))]),na.rm=T),max(rvec[-c(1:(indent-1))],na.rm=T)))
+      abline(h=vol.ref,col="red",lwd=1)
+      cmax <- mean(apply(abs(cor(C0,C0[xcompl,])),1,max) )
+      plot(indent:iter,aff.mean[-c(1:(indent-1))],pch=19,cex=0.1,ylim=c(min(c(aff.mean,cmax)),1))
+      abline(h=cmax,col="red",lwd=1)
+    }
+    
+    print(c(err,sum((B%*%Q-C%*%R)^2)/sum((B%*%Q)^2),mean(aff),log(det(R%*%t(R)+delta*diag(1,nrow(R)))),sum((C-C1)^2)/sum(C1^2),sum(C>0)/length(C) ))
+    print(paste("mean aff:",mean(aff)))
+    print("aff:")
+    print(aff)
+    print(c( sum((B%*%Q-C%*%R)^2),delta*log(det(R%*%t(R)+delta*diag(1,nrow(R)))) ))
+    print("R*t(R) eigen values:")
+    print(eigen(R%*%t(R))$values)
+    print(eigen( R%*%t(R) + delta*diag(1,nrow(R)) )$values)
+    min(eigen( R%*%t(R) + delta*diag(1,nrow(R)) )$values)/max(eigen( R%*%t(R) + delta*diag(1,nrow(R)) )$values)
+    iter <- iter+1
+    
+  }
+
+ 
+  
+   
+  
+  par(mfrow=c(2,1))
+  plot(indent:(iter-1),rvec[-c(1:(indent-1))],pch=19,cex=0.1,ylim=c(min(c(vol.ref,rvec[-c(1:(indent-1))])),max(rvec[-c(1:(indent-1))])),
+       xlab="iterations",ylab="log Volume")
+  plot(indent:(iter-1),aff.mean[-c(1:(indent-1))],pch=19,cex=0.1,ylim=c(min(aff.mean),1),
+       xlab="iterations",ylab="mean reflection cor")
+  abline(h=seq(0.65,0.95,0.05),lty=2,lwd=0.5,col="grey30")
+  
+  
+  sum(C < -1e-3)
+  sum(R < 1e-10)
+  apply(abs(cor(C,C[xcompl,])),1,max) 
+  apply(abs(cor(C0,C0[xcompl,])),1,max) 
+  
+
+  #inds <- c(1,2)
+  #Cx <- t(apply(C,1,function(x) x/sum(x)))
+  #ft <- lm( M[,inds] ~ Cx - 1 )
+  #plot(M[,inds],cex=0.5,pch=19,)
+  #points(H[,inds],col="red",cex=1,pch=19)
+  #points(ft$coefficients,col="green",cex=1,pch=19)
+  spacemut::draw.signature(C[,13])
+  
+  
+  
+  log(det(R%*%t(R)*max((Mcov))+delta*diag(1,nrow(R))))
+
+  log(det(H%*%t(H)+delta*diag(1,nrow(H))))
+  #log(det(H%*%t(H)/max((Mcov))+delta*diag(1,nrow(H))))
+  
+  sum((B%*%Q-C%*%R)^2)
+  det(R%*%t(R))
+  sum((B%*%Q-C%*%R)^2)/det(R%*%t(R))
+  log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+  sum((B%*%Q-C%*%R)^2)/log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+  
+  
+  par(mfrow=c(3,3),mar=c(2,2,0.3,0.3))
+  for (i in 1:3){plot(C0[,i],C[,i],pch=19,cex=0.5);abline(h=0,v=0,col="red",lwd=0.5)}
+    
+}
+
+# winimize W with regularized determinant
+# method = det, logdet
+volnmf.logdet <- function(C, X, R, R.constraint="pos", posit=FALSE, nesterov = FALSE, majorate = FALSE, beta=0.1, w.vol=1e-1, delta=1,eigen.cut = 1e-16,
+                          err.cut = 1e-3, n.iter = 1e+3){
+  
+  #C <- Ctrue
+  #R0 <- R <- matrix(runif(14*14,0,1),14,14)
+  #R0 <- R <- Rtrue
+  
+  
+  ## weight of volume regularization
+  #w.vol <- 1e-1
+  
+  #cat('estimate volume-regularizer R.. ')
+  
+  W0 <- W <- t(R)
+  FM <- solve( t(W)%*%(W) + delta*diag(1,nrow(W)) )
+  H <- t(C)
+  iter <- 1
+  #err.cut <- 0
+  obj <- vector()
+  obj.violent <- 0
+  err <- 1e+5
+  while (err > err.cut & iter < n.iter){
+    W.prev <- W
+    Y <- W
+    if (majorate==TRUE) {FM <- solve(t(Y)%*%Y + delta*diag(1,nrow(Y)) )}
+    
+    if (R.constraint=="pos"){
+      Lip <- sqrt(sum((H%*%t(H) + w.vol*FM)^2))
+      #Lip <- 1/sum((t(FM)%*%FM)^2)
+      gradF <- W%*%(H%*%t(H) + w.vol*FM) - t(X)%*%t(H)
+      W <- W - gradF/Lip
+      W[W < 0] <- 0
+    }else{
+      W <- t(X)%*%t(H)%*%solve((H%*%t(H) + w.vol*FM))
+    }
+
+    if (nesterov==TRUE){
+      Wfast <- W + beta*(W-W.prev)
+      obj[iter] <-  sum((t(X)-W%*%H)^2) + w.vol*sum(diag(FM%*%(t(W)%*%W)))
+      if (iter>=2){
+        if (obj[iter] < obj[iter-1]){
+          W <- Wfast
+        }else{
+          obj.violent <- obj.violent + 1 
+        }
+      }
+    }
+
+    
+    #sum((W-W.prev)^2)/sum(W^2)
+    func1 <- sum((t(X) - W%*%H)^2) 
+    func2 <- w.vol*log(det( t(W)%*%W + delta*diag(1,nrow(Y)) ))
+    func <- func1 + func2
+    #print(eigen( t(Y) %*% Y + delta * diag(1, nrow(Y)) )$values)
+    #print(c(func,func1,func2))
+    err <- sum((W-W.prev)^2)/sum(W^2)
+    #if (iter==1) { err.cut <- err }
+    iter <- iter + 1
+  }
+
+  R <- t(W)
+  #cat(paste('done.. ',iter,' iterations ',err,' error\n'))
+  #cat(paste('violations.. ',obj.violent,'\n'))
+  
+  return(R)
+}
+
+
+
+volnmf.det <- function(C, X, R, posit=FALSE, w.vol=1e-1, eigen.cut = 1e-16,err.cut = 1e-3, n.iter = 1e+3){
+  
+  #C <- Ctrue
+  #R0 <- R <- matrix(runif(14*14,0,1),14,14)
+  #R0 <- R <- Rtrue
+  
+  
+  ## weight of volume regularization
+  #w.vol <- 1e-1
+  
+  #cat('estimate volume-regularizer R.. ')
+  
+  iter <- 1
+  err <- 1e+5
+  while (err > err.cut & iter < n.iter){
+    R.prev <- R
+    for (i in 1:nrow(R)){
+    #for (i in 1:9){
+      #print(c(iter,i))
+      #i <- 1
+      W <- t(R)
+      WH <- W%*%t(C)
+
+      # find quadratic approximation of determinant
+      Wi <- W[,-i]
+      nui <- det(t(Wi)%*%Wi)
+      Xi <- t(X) - WH + as.matrix(W[,i])%*%t(as.matrix(C[,i])) #W[,i]%*%C[,i]
+      #B <- diag(1,nrow(W)) - Wi%*%solve(t(Wi)%*%Wi)%*%t(Wi) 
+      # more efficient method to find B using null subspace analysis!
+      sv <- svd( t(Wi),nu=ncol(Wi),nv=nrow(Wi) )
+      nn <- sum(sv$d < eigen.cut)
+      Ci <- sv$v[,(ncol(sv$v)-nn):ncol(sv$v)] # I take only last column - but how many to take??
+      t(Ci)%*%Wi
+      B <- Ci%*%t(Ci)
+      nui*(W[,i])%*%B%*%W[,i]
+      det(t(W)%*%W)  
+  
+      # form quadratic form
+      Qi <- sum(C[,i]^2)*diag(1,nrow(B)) + w.vol*nui*B
+      #Qi <- Qi#/2
+      fi <- Xi%*%C[,i]
+      Amat <- diag(1,nrow(Qi)); 
+      if (posit==TRUE ) {
+        bvec <- rep(0,nrow(Qi))
+      }else{
+        bvec <- rep(-1e+6,nrow(Qi))
+      }
+      ft <- solve.QP(Dmat = Qi, dvec = fi, Amat = Amat,bvec = bvec)
+      #ft$solution
+      R[i,] <- ft$solution
+      #print(  sum((R-Rtrue)^2)/sum(Rtrue^2))
+    }
+    #plot(R[i,],R0[i,])
+    #sum((R-Rtrue)^2)/sum(Rtrue^2)
+    err <- sum((R-R.prev)^2)/sum(R^2)
+    if (iter %% 1000 == 0){print(c(iter,err))}
+    iter <- iter + 1
+  }
+  
+  #cat(paste('done.. ',iter,' iterations ',err,' error\n'))
+  
+  return(R)
+}
+
+# find Q: A~B*Q (Procrustes problem)
+volnmf.procrustes <- function(A,B){
+  sv <- svd( t(A)%*%B )
+  sv$v%*%t(sv$u)
+}
+
+
+# find optimum of C using ADMM
+volnmf.update.C.eff <- function(X, R, C.prev = NULL, bound=1, extrapolate=TRUE, err.cut = 1e-10, n.iter = 1e+5){
+  #Ctrue <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+  #Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+  #R <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+  #X <- Ctrue%*%R
+  
+  #C.prev <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+  #C.prev <- apply(C.prev,2,function(x) x/sum(x) )
+  
+  if (is.null(C.prev)){
+    ft <- lm( t(X) ~ t(R) - 1) # can be estimated in closed form!
+    C.prev <- t(ft$coefficients)
+    C.prev[C.prev < 0] <- 0
+    C.prev <- apply(C.prev,2,function(x)x/sum(x))
+  }
+  
+  # precalculate matrices
+  S <- R%*%t(R)
+  K <- X%*%t(R)
+  Lip <- sqrt(sum(S^2))
+  
+  #cat('C estimation.. ')
+  err <- 1e+6
+  iter <- 1
+  C <- C.prev
+  conv1 <- vector()
+  conv2 <- vector()
+  q <- c(1,(1+sqrt(5))/5)
+  while( err > err.cut & iter < n.iter ){
+    G <- C%*%S - K
+    Chat <- C - G/Lip
+    C.prev <- C
+    C <- do.call(cbind,lapply(1:ncol(C),function(i){
+      projection.onto.simplex(Chat[,i],bound)
+    }))
+    
+    if (extrapolate==TRUE){
+      extr <- (q[iter]-1)/q[iter+1]
+      C <- C + extr*(C-C.prev)
+    }
+    
+    #conv1[iter] <- sqrt(sum((C-Ctrue)^2))
+    conv2[iter] <- sqrt(sum((C-C.prev)^2))
+    #if (iter%%500==0) {print( c( iter, conv1[iter],conv2[iter] ) )}
+    #if (iter%%1000==0){
+    #  plot(Ctrue[,1],C[,1])
+    #  legend("topleft",as.character(iter))
+    #}
+    iter <- iter + 1
+    q[iter+1] <- (1+sqrt(1+4*q[iter]^2))/2
+  }
+  #cat(paste(' ',iter,' ',conv2[iter-1],'\n'))
+  
+  #plot(Ctrue[,1],C[,1])
+  #apply( Ctrue-C,2,function(x) sqrt(sum(x^2)) )
+  
+  #par(mfrow=c(1,1))
+  #plot(1:length(conv11),conv11,cex=0.05,pch=19,log="y")
+  #points(1:length(conv1no),conv1no,cex=0.05,col="red",pch=19)
+  #points(1:length(conv1),conv1,cex=0.05,col="green",pch=19)
+  
+  #par(mfrow=c(1,1))
+  #plot(1:length(conv1no),conv1no,cex=0.05,pch=19,log="y")
+  #points(1:length(conv1),conv1,cex=0.05,col="red",pch=19)
+  #plot(1:length(conv2no),conv2no,cex=0.1,pch=19)#,log="y")
+  #points(1:length(conv2),conv2,cex=0.1,pch=19,col="red")
+  
+  return(C)
+}
+
+
+# project unprojected vector ('unproj') onto unit probabilistic simplex
+projection.onto.simplex <- function(unproj,bound){
+  q <- sort(unproj,decreasing = TRUE,method="quick")
+  qcum <- cumsum(q)
+  mu <- (qcum-bound)/(1:length(qcum))
+  cond1 <- (mu[-length(mu)] - q[-1]) > 0; cond1 <- c(cond1,TRUE)
+  #cond2 <- q - mu > 0
+  #ind <- which(cond1&cond2)
+  ind <- which.max(cond1)
+  return( pmax(0,unproj-mu[ind]) )
+}
+
+
+
+# find optimum of C using ADMM
+volnmf.update.C <- function(X, R, C.prev = NULL, rho =  sum(R^2)/nrow(R), err.cut = 1e-10, n.iter = 1e+5){
+  #Ctrue <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+  #Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+  #R <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+  #X <- Ctrue%*%R
+  
+  if (is.null(C.prev)){
+    ft <- lm( t(X) ~ t(R) - 1) # can be estimated in closed form!
+    C.prev <- t(ft$coefficients)
+    C.prev[C.prev < 0] <- 0
+    C.prev <- apply(C.prev,2,function(x)x/sum(x))
+  }
+  
+  # assign initial values
+  Z <- Chat <- C <- C.prev
+  V <- matrix(runif(nrow(C)*ncol(C),0,10),nrow(C),ncol(C))
+  U <- runif(ncol(C),0,1)
+  
+  # precalculate inverse matrices
+  Rinv <- solve(R%*%t(R) + rho*diag(1,nrow(R)))
+  XTR <- X%*%t(R)
+  O <- matrix(rep(1,nrow(C)^2),nrow(C),nrow(C))
+  O1 <- matrix(rep(1,nrow(C)*ncol(C)),nrow(C),ncol(C))
+  Oinv <- solve( O + diag(2,nrow(C)) )
+  
+  cat('C estimation.. ')
+  #conv <- vector()
+  #conv1 <- vector()
+  err <- 1e+6
+  iter <- 1
+  while( err > err.cut & iter < n.iter ){
+    C.prev <- C
+    # update ADMM matrices
+    C <- (XTR + rho*(Chat-V))%*%Rinv
+    #C[C < 0] <- 0
+    #Chat <- Oinv%*%( t(t(O1 - C - V) - U)  )
+    Chat <- Oinv%*%( t(t(O1 + C + V + Z) - U)  )
+    Z <- pmax(Chat,0)
+    Chat[Chat < 0] <- 0
+    V <- V + C - Chat
+    U <- U + colSums(Chat)-1
+    
+    err <- sum((C-C.prev)^2)/sum(C^2)
+    iter <- iter + 1
+    #print(sum(Chat < 0))
+    #print(c(iter, sum((C-C.prev)^2),sum((C-Ctrue)^2) ))
+    #conv <- c(conv,sum((C-C.prev)^2))
+    #conv1 <- c(conv1,sum((C-Ctrue)^2))
+  }
+  cat(paste(iter,' iterations ',err, 'error\n'))
+
+  #plot(C[,1],Ctrue[,1],pch=19,cex=0.2);abline(a=0,b=1,col="red")
+  #print(c(iter, sum((C-C.prev)^2)/sum((C)^2),sum((C-Ctrue)^2)/sum((C)^2) ))
+  #iter
+  return( list(C=C,Chat=Chat) )
+}
+
+
+
+# find optimum of C using ADMM
+# method "qp" (default solve.QP) or "fg" (fast gradient)
+volnmf.update.C1 <- function(X, R, C.prev = NULL, method="qp", meq=0, rho =  sum(R^2)/nrow(R), err.cut = 1e-10, n.iter = 1e+5){
+  
+  if (method=="qp"){
+    Dmat <- (R)%*%t(R)
+    Cupd <- do.call(rbind,lapply( 1:nrow(X),function(irow){
+      dvec <- (R)%*%X[irow,] 
+      Amat <- cbind( rep(-1,nrow(R)),diag(1,nrow(R)) )
+      bvec <- c(-1,rep(0,nrow(R)))
+      ft <- solve.QP(Dmat,dvec,Amat,bvec,meq = meq)
+      ft$solution
+      #X[irow,]
+      #as.numeric(t(R)%*%ft$solution  )
+    }))
+  }else if (method=="fg"){
+    Cupd <- do.call(rbind,lapply( 1:nrow(X),function(irow){
+      A <- t(R)
+      Acov <- t(A)%*%A
+      y <- X[irow,]
+      Lip <- max(abs(eigen(A)$values^1)^2)
+      Lip <- 50
+      alp <- 0.5
+      z <- x <- rep(1,nrow(A))/nrow(A)
+      for (i in 1:1000){
+        xprev <- x
+        unproj <- z - as.numeric(Acov%*%z - t(A)%*%y)/Lip
+
+        q <- sort(unproj,decreasing = TRUE)
+        qcum <- cumsum(q)
+        mu <- (qcum-1)/(1:length(qcum))
+        cond1 <- (mu[-length(mu)] - q[-1]) > 0; cond1 <- c(cond1,TRUE)
+        cond2 <- q - mu > 0
+        ind <- which(cond1&cond2)
+        x <- pmax(0,unproj-mu[ind])
+        #alp <- (-alp^2 + sqrt(alp^4 + 4*alp^2) )/2
+        beta <- alp*(1-alp)/(alp^2+alp+1)
+        z <- x + beta*(x-xprev)
+      }
+      x
+    }))
+  }
+  
+  return( list(C=Cupd,Chat=Cupd) )
+}
+
+
+# find optimum of C
+volnmf.update.Cy <- function(X, R, C.prev = NULL, n.iter = 10){
+  Ctrue <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+  Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+  R <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+  X0 <- Ctrue%*%R
+  X <- X0 #+ rnorm(length(X0),0,0.003)
+  
+  if (is.null(C.prev)){
+    ft <- lm( t(X) ~ t(R) - 1) # can be estimated in closed form!
+    C.prev <- t(ft$coefficients)
+    C.prev[C.prev < 0] <- 0
+  }
+  
+  #C.prev <- matrix(runif(192*14,0,10),192,14)
+  C <- C.prev
+  C[C < 0] <- 0
+  C <- apply(C,2,function(x) x/sum(x) )
+
+  Q <- R%*%t(R)
+  F <- solve(Q)
+  xvec <- colSums(X)
+  
+  M <- matrix(-5,nrow=nrow(C),ncol=ncol(C))
+  y <- rep(1,ncol(C))
+  iter <- 1
+  while(iter < 10){
+    y.prev <- y  
+    y <- ( (R)%*%xvec - colSums(M) - Q%*%rep(1,length(y)) )/length(y)
+    M <- do.call(rbind,lapply( 1:nrow(M),function(i){
+        pmin(0,(R)%*%X[i,] - y)
+      }))
+    print(c(iter, sum((y-y.prev)^2) ))
+    
+    iter <- iter + 1
+  }
+  
+  
+  rxvec <- R%*%X[i,] <- 1
+  mvec <- rep(-1,ncol(C))
+  y <- rep(1,ncol(C))
+  iter <- 1
+  while(iter < 10){
+    y.prev <- y  
+    y <- ( rxvec - mvec - Q%*%rep(1,length(y)) )
+    M <- do.call(rbind,lapply( 1:nrow(M),function(i){
+      pmin(0,(R)%*%X[i,] - y)
+    }))
+    print(c(iter, sum((y-y.prev)^2) ))
+    
+    iter <- iter + 1
+  }
+  
+  
+  
+  # solution
+  Csol <- do.call(rbind,lapply( 1:nrow(C),function(i){
+    - as.numeric( F%*%( M[i,] + y - R%*%X[i,] )  )
+  }))
+  plot(Csol[,2],Ctrue[,2])
+  
+  return(C)
+}
+
+
+
+################################ old scripts and code ##########################################
+
+# find optimum of C
+volnmf.update.Cx <- function(X, R, C.prev = NULL, n.iter = 10, err.cut = 1e-3){
+  #Ctrue <- matrix( runif(192*14,0,1),nrow=192 ,ncol=14)
+  #Ctrue <- apply(Ctrue,2,function(x) x/sum(x) )
+  #R <- matrix( runif(ncol(C)*ncol(C),0,1),nrow=ncol(C) ,ncol=ncol(C))
+  #X <- Ctrue%*%R
+
+  if (is.null(C.prev)){
+    ft <- lm( t(X) ~ t(R) - 1) # can be estimated in closed form!
+    C.prev <- t(ft$coefficients)
+    C.prev[C.prev < 0] <- 0
+  }
+  
+  #C.prev <- matrix(runif(192*14,0,10),192,14)
+  C <- C.prev
+  C[C < 0] <- 0
+  C <- apply(C,2,function(x) x/sum(x) )
+  
+  #C <- C.prev <- Ctrue
+  rm <- rowSums(R)
+  rsq <- rowSums(R^2)
+  iter <- 1
+  err <- 1e+6
+  while(iter < n.iter & err > err.cut){
+    #dX <- X - C%*%R
+    #dX <- matrix( runif(192*14,0,1e-10),192,14 )
+    #sum(dX^2)
+    #L <- ( dX%*%t(R) + t(t(C)*rsq) )
+    #Q <- t(t(L)/rsq)
+    #C.prev <- C
+    
+    
+    #dX <- X - C%*%R
+    #L <- ( dX%*%t(R) + t(t(C)*rsq) )
+    #Q <- t(t(L)/rsq)
+    #C.prev <- C
+    
+    #C <- do.call(cbind,lapply(1:ncol(C),function(k){
+    for (k in 1:ncol(C)){
+      
+      
+      dX <- X - C%*%R
+      L <- ( dX%*%t(R) + t(t(C)*rsq) )
+      Q <- t(t(L)/rsq)
+      C.prev <- C
+      
+
+      Dmat <- diag(1,192)
+      dvec <- Q[,k]
+      Amat <- cbind( rep(1,192),diag(1,192) )
+      bvec <- c(1,rep(0,192))
+      ft <- solve.QP(Dmat,dvec,Amat,bvec,meq = 1)
+      C[,k] <- ft$solution
+    }
+    #}))
+    err <- sum((C-C.prev)^2)/sum(C^2)
+    if(iter%%100 == 0){print(c(iter,sum((C-C.prev)^2)/sum(C^2)) )}
+    #print(c(iter,sum((C-Ctrue)^2)/sum(Ctrue^2)) )
+    iter <- iter+1
+  }
+
+  print(c(iter,err) )
+  
+  return(C)
+}
+
+
+
+
+for (ii in 1:1000){
+C2 <- do.call(cbind,lapply( 1:ncol(C),function(k){
+  q <- sort(Q[,k],decreasing = TRUE)
+  #q <- sort( runif(192,0,90e-2),decreasing = TRUE )
+  qcum <- cumsum(q)
+  mu <- (qcum-1)/(1:length(qcum))
+  cond1 <- (mu[-length(mu)] - q[-1]) > 0; cond1 <- c(cond1,TRUE)
+  cond2 <- q - mu > 0
+  ind <- which(cond1&cond2)
+  
+  ### diagnostics 
+  diagnost <- FALSE
+  if (diagnost==TRUE){
+    plot(1:length(qcum), qcum - (1:length(qcum))*q,pch=19,cex=0.1 ); abline(h=1,col="red")
+    ind
+    mu[ind]
+    qcum[ind] - mu[ind]*ind
+  }
+  
+  pmax(0,Q[,k]-mu[ind])
+}))
+}
+
+
+for (ii in 1:1000){
+for (k in 1:ncol(C)){
+  q <- sort(Q[,k],decreasing = TRUE)
+  #q <- sort( runif(192,0,90e-2),decreasing = TRUE )
+  qcum <- cumsum(q)
+  mu <- (qcum-1)/(1:length(qcum))
+  cond1 <- (mu[-length(mu)] - q[-1]) > 0; cond1 <- c(cond1,TRUE)
+  cond2 <- q - mu > 0
+  ind <- which(cond1&cond2)
+  
+  #print(ind)
+  ### diagnostics 
+  diagnost <- FALSE
+  if (diagnost==TRUE){
+    plot(1:length(qcum), qcum - (1:length(qcum))*q,pch=19,cex=0.1 ); abline(h=1,col="red")
+    ind
+    mu[ind]
+    qcum[ind] - mu[ind]*ind
+  }
+  
+  C2[,k] <- pmax(0,Q[,k]-mu[ind])
+}
+}

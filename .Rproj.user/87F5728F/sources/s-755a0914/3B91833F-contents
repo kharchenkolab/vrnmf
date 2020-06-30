@@ -1,0 +1,586 @@
+vol <- vol.preprocess(rate.new)
+
+vol.anchor <- AnchorFree(vol,n.comp = 14,init=NULL,init.type="unif.both",n.iter=30,err.cut=1e-20, verbose=TRUE)
+  
+volres <- volnmf.main(vol, n.comp = 14, domain = "covariance", volf = 'det',
+                      wvol = 1e-11, delta = 1e-8, n.iter = 1e+2, err.cut = 1e-20,
+                      vol.iter = 1e+2, c.iter = 1e+2, 
+                      C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                      C.init = NULL, R.init = NULL, anchor = vol.anchor, record = 20 )
+
+fctrs <- 10^seq(-3,3,length.out = 24)
+# for logdet: wvol = 0.006, for det: wvol = 1e-20!
+vol.list1 <- mclapply(fctrs,function(fctr){
+  #fctr <- 1e+2
+  #volres <- volnmf.main(vol, n.comp = 14, domain = "covariance", volf = 'det', do.nmf=FALSE,
+  #                      wvol = (1e-20)*fctr, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-20,
+  #                      vol.iter = 1e+2, c.iter = 1e+2, 
+  #                      C.constraint = "col", C.bound = 1, R.constraint = "pos",
+  #                      #C.init = volres$C, R.init = volres$R, anchor = NULL,#resl[[1]],
+  #                      C.init = NULL, R.init = NULL, anchor =resl[[1]],
+  #                      record = 20 )
+  
+    
+  volres <- volnmf.main(vol, n.comp = 14, domain = "covariance", volf = 'logdet', do.nmf=TRUE,
+                        wvol = (1e-4)*fctr, delta = 1e-8, n.iter = 2e+4, err.cut = 1e-30,
+                        vol.iter = 1e+2, c.iter = 2e+1, 
+                        C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                        #C.init = volres$C, R.init = volres$R, anchor = NULL,#resl[[1]],
+                        C.init = NULL, R.init = NULL, anchor =resl[[1]],
+                        record = 20 )
+  volres
+},mc.cores=25)
+
+dat1 <- do.call(rbind,lapply(vol.list1,function(vl){
+  apply(abs(cor(vl$C,vl$C[xcompl,])),1,max) 
+}))
+eigs <- do.call(rbind,lapply(vol.list1,function(vl){
+  eigen( t(vl$R)%*%vl$R )$values
+}))
+par(mfrow=c(1,2))
+plot(fctrs,apply(dat1,1,mean))#,log="x")
+plot(fctrs,apply(eigs,1,min),log="x")
+
+
+iss <- 1:50
+# for logdet: wvol = 0.006, for det: wvol = 1e-20!
+### run logdet with wvol=6e-3
+vlist.log.pos <- mclapply(iss,function(i){
+  fctr <- 6
+  volres <- volnmf.main(vol, n.comp = 14, n.reduce = 14,domain = "covariance",
+                        volf = 'logdet', R.majorate=FALSE,
+                        do.nmf=TRUE, iter.nmf = 5e+2,
+                        wvol = (1e-3)*fctr, delta = 1e-10, n.iter = 5e+3, err.cut = 1e-30,
+                        vol.iter = 1e+3, c.iter = 1e+2, 
+                        C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                        #C.init = volres.nmf$C, R.init = volres.nmf$R, Q.init = volres.nmf$Q,
+                        #C.init = volres4$C, R.init = volres4$R, Q.init = volres4$Q,
+                        C.init = NULL, R.init = NULL, Q.init = NULL,
+                        #anchor = resl[[i]],
+                        record = 20 )
+  
+  volres
+},mc.cores=25)
+saveRDS(vlist.log.pos,file="/d0/home/solrust/mutations/sample_logdet.rds")
+
+vlist.log.anchor <- mclapply(1:50,function(i){
+  fctr <- 6 #3
+  volres <- volnmf.main(vol, n.comp = 14, domain = "covariance",
+                            volf = 'logdet', R.majorate=FALSE,
+                            do.nmf=TRUE, iter.nmf = 5e+2,
+                            wvol = (1e-3)*fctr, delta = 1e-10, n.iter = 5e+3, err.cut = 1e-30,
+                            vol.iter = 1e+3, c.iter = 1e+2, 
+                            C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                            #C.init = volres$C, R.init = volres$R, anchor = NULL,#resl[[1]],
+                            C.init = NULL, R.init = NULL,
+                            anchor = resl[[ inds[i] ]],
+                            record = 20)
+  volres
+},mc.cores=25)
+saveRDS(vlist.log.anchor,file="/d0/home/solrust/mutations/sample_logdet_anchor.rds")
+
+
+
+### run logdet with different wvol
+#fctrs <- 6*c(10^seq(-2,2,length.out = 49),1)
+fctrs1 <- seq(0,12,length.out = 13)
+fctrs2 <- seq(5.1,6.9,length.out = 12)
+fctrs <- sort(c(fctrs1,fctrs2))
+vlist.log.wvol <- mclapply( rep(fctrs,1),function(fctr){
+  volres <- volnmf.main(vol, n.comp = 14, n.reduce = 14,domain = "covariance",
+                        volf = 'logdet', R.majorate = FALSE,
+                        do.nmf=TRUE, iter.nmf = 5e+2,
+                        wvol = 1e-3*fctr, delta = 1e-8, n.iter = 2e+3, err.cut = 1e-30,
+                        vol.iter = 1e+3, c.iter = 1e+2, 
+                        C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                        #C.init = volres$C, R.init = volres$R,# Q.init = volres$Q,
+                        C.init = NULL, R.init = NULL, Q.init = NULL,
+                        #anchor = resl[[i]],
+                        record = 20 )
+  volres
+},mc.cores=27)
+saveRDS(vlist.log.wvol,file="/d0/home/solrust/mutations/sample_logdet_wvol.rds")
+
+
+### run logdet with wvol=6e-3 without positivity constraint
+vlist.log.nopos <- mclapply( seq(0,10,length.out = 25),function(fctr){
+  #fctr <- 5
+  #if (i < 17){fctr <- 3}
+  #if (i < 35){fctr <- 4}
+  fctr <- 7#2
+  volres <- volnmf.main(vol, n.comp = 14, n.reduce = 14,domain = "covariance", 
+                        volf = 'logdet', R.majorate = FALSE,
+                        do.nmf=TRUE, iter.nmf = 1e+3,
+                        wvol = 1e-3*fctr, delta = 1e-8, n.iter = 2e+3, err.cut = 1e-30,
+                        vol.iter = 1e+3, c.iter = 1e+2, 
+                        C.constraint = "col", C.bound = 1, R.constraint = "no",
+                        #C.init = volres$C.init, R.init = volres$R.init, Q.init = volres$Q.init,
+                        C.init = NULL, R.init = NULL, Q.init = NULL,
+                        #anchor = resl[[i]],
+                        record = 20 )
+  volres
+},mc.cores=28)
+saveRDS(vlist.log.nopos,file="/d0/home/solrust/mutations/sample_logdet_nopos.rds")
+
+
+# 1000 iterations = 10 min
+vlist.det.rand <- mclapply(iss,function(i){
+  fctr <- 1e-5
+  if (i %% 2 == 0) {fctr <- 5e-5}
+  volres <- volnmf.main(vol, n.comp = 14, domain = "covariance", volf = 'det', 
+                        do.nmf=TRUE, iter.nmf = 5e+2,
+                        wvol = (1e-18)*fctr, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-30,
+                        vol.iter = 2e+1, c.iter = 1e+2, 
+                        C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                        #C.init = volres$C, R.init = volres$R, anchor = NULL,#resl[[1]],
+                        C.init = NULL, R.init = NULL, #anchor = resl[[ inds[i] ]],
+                        record = 20 )
+  volres
+},mc.cores=25)
+saveRDS(vlist.det.rand,file="/d0/home/solrust/mutations/sample_det.rds")
+
+
+
+vlist <- vlist.log
+
+dat <- do.call(rbind,lapply(vlist,function(vl){
+  apply(abs(cor(vl$C,vl$C[xcompl,])),1,max) 
+}))
+eigs <- do.call(rbind,lapply(vlist,function(vl){
+  eigen( t(vl$R)%*%vl$R )$values
+}))
+par(mfrow=c(1,2))
+plot(1:nrow(dat),apply(dat,1,function(x) sum(x>0.85) ))
+plot(1:nrow(eigs),(apply(eigs,1,min)+1e-13),log="y")
+#plot(apply(dat,1,function(x) sum(x>0.8) ),(apply(eigs,1,min)+1e-13),log="y")
+
+mref <- apply(dat,1,function(x) {
+  sum(x>0.80)
+  #mean(x)
+})
+soldist <- do.call(rbind,lapply(1:length(vlist),function(i){
+  unlist(lapply(1:length(vlist),function(j){
+    #sqrt(sum((vlist[[i]]$C - vlist[[j]]$C)^2))
+    mean( apply(cor(vlist[[i]]$C,vlist[[j]]$C),1,max) )
+    #xx <- unlist(lapply(1:ncol(vlist[[i]]$C),function(k){
+    #  xx <- colSums((vlist[[j]]$C-vlist[[i]]$C[,k])^2)
+    #  min(xx)
+    #}))
+    #mean( xx )
+  }))
+}))
+ts <- Rtsne::Rtsne(as.dist(soldist),perplexity=0.5)
+par(mfrow=c(1,1))
+plot(ts$Y[,1:2],col=as.factor(as.numeric(mref > 13)),pch=19,cex=1)
+
+
+spacemut::draw.signature(vlist[[2]]$C[,2])
+mref[2]
+
+fctrs.vec <- seq(0,10,length.out = 25)
+fctrs.vec <- fctrs
+par(mfrow=c(2,2))
+plot( fctrs.vec,apply(dat,1,mean))
+plot( fctrs.vec,apply(eigs,1,min),log="y")
+plot(apply(dat,1,mean),apply(eigs,1,min),log="y")
+
+#  7 12 13 24 28 30 43 51 58
+ii <- 47
+vl <- vlist.log[[ii]]
+refl <- unlist(lapply(vl$rec[seq(1,length(vl$rec),4)],function(C) {
+  mean(apply(cor(C,C[xcompl,]),1,max))
+}))
+vols <- unlist(lapply(vl$rec[seq(2,length(vl$rec),4)],function(R) log(det(t(R)%*%R+delta*diag(1,nrow(R))))   ))
+#vols <- unlist(lapply(vl$rec[seq(2,length(vl$rec),4)],function(R) det(t(R)%*%R)   ))
+iter <- unlist(lapply(vl$rec[seq(4,length(vl$rec),4)],function(it) it ))
+par(mfrow=c(2,1))
+plot(iter,vols,pch=19,cex=0.5)#,ylim=c(10,60))
+plot(iter,refl,ylim=c(0.6,1),pch=19,cex=0.5)
+min(vols)
+mref[ii]
+dat[ii,]
+sum( dat[ii,] > 0.85)
+max(refl)
+#mean(apply(cor(resl[[inds[15]]]$C,resl[[inds[15]]]$C[xcompl,]),1,max))
+apply( cor(Cpos.v1,vl$C),1,max)
+
+crv <- unlist(lapply( resl,function(res) mean(apply(cor(res$C,res$C[xcompl,]),1,max))  ))
+crv1 <- unlist(lapply( vlist,function(res) mean(apply(cor(res$C,res$C[xcompl,]),1,max))  ))
+
+
+
+dat2 <- do.call(rbind,lapply(vol.list2,function(vl){
+  if (length(vl) > 1){
+    apply(abs(cor(vl$C,vl$C[xcompl,])),1,max) }else{NA}
+}))
+eigs2 <- do.call(rbind,lapply(vol.list2,function(vl){
+  if (length(vl) > 1){
+    eigen( t(vl$R)%*%vl$R )$values
+  }else{NA}
+}))
+par(mfrow=c(1,2))
+plot(fctrs,apply(dat2,1,mean),log="x",ylim=c(0.9,1))
+plot(fctrs,apply(eigs2,1,min),log="x")
+
+
+
+
+### input: 
+# vol - preprocessed object from vol.preprocess
+# B - matrix to facrotize
+# n.comp - number of components to extract
+# volnmf - preprocessed object storing NMF results
+# domain - 'covariance' or 'primary'. Formed does BQ~CR, latter does B~CR.
+# volf - function that approximate volume(R) - could be 'logdet' or 'det'
+# C.init, R.init - matrices of initial values
+# anchor - object from AnchorFree. 
+# C.constarint: 'col' - sum columns to 'C.bound', 'row' - sum rows to 'C.bound'.
+# R.constraint: 'pos' - non-negative values, NULL - no constraints
+# verbose - print output 
+# record - record parameters every 'record' iterations
+volnmf.main <- function(vol, B = NULL, n.comp = 3, n.reduce = n.comp, volnmf = NULL, do.nmf=TRUE, iter.nmf = 1e+3,
+                        domain = "covariance", volf = 'logdet',
+                        wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,
+                        vol.iter = 1e+2, c.iter = 1e+2, 
+                        C.constraint = "col", C.bound = 1, R.constraint = "pos",R.majorate=FALSE,
+                        C.init = NULL, R.init = NULL, Q.init = NULL, anchor = NULL, frac.zero = 0.3,
+                        verbose = TRUE, record = NULL ){
+  
+  #B <- NULL; n.comp <- 14; n.reduce <- n.comp; volnmf <- NULL;
+  #domain <- "covariance"; volf <- 'logdet';
+  #wvol <- NULL; delta <- 1e-8; n.iter <- 1e+4; err.cut <- 1e-8;
+  #vol.iter <- 1e+2; c.iter <- 1e+2;
+  #C.constraint <- "col"; C.bound <- 1; R.constraint <- "pos";
+  #C.init <- NULL; R.init <- NULL;
+  #anchor = NULL;
+  #frac.zero = 0.3; verbose = TRUE; record = 100 
+  
+  # matrix B
+  if (is.null(B)){
+    if (!is.null(volnmf)){
+      B <- volnmf$B
+    }else if(!is.null(vol)){
+      B <- -vol$U[,1:n.reduce]%*%sqrt(diag(vol$eigens)[1:n.reduce,1:n.reduce])
+    }
+  }
+  
+  #if (domain=="covariance"){
+  if (is.null(Q.init)){
+    #Q.init <- diag(1,ncol(B))
+    Q.init <- diag(1,nrow=n.reduce,ncol=n.comp)
+  }
+  #}
+  
+  ### initialize matrices
+  if (!is.null(anchor)){   # initial matrices come from AnchorFree algorithm
+    C.init <- anchor$C
+    E <- anchor$E
+    svE <- svd(E)
+    Esq <- svE$u%*%sqrt(diag(svE$d))
+    Qe <- diag(1,nrow(E))
+    for (jj in 1:100){
+      R <- pmax( Esq%*%Qe,0 )
+      Qe <- volnmf.procrustes(R,Esq)
+    }
+    R.init <- R
+    Q.init <- Qe
+    Q.init <- diag(1,nrow=n.reduce,ncol=n.comp)
+  }else{   # initial matrices are generate from uniform distribution
+    if (is.null(C.init)){
+      rmin <- 0; cmin <- 0
+      #while ( rmin < 1e-6 | cmin < 1e-6 ){
+        C <- matrix(runif(nrow(B)*n.comp,0,1 ),nrow=nrow(B),ncol=n.comp)
+        #C[ sample(nrow(C)*ncol(C),nrow(C)*ncol(C)*frac.zero) ] <- 0
+        rmin <- min(rowSums(C)); cmin <- min(colSums(C))
+      #}
+      if (C.constraint=="col"){
+        C <- apply(C,2,function(x) (x)/sum(x) )
+      }else if (C.constraint=="row"){
+        C <- apply(C,1,function(x) (x)/sum(x) )
+      }
+      C.init <- C*C.bound
+      #range( colSums(C.init) ); range( apply(C.init,1,max) ); range( apply(C.init,2,max) )
+    }
+    if (is.null(R.init)){
+      R.init <- matrix(runif(n.comp*n.comp,0,1/C.bound),n.comp,n.comp)
+    }
+  }
+  
+  C.rand <- C.init; R.rand <- R.init; Q.rand <- Q.init
+  if (do.nmf==TRUE){
+    cat('run standard nmf.. ')
+    nmf.solution <- volnmf.estimate(B, C = C.init, R = R.init, Q = Q.init, 
+                            domain = domain, volf = volf,
+                            wvol = 0, delta = delta, n.iter = iter.nmf, err.cut = err.cut,
+                            vol.iter = vol.iter/10, c.iter = c.iter/10, 
+                            C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
+                            verbose = verbose, record = 20)  
+    cat('done');cat('\n')
+    C.init <- nmf.solution$C; R.init <- nmf.solution$R; Q.init <- nmf.solution$Q
+  }
+  if (is.null(wvol)){ wvol <- 0 }
+  
+  # for logdet: wvol = 0.006, for det: wvol = 5e-11 or 1e-22?
+  vol.solution <- volnmf.estimate(B, C = C.init, R = R.init, Q = Q.init, 
+                                  domain = domain, volf = volf, R.majorate=R.majorate,
+                                  wvol = wvol, delta = delta, n.iter = n.iter, err.cut = err.cut,
+                                  vol.iter = vol.iter, c.iter = c.iter, 
+                                  C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
+                                  verbose = verbose, record = record ) 
+  
+  return( list( C = vol.solution$C, R = vol.solution$R, Q = vol.solution$Q, 
+                C.init = C.init, R.init = R.init, Q.init = Q.init, 
+                C.rand = C.rand, R.rand = R.rand, Q.rand = Q.rand,
+                rec = vol.solution$info.record ) )
+}
+
+
+
+# preprocess data
+vol.preprocess <- function(X,col.norm="sd",row.norm=NULL){
+  row.factors <- rep(1,nrow(X))
+  col.factors <- rep(1,ncol(X))
+  
+  if (col.norm=="sd"){
+    col.factors <- apply(X,2,sd)
+  }
+  X.process <- t(t(X)/col.factors)/row.factors
+  
+  P0 <- t(X.process)%*%X.process
+  pfactor <- max(P0)
+  P <- P0/pfactor # how to normalize P to avoid inf problems?
+  dimr <- svd(P)
+  
+  return( list(X.process = X.process, row.factor=row.factors, col.factors=col.factors, 
+               P0=P0, P = P, pfactor = pfactor, U = dimr$u, eigens = dimr$d) )
+}
+
+
+### Implementation of AnchorFree method
+AnchorFree <- function(vol,n.reduce=n.comp,n.comp = 3,init=NULL,init.type="unif.both",n.iter=30,err.cut=1e-10, verbose=FALSE){
+  B <- -vol$U[,1:n.reduce]%*%sqrt(diag(vol$eigens)[1:n.reduce,1:n.comp])
+  
+  M <- init
+  if (is.null(M)){
+    if (init.type=="diag"){
+      M <- diag( runif(n.comp,-1,1)  ,n.comp)
+    }else if (init.type=="similar"){
+      M <- matrix(runif(n.comp*n.comp,0.9,1.1),nrow = n.comp, ncol=n.comp) 
+    }else if (init.type=="unif.pos"){
+      M <- matrix(runif(n.comp*n.comp,0,1),nrow = n.comp, ncol=n.comp) 
+    }else if (init.type=="unif.both"){
+      M <- matrix(runif(n.comp*n.comp,-1,1),nrow = n.comp, ncol=n.comp) 
+    }else if (init.type=="normal"){
+      M <- matrix(rnorm(n.comp*n.comp,0,1),nrow = n.comp, ncol=n.comp) 
+    }else if (init.type=="ica" | init.type=="ica.pos"){
+      ic <- ica::icafast((B), nc = n.comp, fun = fun)
+      icM <- t(t(ic$S) + (t(solve(t(ic$M))) %*% apply(B, 2, mean))[,1])
+      sgn <- (apply(icM,2,function(x) sign(sum(sign(x)*x^2)) ))
+      icM <- t(t(icM)*sgn)
+      if (init.type=="ica.pos"){ icM[icM < 0] <- 0 }
+      ft <- lm( icM ~ B - 1 )
+      M <- ft$coefficients
+    }else if (init.type=="Epos"){
+      preE0 <- matrix(runif(n.comp*n.comp,0,1),nrow = n.comp, ncol=n.comp) 
+      E0 <- preE0%*%t(preE0)
+      svdE <- svd(E0)
+      Mrev <- svdE$u%*%sqrt(diag(svdE$d))
+      M <- solve(Mrev)
+    }
+  }
+  
+  M.prev <- M
+  detM.prev <- det(M)
+  require(lpSolveAPI)
+  
+  iter <- 1
+  err <- 1e+5
+  while ( iter < n.iter & abs(err) > err.cut ){
+    #f <- 1; k <- 1
+    for (f in 1:n.comp){
+      #f <- 8
+      avec <- unlist(lapply(1:n.comp,function(k){
+        if (n.comp==2) {detM <- M[-k,-f]}else{detM<-det(M[-k,-f])}
+        Minor <- (-1)^(k+f)*detM
+      }))
+      Bconstr <- rbind(B, as.numeric(rep(1,nrow(B))%*%B))
+      
+      #x <- M[,f] # + 1e-10#/183.6
+      #x <- x*1.0
+      #range(Bconstr[-nrow(Bconstr),]%*%x)
+      #as.numeric(rep(1,nrow(B))%*%B)%*%x
+      #avec%*%x
+      #avec%*%get.variables(lps1)
+      
+      lps1 <- make.lp( nrow(Bconstr), n.comp)
+      lp.control(lps1,sense='max')
+      for(i in 1:ncol(Bconstr)){
+        set.column(lps1,i,Bconstr[,i] )
+      }
+      set.objfn(lps1, avec)
+      set.constr.type(lps1, c(rep(">=",nrow(Bconstr)-1),"=") )
+      set.rhs(lps1, c(rep(0,nrow(Bconstr)-1),1) )
+      set.bounds(lps1, lower = rep(-Inf,ncol(Bconstr)), columns = 1:ncol(Bconstr))
+      solve(lps1)
+      #get.variables(lps1)
+      #get.objective(lps1)
+      #avec%*%x
+      #avec%*%get.variables(lps1)
+      
+      lps2 <- make.lp( nrow(Bconstr), n.comp)
+      lp.control(lps2,sense='min')
+      for(i in 1:ncol(Bconstr)){
+        set.column(lps2,i,Bconstr[,i] )
+      }
+      set.objfn(lps2, avec)
+      set.constr.type(lps2, c(rep(">=",nrow(Bconstr)-1),"=") )
+      set.rhs(lps2, c(rep(0,nrow(Bconstr)-1),1) )
+      set.bounds(lps2, lower = rep(-Inf,ncol(Bconstr)), columns = 1:ncol(Bconstr))
+      solve(lps2)
+      #get.variables(lps2)
+      #get.objective(lps2)
+      
+      if ( abs(get.objective(lps1)) > abs(get.objective(lps2)) ){
+        M[,f] <- get.variables(lps1)
+      }else{  M[,f] <- get.variables(lps2) }
+      
+      
+      #cat( c(f,det(M)) );cat('\n')
+    }
+    
+    detM <- det(M)
+    err <- (detM-detM.prev)/detM
+    
+    if (verbose==TRUE){
+      cat( c(iter, detM, detM.prev, err) )
+      cat('\n')
+    }
+    M.prev <- M
+    detM.prev <- detM
+    iter <- iter + 1
+  }
+  
+  if ( abs(detM) > 1e-30 ){
+    C <- B%*%M
+    #rownames(C) <- colnames(rate.new)
+    Ccov <- solve(t(C)%*%C)
+    E <- Ccov%*%(t(C)%*%Pclean%*%C)%*%Ccov
+    Ppred <- C%*%E%*%t(C)
+  }else{
+    C <- NA; Ccov <- NA; E <- NA; Ppred <- NA
+  }
+  
+  
+  return( list(C = C, E = E, Pest = Ppred, M = M, detM = detM, init.type = init.type) )
+}
+
+volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init, 
+                            domain = "covariance", volf = 'logdet', R.majorate=FALSE,
+                            wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,
+                            vol.iter = 1e+2, c.iter = 1e+2, 
+                            C.constraint = "col", C.bound = 1, R.constraint = "pos",
+                            verbose = TRUE, record = NULL, Canchor = NULL, Ctrue = NULL ){
+  
+  iter <- 1
+  err <- 1e+5
+  rvol <- vector()
+  aff.mean <- vector()
+  info.record <- list()
+  eigens <- 1
+  
+  while (iter < n.iter & err > err.cut #& (min(eigens) > 1e-16 | iter<3)
+         ){
+    #print(iter)
+    if (domain=="covariance"){
+      X <- B%*%Q
+    }else{ X <- B }
+    
+    ### update R
+    err.prev <- sum((X-C%*%R)^2)
+    if (volf=="logdet"){
+      vol.prev <- log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+    }else if (volf=="det"){ vol.prev <- det(R%*%t(R)) }
+    R.prev <- R
+    
+    if (volf=="logdet"){
+      R <- volnmf.logdet(C, X, R.prev, R.constraint=R.constraint, nesterov=FALSE, majorate = R.majorate, beta=1e-4, w.vol=wvol, delta=delta, 
+                         eigen.cut=1e-20,err.cut = 1e-100, n.iter = vol.iter)
+      
+    }else if (volf=="det"){
+      R <- volnmf.det(C, X, R.prev, posit=FALSE, w.vol=wvol, eigen.cut=1e-20,err.cut = 1e-100, n.iter = vol.iter)
+    }     
+    
+    err.post <- sum((X-C%*%R)^2)
+    if (volf=="logdet"){
+      vol.post <- log(det(R%*%t(R)+delta*diag(1,nrow(R))))
+    }else if (volf=="det"){ vol.post <- det(R%*%t(R)) }
+    rvol[iter] <- vol.post
+    
+    ### update C
+    C.prev <- C
+    if (C.constraint=="col"){
+      C <- volnmf.update.C.eff(X, R, C.prev = C.prev, bound=C.bound, extrapolate = TRUE,
+                               err.cut = 1e-100, n.iter = c.iter)
+      #C <- volnmf.update.Cx(X, R, C.prev = C.prev, n.iter = c.iter,err.cut = 1e-100)
+      
+    }else{
+      Cl <- volnmf.update.C1(X, R, C.prev = C.prev, meq=1,
+                             err.cut = 1e-20, n.iter = c.iter, rho=1e+3)#,rh=0.1)
+      C <- Cl$C
+    }
+    err.post.C <- sum((X-C%*%R)^2) 
+    
+    ### optimize Q
+    if (domain=="covariance"){
+      Q <- volnmf.procrustes( C%*%R,B)
+    }
+    
+    err <- sum((C-C.prev)^2)/sum(C^2)
+    eigens <- eigen(R%*%t(R))$values
+    mutation.run <- TRUE
+    aff <- 1#NA
+    if (mutation.run==TRUE){
+      rownames(C) <- colnames(rate.new)
+      aff <- apply(abs(cor(C,C[xcompl,])),1,max)
+    }else if (!is.null(Ctrue)){
+      aff <- apply(cor(C,Ctrue),1,max)
+    }
+    aff.mean[iter] <- mean(aff)
+    
+    if (verbose==TRUE & (iter %% 100 == 0) ){
+      print(str(rvol))
+      print(str(aff.mean))
+      par(mfrow=c(2,1))
+      plot(1:iter,rvol,pch=19,cex=0.1,xlab="iteration",ylab="Vol")
+      if (!is.null(vol.ref)) {abline(h=vol.ref,col="red",lwd=1)}
+      cmax <- aff.mean[length(aff.mean)]
+      if (!is.null(Canchor)) {cmax <- mean(apply(abs(cor(Canchor,Canchor[xcompl,])),1,max))} 
+      plot(1:iter,aff.mean,pch=19,cex=0.1,xlab="iteration",ylab="Affinity",
+           ylim=c(min(c(aff.mean,cmax)),1))
+      abline(h=cmax,col="red",lwd=1)
+    }
+    
+    if (verbose==TRUE & (iter %% record == 0) ){
+      cat(paste("iteration",iter,"\n"))
+      cat(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
+      cat(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
+      cat(paste("Fraction R>0: ", sum(R > -1e-10)/length(R),"\n"))
+      cat(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
+      cat(paste("Mean affinity:",mean(aff),"\n"))
+      cat("Affinities: "); cat('\n'); cat(aff); cat('\n')
+      cat("Eigenvalues of R%*%t(R):"); cat('\n'); cat(eigens); cat("\n")
+    }
+    
+    if (!is.null(record)){
+      if (iter%%record==0){
+        rec <- list(C = C, R = R, Q = Q, iter = iter)
+        info.record <- c(info.record,rec)
+      }
+    }
+    iter <- iter+1
+  }
+  
+  return( list(C = C, R = R, Q = Q, iter = iter, err = err, info.record = info.record) )
+}
+
+

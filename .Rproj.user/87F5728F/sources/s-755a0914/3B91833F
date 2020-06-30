@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1593484940464.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2764648699",
+    "id" : "3B91833F",
+    "lastKnownWriteTime" : 1592848995,
+    "last_content_update" : 1592848995,
+    "path" : "/d0/home/solrust/mutations/scr/volume_pipeline.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "586,0",
+        "scrollLine" : "563"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

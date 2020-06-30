@@ -1,0 +1,9 @@
+{
+    "path" : "~/mutations/vrnmf",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
