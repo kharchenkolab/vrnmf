@@ -1,2 +1,2 @@
-# vrNMF
+# vrnmf
 volume-regularized NMF
