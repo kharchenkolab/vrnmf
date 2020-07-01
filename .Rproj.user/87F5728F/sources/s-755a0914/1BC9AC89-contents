@@ -1,6 +1,6 @@
 # winimize W with regularized determinant
 # method = det, logdet
-volnmf_logdet <- function(C, X, R, R.constraint="pos", posit=FALSE, nesterov = FALSE, majorate = FALSE, beta=0.1, w.vol=1e-1, delta=1,eigen.cut = 1e-16,
+volnmf.logdet <- function(C, X, R, R.constraint="pos", posit=FALSE, nesterov = FALSE, majorate = FALSE, beta=0.1, w.vol=1e-1, delta=1,eigen.cut = 1e-16,
                           err.cut = 1e-3, n.iter = 1e+3){
 
   #C <- Ctrue
@@ -70,7 +70,7 @@ volnmf_logdet <- function(C, X, R, R.constraint="pos", posit=FALSE, nesterov = F
 
 
 
-volnmf_det <- function(C, X, R, posit=FALSE, w.vol=1e-1, eigen.cut = 1e-16,err.cut = 1e-3, n.iter = 1e+3){
+volnmf.det <- function(C, X, R, posit=FALSE, w.vol=1e-1, eigen.cut = 1e-16,err.cut = 1e-3, n.iter = 1e+3){
 
   #C <- Ctrue
   #R0 <- R <- matrix(runif(14*14,0,1),14,14)

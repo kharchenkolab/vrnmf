@@ -177,7 +177,7 @@ volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init,
     mutation.run <- TRUE
     aff <- 1#NA
     if (mutation.run==TRUE){
-      rownames(C) <- colnames(rate.new)
+      rownames(C) <- colnames(rate.rec)
       aff <- apply(abs(cor(C,C[xcompl,])),1,max)
     }else if (!is.null(Ctrue)){
       aff <- apply(cor(C,Ctrue),1,max)
@@ -189,7 +189,7 @@ volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init,
       print(str(aff.mean))
       par(mfrow=c(2,1))
       plot(1:iter,rvol,pch=19,cex=0.1,xlab="iteration",ylab="Vol")
-      if (!is.null(vol.ref)) {abline(h=vol.ref,col="red",lwd=1)}
+      #if (!is.null(vol.ref)) {abline(h=vol.ref,col="red",lwd=1)}
       cmax <- aff.mean[length(aff.mean)]
       if (!is.null(Canchor)) {cmax <- mean(apply(abs(cor(Canchor,Canchor[xcompl,])),1,max))}
       plot(1:iter,aff.mean,pch=19,cex=0.1,xlab="iteration",ylab="Affinity",

@@ -325,28 +325,3 @@ volnmf.update.Cx <- function(X, R, C.prev = NULL, n.iter = 10, err.cut = 1e-3){
   return(C)
 }
 
-
-
-
-for (ii in 1:1000){
-  C2 <- do.call(cbind,lapply( 1:ncol(C),function(k){
-    q <- sort(Q[,k],decreasing = TRUE)
-    #q <- sort( runif(192,0,90e-2),decreasing = TRUE )
-    qcum <- cumsum(q)
-    mu <- (qcum-1)/(1:length(qcum))
-    cond1 <- (mu[-length(mu)] - q[-1]) > 0; cond1 <- c(cond1,TRUE)
-    cond2 <- q - mu > 0
-    ind <- which(cond1&cond2)
-
-    ### diagnostics
-    diagnost <- FALSE
-    if (diagnost==TRUE){
-      plot(1:length(qcum), qcum - (1:length(qcum))*q,pch=19,cex=0.1 ); abline(h=1,col="red")
-      ind
-      mu[ind]
-      qcum[ind] - mu[ind]*ind
-    }
-
-    pmax(0,Q[,k]-mu[ind])
-  }))
-}
