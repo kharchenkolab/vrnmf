@@ -1,5 +1,11 @@
-# find Q: A~B*Q (Procrustes problem)
-volnmf.procrustes <- function(A,B){
-  sv <- svd( t(A)%*%B )
-  sv$v%*%t(sv$u)
+#' Procrustes algorithm estimates orthonormal transformation between two matrices.
+#'
+#' \code{volnmf_procrustes} finds orthonormal matrix \code{Q} that minimizes objective
+#' \code{||A-B*Q||^2}
+#'
+#' @param A,B Numeric Matrices. Orthonormal transformation convert matrix \code{B} in matrix \code{A}.
+#' @return An optimal orthonormal tranformation matrix \code{Q}.
+volnmf_procrustes <- function(A, B){
+  sv <- svd(t(A) %*% B)
+  return(sv$v %*% t(sv$u))
 }

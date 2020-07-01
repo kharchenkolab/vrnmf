@@ -54,7 +54,7 @@ volnmf.main <- function(vol, B = NULL, n.comp = 3, n.reduce = n.comp, volnmf = N
     Qe <- diag(1,nrow(E))
     for (jj in 1:100){
       R <- pmax( Esq%*%Qe,0 )
-      Qe <- volnmf.procrustes(R,Esq)
+      Qe <- volnmf_procrustes(R,Esq)
     }
     R.init <- R
     Q.init <- Qe
@@ -140,11 +140,12 @@ volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init,
     R.prev <- R
 
     if (volf=="logdet"){
-      R <- volnmf.logdet(C, X, R.prev, R.constraint=R.constraint, nesterov=FALSE, majorate = R.majorate, beta=1e-4, w.vol=wvol, delta=delta,
-                         eigen.cut=1e-20,err.cut = 1e-100, n.iter = vol.iter)
+      R <- volnmf_logdet(C, X, R.prev, R.constraint=R.constraint, nesterov=FALSE, majorate = R.majorate,
+                         w.vol=wvol, delta=delta,
+                         err.cut = 1e-100, n.iter = vol.iter)
 
     }else if (volf=="det"){
-      R <- volnmf.det(C, X, R.prev, posit=FALSE, w.vol=wvol, eigen.cut=1e-20,err.cut = 1e-100, n.iter = vol.iter)
+      R <- volnmf_det(C, X, R.prev, posit=FALSE, w.vol=wvol, eigen.cut=1e-20,err.cut = 1e-100, n.iter = vol.iter)
     }
 
     err.post <- sum((X-C%*%R)^2)
@@ -169,7 +170,7 @@ volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init,
 
     ### optimize Q
     if (domain=="covariance"){
-      Q <- volnmf.procrustes( C%*%R,B)
+      Q <- volnmf_procrustes( C%*%R,B)
     }
 
     err <- sum((C-C.prev)^2)/sum(C^2)
@@ -187,7 +188,7 @@ volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init,
     if (verbose==TRUE & (iter %% 100 == 0) ){
       print(str(rvol))
       print(str(aff.mean))
-      par(mfrow=c(2,1))
+      par(mfrow=c(2,1),mar=c(4,4,1,1))
       plot(1:iter,rvol,pch=19,cex=0.1,xlab="iteration",ylab="Vol")
       #if (!is.null(vol.ref)) {abline(h=vol.ref,col="red",lwd=1)}
       cmax <- aff.mean[length(aff.mean)]
