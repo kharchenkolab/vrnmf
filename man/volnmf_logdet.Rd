@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_volume.R
 \name{volnmf_logdet}
 \alias{volnmf_logdet}
-\title{Update volume-regularized matrix \code{R} using logdet volume approximation}
+\title{Update volume-regularized matrix \code{R} using logdet volume approximation.}
 \usage{
 volnmf_logdet(
   C,
@@ -40,5 +40,5 @@ An updated matrix \code{R}.
 }
 \description{
 \code{volnmf_logdet} finds matrix \code{R} that minimizes objective
-\code{||X-C*R||^2 + w.vol*log(det(R)+delta)}
+\code{||X-C*R||^2 + w.vol*log(det(R)+delta)}.
 }

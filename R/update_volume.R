@@ -1,7 +1,7 @@
-#' Update volume-regularized matrix \code{R} using logdet volume approximation
+#' Update volume-regularized matrix \code{R} using logdet volume approximation.
 #'
 #' \code{volnmf_logdet} finds matrix \code{R} that minimizes objective
-#' \code{||X-C*R||^2 + w.vol*log(det(R)+delta)}
+#' \code{||X-C*R||^2 + w.vol*log(det(R)+delta)}.
 #'
 #' @param C,X,R Numeric Matrices. Matrices involved in objective function.
 #' Matrix R serves as initialization.

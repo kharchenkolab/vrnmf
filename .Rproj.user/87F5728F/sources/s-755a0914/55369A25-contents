@@ -157,14 +157,13 @@ volnmf.estimate <- function(B, C = C.init, R = R.init, Q = Q.init,
     ### update C
     C.prev <- C
     if (C.constraint=="col"){
-      C <- volnmf.update.C.eff(X, R, C.prev = C.prev, bound=C.bound, extrapolate = TRUE,
+      C <- volnmf_simplex_col(X, R, C.prev = C.prev, bound=C.bound, extrapolate = TRUE,
                                err.cut = 1e-100, n.iter = c.iter)
       #C <- volnmf.update.Cx(X, R, C.prev = C.prev, n.iter = c.iter,err.cut = 1e-100)
 
     }else{
-      Cl <- volnmf.update.C1(X, R, C.prev = C.prev, meq=1,
+      C <- volnmf_simplex_row(X, R, C.prev = C.prev, meq=1,
                              err.cut = 1e-20, n.iter = c.iter, rho=1e+3)#,rh=0.1)
-      C <- Cl$C
     }
     err.post.C <- sum((X-C%*%R)^2)
 
