@@ -13,6 +13,8 @@ A more general formulation of the problem that accounts for noise in matrix X, s
 
 We provide implementation of _vrnmf_ approach and devise its reformulation in covariance domain. A detailed walkthrough is available hereLINK.
 
+"...the **go to** statement should be abolished..." [[1]](#1).
+
 TODO:
 - links.
 - citations.
@@ -25,4 +27,10 @@ install.packages("devtools")
 devtools::install_github("kharchenkolab/vrnmf")
 library(vrnmf)
 ```
+
+## References
+<a id="1">[1]</a> 
+Dijkstra, E. W. (1968). 
+Go to statement considered harmful. 
+Communications of the ACM, 11(3), 147-148.
 
