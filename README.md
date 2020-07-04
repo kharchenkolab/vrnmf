@@ -3,7 +3,7 @@ volume-regularized NMF.
 
 Package implements a set of methods to perform non-negative matrix decomposition with minimum volume contraints. 
 
-A general problem is to decompose a non-negative matrix $X_{nm}$ in a product of non-negative matrix $C_{nr}$ and matrix $D_{rm}$ of lower rank $r$: $X = C\timesD$. In case of non-negativity constraint on matrix $D$ the problem is known as NMF.
+A general problem is to decompose a non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1"> $X_{nm}$ in a product of non-negative matrix $C_{nr}$ and matrix $D_{rm}$ of lower rank $r$: $X = C\timesD$. In case of non-negativity constraint on matrix $D$ the problem is known as NMF.
 
 (how the problem is called with only one non-negative matrix?)
 3) However, the problem, and NMF as a particualr case, is not identifiable in general case (cite). There are potentially infite number of solutions. It makes interpretation of obtained results challenging and limit NMF applicability to dimensionality reduction.
