@@ -9,7 +9,7 @@ However, recent theoretical advances showed that the issue can be overcome under
 
 A more general formulation of the problem that accounts for noise in matrix X, such that only approximately <img src="https://render.githubusercontent.com/render/math?math=X \approx CD">, is called volume-regularized NMF (vrnmf). Vrnmf balances goodness of matrix approximation and matrix D volume (cites):
 
-<img src="https://render.githubusercontent.com/render/math?math=\parallel X - CD \parallel + \lambda \cdot Vol(D)">
+<img src="https://render.githubusercontent.com/render/math?math=\| X-CD \|_{F}^{2} %2B \lambda \cdot Vol(D)"> 
 
 7) Here we provide implementation of vrnmf and reformulation of vrnmf in covariance domain. A detailed walkthrough is available here.
 
