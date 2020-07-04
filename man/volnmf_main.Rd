@@ -28,6 +28,7 @@ volnmf_main(
   R.init = NULL,
   Q.init = NULL,
   anchor = NULL,
+  Ctrue = NULL,
   verbose = TRUE,
   record = NULL
 )

@@ -4,14 +4,16 @@
 \alias{vol_preprocess}
 \title{Preprocess the data for downstream volume analysis.}
 \usage{
-vol_preprocess(X, col.norm = "sd", row.norm = NULL)
+vol_preprocess(X, col.norm = "sd", row.norm = NULL, pfactor = NULL)
 }
 \arguments{
 \item{X}{A numeric matrix. Covariance is estimated for column vectors of \code{X}.}
 
 \item{col.norm}{A character. Specifies column normalization strategy (by default "sd"). NULL to avoid normalization.}
 
-\item{row.norm}{A character. Specifies row normalization strategy (by default NULL).
+\item{row.norm}{A character. Specifies row normalization strategy (by default NULL).}
+
+\item{pfactor}{A numeric A factor to normalize co-occurence matrix (by default NULL).
 Row normalization follows column normalization. NULL to avoid normalization.}
 }
 \value{

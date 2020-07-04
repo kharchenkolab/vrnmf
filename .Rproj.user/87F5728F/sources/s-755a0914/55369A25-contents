@@ -43,7 +43,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                         wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,
                         vol.iter = 1e+2, c.iter = 1e+2,
                         C.constraint = "col", C.bound = 1, R.constraint = "pos", R.majorate = FALSE,
-                        C.init = NULL, R.init = NULL, Q.init = NULL, anchor = NULL,
+                        C.init = NULL, R.init = NULL, Q.init = NULL, anchor = NULL, Ctrue = NULL,
                         verbose = TRUE, record = NULL ){
 
   #B <- NULL; n.comp <- 14; n.reduce <- n.comp; volnmf <- NULL;
@@ -104,7 +104,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                     #vol.iter = vol.iter / 10, c.iter = c.iter / 10,
                                     vol.iter = 2, c.iter = 2,
                                     C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
-                                    verbose = verbose, record = 20)
+                                    verbose = verbose, record = 20, Ctrue = Ctrue)
     cat('done'); cat('\n')
     C.init <- nmf.solution$C; R.init <- nmf.solution$R; Q.init <- nmf.solution$Q
   }
@@ -116,7 +116,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                   wvol = wvol, delta = delta, n.iter = n.iter, err.cut = err.cut,
                                   vol.iter = vol.iter, c.iter = c.iter,
                                   C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
-                                  verbose = verbose, record = record )
+                                  verbose = verbose, record = record, Ctrue = Ctrue )
 
   return( list( C = vol.solution$C, R = vol.solution$R, Q = vol.solution$Q,
                 C.init = C.init, R.init = R.init, Q.init = Q.init,
@@ -220,7 +220,7 @@ volnmf_estimate <- function(B, C, R, Q,
 
     err <- sum((C - C.prev)^2) / sum(C^2)
     eigens <- eigen(R %*% t(R))$values
-    mutation.run <- TRUE
+    mutation.run <- FALSE
     aff <- 1
     if (mutation.run == TRUE){
       rownames(C) <- colnames(rate.rec)
