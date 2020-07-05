@@ -1,7 +1,7 @@
 #' Simulate matrices to explores \code{vrnmf}
 #'
 #' \code{sim_factors} simulates non-negative factorization matrices \code{C} and \code{D}
-#' under a variaty of conditions to explroe factorization \eqn{X = C*D + noise}.
+#' under a variaty of conditions to explore factorization \eqn{X = C*D + noise}.
 #'
 #' @param m,n,r Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
 #' and matrix \code{D} has a size of \code{r*n}.
@@ -14,8 +14,8 @@
 #'
 #' \code{X.noise}, \code{X} - noisy and original matrix \code{X} to decompose.
 #'
-#' \code{C}, \code{R} - factorization matrices.
-sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0.3,
+#' \code{C}, \code{D} - factorization matrices.
+sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0.4,
                       condition = TRUE, noise = 0e-4){
 
   # sample matrices entries from a distribution
@@ -60,7 +60,7 @@ sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0
   N <- matrix(rnorm(length(X), 0, noise), nrow = nrow(X), ncol = ncol(X))
   X.noise <- X + N
 
-  return(list(X.noise = X.noise, X = X, C = C, R = R))
+  return(list(X.noise = X.noise, X = X, C = C, D = R))
 }
 
 

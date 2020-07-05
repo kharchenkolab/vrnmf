@@ -10,7 +10,7 @@ sim_factors(
   r,
   simplex = "col",
   distr = "unif",
-  frac.zeros = 0.3,
+  frac.zeros = 0.4,
   condition = TRUE,
   noise = 0
 )
@@ -34,9 +34,9 @@ List of simulated matrices:
 
 \code{X.noise}, \code{X} - noisy and original matrix \code{X} to decompose.
 
-\code{C}, \code{R} - factorization matrices.
+\code{C}, \code{D} - factorization matrices.
 }
 \description{
 \code{sim_factors} simulates non-negative factorization matrices \code{C} and \code{D}
-under a variaty of conditions to explroe factorization \eqn{X = C*D + noise}.
+under a variaty of conditions to explore factorization \eqn{X = C*D + noise}.
 }
