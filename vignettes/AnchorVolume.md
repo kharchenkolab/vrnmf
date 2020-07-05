@@ -1,4 +1,13 @@
-# AnforFree algorithm
+---
+title: "AnforFree algorithm"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AnchorVolume}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
 
 Generally, structured matrix facrotization problem is formulated as decomposition of original matrix $X$ in a product of unknown non-negative matrix $C$ and matrix $D$ of lower rank: 
 
