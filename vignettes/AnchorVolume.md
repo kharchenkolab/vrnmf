@@ -16,7 +16,7 @@
 
 ## Application
 
-Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and the dataset:
+Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate a dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and the dataset:
   
   ```r
   library(vrnmf)

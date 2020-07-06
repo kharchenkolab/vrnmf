@@ -21,9 +21,9 @@ $$
 $$
   where $Y = X \cdot X^{T}, E = D \cdot D^{T}.$
   
-  The goal of _AnchorFree_ approach is to tri-factorize matrix $Y$ in a product of matrices $C$ and $E$. Under a relatively mild assumption on spread of column vectors of matrix $C$, matrix $E$ has minimum volume across all possible factorizations. _AnchorFree_ seeks to find a factorization pair of matrices $(C,E)$ such that matrix $E$ would have minimum determinant (as a proxy of volume) using alternating linear programming. 
+  The goal of _AnchorFree_ approach is to tri-factorize matrix $Y$ in a product of matrices $C$ and $E$. Under a relatively mild assumption on spread of column vectors of matrix $C$, matrix $E$ has minimum volume across all possible factorizations. _AnchorFree_ seeks to find a factorization pair of matrices $(C,E)$ such that column vectors of $C$ represent unit simplex and matrix $E$ has minimum determinant (as a proxy of volume) using alternating linear programming. 
 
-Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and the dataset:
+Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate a dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and the dataset:
   
   ```{r}
 library(vrnmf)
