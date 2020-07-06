@@ -8,6 +8,7 @@
 #' @param n.cores An integer. Number of cores to use (by default 1).
 #' @return Fitted matrix \code{D}.
 infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
+  X <- t(X)
   D <- t(C) %*% C
   dmat <- X %*% C
   Amat <- diag(1, nrow(D))
@@ -16,10 +17,10 @@ infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
     bvec <- rep(-1e+5, nrow(D))
   }
   nr <- nrow(X)
-  inten <- do.call(rbind, parallel::mclapply(1:nr, function(i){
-    ft <- solve.QP(D, dmat[i, ], Amat, bvec)
+  inten <- do.call(cbind, parallel::mclapply(1:nr, function(i){
+    ft <- quadprog::solve.QP(D, dmat[i, ], Amat, bvec)
     ft$solution
   },mc.cores = 20))
-  colnames(inten) <- paste("comp",1:ncol(C),sep="")
+  rownames(inten) <- paste("comp",1:ncol(C),sep="")
   return(inten)
 }

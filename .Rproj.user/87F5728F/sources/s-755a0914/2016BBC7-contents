@@ -4,7 +4,7 @@ rate.norm <- (apply(rate.new,2,function(x) (x)/sd(x) ))
 P0 <- t(as.matrix(rate.norm))%*%as.matrix(rate.norm)
 
 
-AnchorFree <- function(P0,n.reduce=n.comp,n.comp = 3,init=NULL,init.type="unif.both",n.iter=30){
+AnchorFree.old <- function(P0,n.reduce=n.comp,n.comp = 3,init=NULL,init.type="unif.both",n.iter=30){
   P <- P0/max((P0)) # how to normalize P to avoid inf problems?
   dimr <- svd(P)
   #range(dimr$d); head(dimr$d,7)

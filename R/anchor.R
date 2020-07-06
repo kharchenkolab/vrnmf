@@ -35,8 +35,8 @@
 #' \code{M}, \code{detM} auxiliary matrix \code{M} and its determinant.
 #'
 #' \code{init.type} type of initialization of matrix \code{M} that was used.
-AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "unif.both",
-                       n.iter = 30, err.cut = 1e-10, verbose = FALSE){
+AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
+                       n.iter = 30, err.cut = 1e-30, verbose = FALSE){
 
   B <- -vol$U[,1:n.comp] %*% sqrt(diag(vol$eigens)[1:n.comp,1:n.comp])
   Pclean <- B %*% t(B)
@@ -44,7 +44,8 @@ AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "unif.both",
   M <- init
   if (is.null(M)){
     if (init.type == "diag"){
-      M <- diag(runif(n.comp, -1, 1), n.comp)
+      #M <- diag(runif(n.comp, -1, 1), n.comp)
+      M <- diag(1, n.comp)
     }else if (init.type == "similar"){
       M <- matrix(runif(n.comp*n.comp, 0.9, 1.1), nrow = n.comp, ncol = n.comp)
     }else if (init.type == "unif.pos"){

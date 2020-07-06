@@ -12,13 +12,13 @@
     "path" : "~/mutations/vrnmf/R/vpreprocess.R",
     "project_path" : "R/vpreprocess.R",
     "properties" : {
-        "cursorPosition" : "12,27",
+        "cursorPosition" : "12,14",
         "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 5,
+    "relative_order" : 4,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

@@ -8,9 +8,9 @@ AnchorFree(
   vol,
   n.comp = 3,
   init = NULL,
-  init.type = "unif.both",
+  init.type = "diag",
   n.iter = 30,
-  err.cut = 1e-10,
+  err.cut = 1e-30,
   verbose = FALSE
 )
 }

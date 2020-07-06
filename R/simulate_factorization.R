@@ -21,7 +21,7 @@ sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0
   # sample matrices entries from a distribution
   if (distr == "unif"){
     C <- matrix(runif(m*r,0,1), nrow = m, ncol = r)
-    R <- matrix(runif(r*n,0.8,1), nrow = r, ncol = n)
+    R <- matrix(runif(r*n,0,1), nrow = r, ncol = n)
   }else if (distr == "exp"){
     C <- matrix(rexp(m*r,1), nrow = m, ncol = r)
     R <- matrix(rexp(r*n,1), nrow = r, ncol = n)
