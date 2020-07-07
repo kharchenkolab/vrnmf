@@ -87,11 +87,11 @@ Next, `AnchorFree` function decomposes co-occurence matrix into matrices `C` and
   ##  num [1:10, 1:10] 304 129 138 132 135 ...
   ```
 
-Comparison of original matrix `simnmf$C` and inferred matrix `vol.anchor$C` shows that they have highly similar pairs of column vectors:
+Comparison of original matrix `simnmf$C` and inferred matrix `volres$C` rescaled back by `vol$col.factors` shows that they have highly similar pairs of column vectors:
   
   
   ```r
-  C <- vol.anchor$C
+  C <- vol.anchor$C*vol$col.factors
   apply(cor(simnmf$C, C), 1, max)
   ```
   

@@ -1,33 +1,20 @@
----
-title: "volume_regularized_NMF"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{volume_regularized_NMF}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-
+# Volume_regularized_NMF
 
 ## Introduction  
   
-  Generally, structured matrix factorization problem is formulated as a decomposition of original matrix $X$ in a product of unknown non-negative matrix $C$ and matrix $D$ of lower rank: 
+  Generally, structured matrix factorization problem is formulated as a decomposition of original matrix <img src="https://render.githubusercontent.com/render/math?math=X"> in a product of unknown non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=C"> and matrix <img src="https://render.githubusercontent.com/render/math?math=D"> of lower rank: 
   
-  $$
-  X = C \cdot D
-$$
-  In practice, if $X$ has significantly more rows than columns or if observations are noisy and represent statistical sampling than reformulation of the problem in "covariance domain" simplifies inference:
+<img src="https://render.githubusercontent.com/render/math?math=X = C \cdot D">
+
+  In practice, if <img src="https://render.githubusercontent.com/render/math?math=X"> has significantly more rows than columns or if observations are noisy and represent statistical sampling than reformulation of the problem in "covariance domain" simplifies inference:
   
-  $$
-  Y = C \cdot E \cdot C^{T},
-$$
-  where $Y = X \cdot X^{T}, E = D \cdot D^{T}.$
+<img src="https://render.githubusercontent.com/render/math?math=Y = C \cdot E \cdot C^{T},">
+
+  where <img src="https://render.githubusercontent.com/render/math?math=Y = X \cdot X^{T}, E = D \cdot D^{T}.">
   
-  Under a relatively mild assumption on spread of column (row) vectors of matrix $C$ that belong to column (row) unit simplex, matrix $E$ has minimum volume across all possible factorizations. _Vrnmf_, as compared to _AnchorFree_, considers noisy version of the problem. _Vrnmf_ seeks to find a factorization pair of matrices $(C,E)$ that balances goodness of fit of $\|Y-C \cdot E \cdot C^{T}\|_{F}^{2}$ and volume fo matrix $E$. The method uses alternating optimization of the following objective function:
+  Under a relatively mild assumption on spread of column (row) vectors of matrix <img src="https://render.githubusercontent.com/render/math?math=C"> that belong to column (row) unit simplex, matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum volume across all possible factorizations. _Vrnmf_, as compared to _AnchorFree_, considers noisy version of the problem. _Vrnmf_ seeks to find a factorization pair of matrices <img src="https://render.githubusercontent.com/render/math?math=(C,E)"> that balances goodness of fit of <img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2}"> and volume fo matrix <img src="https://render.githubusercontent.com/render/math?math=E">. The method uses alternating optimization of the following objective function:
   
-$$
-\|Y-C \cdot E \cdot C^{T}\|_{F}^{2} + \lambda \cdot Volume(E)
-$$
+<img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2} + \lambda \cdot Volume(E).">
 
 
 ## Application in "covariance" domain
@@ -44,7 +31,7 @@ Application of the method is examplified below for a simulated dataset. For that
   #> [1] "X.noise" "X"       "C"       "D"
   ```
 
-Summary below shows that the original matrix `X` of the size $192 \cdot 3000$ is a product of two matrices of lower rank 10:
+Summary below shows that the original matrix `X` of the size <img src="https://render.githubusercontent.com/render/math?math=192 \cdot 3000"> is a product of two matrices of lower rank 10:
   
   
   ```r
