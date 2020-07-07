@@ -22,7 +22,7 @@ volnmf_estimate(
   C.bound = 1,
   R.constraint = "pos",
   verbose = TRUE,
-  record = NULL,
+  record = 100,
   Canchor = NULL,
   Ctrue = NULL
 )

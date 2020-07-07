@@ -7,19 +7,19 @@
     "folds" : "",
     "hash" : "0",
     "id" : "55369A25",
-    "lastKnownWriteTime" : 1593723936,
-    "last_content_update" : 1593723936414,
+    "lastKnownWriteTime" : 1594088352,
+    "last_content_update" : 1594088352714,
     "path" : "~/mutations/vrnmf/R/volnmf_estimate.R",
     "project_path" : "R/volnmf_estimate.R",
     "properties" : {
-        "cursorPosition" : "225,9",
-        "scrollLine" : "0",
+        "cursorPosition" : "234,42",
+        "scrollLine" : "224",
         "tempName" : "Untitled1"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 5,
+    "relative_order" : 8,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

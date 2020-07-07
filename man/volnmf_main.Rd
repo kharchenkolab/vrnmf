@@ -16,10 +16,10 @@ volnmf_main(
   volf = "logdet",
   wvol = NULL,
   delta = 1e-08,
-  n.iter = 10000,
-  err.cut = 1e-08,
+  n.iter = 2000,
+  err.cut = 1e-10,
   vol.iter = 100,
-  c.iter = 100,
+  c.iter = 10,
   C.constraint = "col",
   C.bound = 1,
   R.constraint = "pos",
@@ -30,7 +30,9 @@ volnmf_main(
   anchor = NULL,
   Ctrue = NULL,
   verbose = TRUE,
-  record = NULL
+  record = 100,
+  verbose.nmf = FALSE,
+  record.nmf = NULL
 )
 }
 \arguments{

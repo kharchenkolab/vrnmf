@@ -40,11 +40,11 @@
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
                         do.nmf=TRUE, iter.nmf = 1e+3,
                         domain = "covariance", volf = 'logdet',
-                        wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,
-                        vol.iter = 1e+2, c.iter = 1e+2,
+                        wvol = NULL, delta = 1e-8, n.iter = 2e+3, err.cut = 1e-10,
+                        vol.iter = 1e+2, c.iter = 1e+1,
                         C.constraint = "col", C.bound = 1, R.constraint = "pos", R.majorate = FALSE,
                         C.init = NULL, R.init = NULL, Q.init = NULL, anchor = NULL, Ctrue = NULL,
-                        verbose = TRUE, record = NULL ){
+                        verbose = TRUE, record = 100, verbose.nmf = FALSE, record.nmf = NULL){
 
   #B <- NULL; n.comp <- 14; n.reduce <- n.comp; volnmf <- NULL;
   #domain <- "covariance"; volf <- 'logdet';
@@ -83,6 +83,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
   }else{   # initial matrices are generate from uniform distribution
     if (is.null(C.init)){
       C <- matrix(runif(nrow(B)*n.comp, 0, 1), nrow = nrow(B), ncol = n.comp)
+
       if (C.constraint == "col"){
         C <- apply(C, 2, function(x) x / sum(x))
       }else if (C.constraint == "row"){
@@ -92,6 +93,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
     }
     if (is.null(R.init)){
       R.init <- matrix(runif(n.comp*n.comp, 0, 1 / C.bound), n.comp, n.comp)
+
     }
   }
 
@@ -104,20 +106,21 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                     #vol.iter = vol.iter / 10, c.iter = c.iter / 10,
                                     vol.iter = 2, c.iter = 2,
                                     C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
-                                    verbose = verbose, record = 20, Ctrue = Ctrue)
+                                    verbose = verbose.nmf, record = record.nmf, Ctrue = Ctrue)
     cat('done'); cat('\n')
     C.init <- nmf.solution$C; R.init <- nmf.solution$R; Q.init <- nmf.solution$Q
   }
   if (is.null(wvol)) wvol <- 0
 
   # for logdet: wvol = 0.006, for det: wvol = 5e-11 or 1e-22?
+  cat('run volume-regularized nmf.. ')
   vol.solution <- volnmf_estimate(B, C = C.init, R = R.init, Q = Q.init,
                                   domain = domain, volf = volf, R.majorate = R.majorate,
                                   wvol = wvol, delta = delta, n.iter = n.iter, err.cut = err.cut,
                                   vol.iter = vol.iter, c.iter = c.iter,
                                   C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
                                   verbose = verbose, record = record, Ctrue = Ctrue )
-
+  cat('done'); cat('\n')
   return( list( C = vol.solution$C, R = vol.solution$R, Q = vol.solution$Q,
                 C.init = C.init, R.init = R.init, Q.init = Q.init,
                 C.rand = C.rand, R.rand = R.rand, Q.rand = Q.rand,
@@ -160,7 +163,7 @@ volnmf_estimate <- function(B, C, R, Q,
                             wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,
                             vol.iter = 1e+2, c.iter = 1e+2,
                             C.constraint = "col", C.bound = 1, R.constraint = "pos",
-                            verbose = TRUE, record = NULL, Canchor = NULL, Ctrue = NULL){
+                            verbose = TRUE, record = 100, Canchor = NULL, Ctrue = NULL){
 
   iter <- 1
   err <- 1e+5
@@ -226,7 +229,11 @@ volnmf_estimate <- function(B, C, R, Q,
       rownames(C) <- colnames(rate.rec)
       aff <- apply(abs(cor(C, C[xcompl, ])), 1, max)
     }else if (!is.null(Ctrue)){
-      aff <- apply(cor(C, Ctrue), 1, max)
+      if (is.null(vol)){
+        aff <- apply(cor(C, Ctrue), 1, max)
+      }else{
+        aff <- apply(cor(C*vol$col.factors, Ctrue), 1, max)
+      }
     }
     aff.mean[iter] <- mean(aff)
 
@@ -241,15 +248,17 @@ volnmf_estimate <- function(B, C, R, Q,
       abline(h=cmax, col="red", lwd=1)
     }
 
-    if (verbose==TRUE & (iter %% record == 0)){
-      cat(paste("iteration", iter, "\n"))
-      cat(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
-      cat(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
-      cat(paste("Fraction R>0: ", sum(R > -1e-10)/length(R),"\n"))
-      cat(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
-      cat(paste("Mean affinity:",mean(aff),"\n"))
-      cat("Affinities: "); cat('\n'); cat(aff); cat('\n')
-      cat("Eigenvalues of R%*%t(R):"); cat('\n'); cat(eigens); cat("\n")
+    if (verbose==TRUE & !is.null(record)){
+      if (iter %% record == 0){
+        cat(paste("iteration", iter, "\n"))
+        cat(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
+        cat(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
+        cat(paste("Fraction R>0: ", sum(R > -1e-10)/length(R),"\n"))
+        cat(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
+        cat(paste("Mean affinity:",mean(aff),"\n"))
+        cat("Affinities: "); cat('\n'); cat(aff); cat('\n')
+        cat("Eigenvalues of R%*%t(R):"); cat('\n'); cat(eigens); cat("\n")
+      }
     }
 
     if (!is.null(record)){
