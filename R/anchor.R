@@ -35,6 +35,7 @@
 #' \code{M}, \code{detM} auxiliary matrix \code{M} and its determinant.
 #'
 #' \code{init.type} type of initialization of matrix \code{M} that was used.
+#' @export
 AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
                        n.iter = 30, err.cut = 1e-30, verbose = FALSE){
 

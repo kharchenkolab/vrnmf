@@ -7,6 +7,7 @@
 #' @param esign A character. Keep elements of matrix \code{D} non-negative ("pos") or not ("all). By default "pos".
 #' @param n.cores An integer. Number of cores to use (by default 1).
 #' @return Fitted matrix \code{D}.
+#' @export
 infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
   X <- t(X)
   D <- t(C) %*% C

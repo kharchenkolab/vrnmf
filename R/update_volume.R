@@ -13,6 +13,7 @@
 #' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.
 #' @param n.iter An integer. Number of iterations.
 #' @return An updated matrix \code{R}.
+#' @export
 volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, nesterov = FALSE,
                           w.vol = 1e-1, delta = 1, err.cut = 1e-3, n.iter = 1e+3){
 
@@ -85,6 +86,7 @@ volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, nest
 #' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.
 #' @param n.iter An integer. Number of iterations.
 #' @return An updated matrix \code{R}.
+#' @export
 volnmf_det <- function(C, X, R, posit=FALSE,
                        w.vol = 1e-1, eigen.cut = 1e-16, err.cut = 1e-3, n.iter = 1e+3){
 

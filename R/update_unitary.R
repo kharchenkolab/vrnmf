@@ -5,6 +5,7 @@
 #'
 #' @param A,B Numeric Matrices. Orthonormal transformation convert matrix \code{B} in matrix \code{A}.
 #' @return An optimal orthonormal tranformation matrix \code{Q}.
+#' @export
 volnmf_procrustes <- function(A, B){
   sv <- svd(t(A) %*% B)
   return(sv$v %*% t(sv$u))

@@ -37,6 +37,7 @@
 #' \code{C.rand, R.rand, Q.rand} Random initialization matrices for NMF optimization \code{(w.vol=0)}.
 #'
 #' \code{rec} a list of objects that record and store state of matrices each \code{record} iterations.
+#' @export
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
                         do.nmf=TRUE, iter.nmf = 1e+3,
                         domain = "covariance", volf = 'logdet',
@@ -158,6 +159,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' \code{iter, err} Number of iterations and relative per-iteration error \code{err} in matrix \code{C}.
 #'
 #' \code{info.record} a list of objects that record and store state of matrices each \code{record} iterations.
+#' @export
 volnmf_estimate <- function(B, C, R, Q,
                             domain = "covariance", volf = 'logdet', R.majorate = FALSE,
                             wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,

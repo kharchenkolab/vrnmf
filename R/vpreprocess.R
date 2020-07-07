@@ -10,6 +10,7 @@
 #' @return A list of objects that include normalized matrix \code{X.process}, row and column normalization factors \code{row.factors} and \code{col.factors},
 #' covariance matrix \code{P0}, covariance matrix \code{P} normalized to maximum value \code{pfactor},
 #' orthonormal basis \code{U} and vector of eigenvalues \code{eigens}.
+#' @export
 vol_preprocess <- function(X, col.norm = "sd", row.norm = NULL, pfactor = NULL){
   row.factors <- rep(1,nrow(X))
   col.factors <- rep(1,ncol(X))
