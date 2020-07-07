@@ -1,10 +1,10 @@
 ---
-  title: "AnforFree algorithm"
+title: "AnforFree algorithm"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{AnchorVolume}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
   
 ## Introduction  
