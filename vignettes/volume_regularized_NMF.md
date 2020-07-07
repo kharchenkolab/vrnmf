@@ -14,7 +14,7 @@
   
   Under a relatively mild assumption on spread of column (row) vectors of matrix <img src="https://render.githubusercontent.com/render/math?math=C"> that belong to column (row) unit simplex, matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum volume across all possible factorizations. _Vrnmf_, as compared to _AnchorFree_, considers noisy version of the problem. _Vrnmf_ seeks to find a factorization pair of matrices <img src="https://render.githubusercontent.com/render/math?math=(C,E)"> that balances goodness of fit of <img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2}"> and volume fo matrix <img src="https://render.githubusercontent.com/render/math?math=E">. The method uses alternating optimization of the following objective function:
   
-<img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2} + \lambda \cdot Volume(E).">
+<img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2} %2B \lambda \cdot Volume(E).">
 
 
 ## Application in "covariance" domain
