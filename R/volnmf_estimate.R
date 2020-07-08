@@ -213,8 +213,7 @@ volnmf_estimate <- function(B, C, R, Q,
       C <- volnmf_simplex_col(X, R, C.prev = C.prev, bound = C.bound, extrapolate = TRUE,
                                err.cut = 1e-100, n.iter = c.iter)
     }else{
-      C <- volnmf_simplex_row(X, R, C.prev = C.prev, meq = 1,
-                             err.cut = 1e-20, n.iter = c.iter, rho=1e+3)
+      C <- volnmf_simplex_row(X, R, C.prev = C.prev, meq = 1)
     }
     err.post.C <- sum((X - C %*% R)^2)
 
