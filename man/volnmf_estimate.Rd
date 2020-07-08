@@ -24,7 +24,8 @@ volnmf_estimate(
   verbose = TRUE,
   record = 100,
   Canchor = NULL,
-  Ctrue = NULL
+  Ctrue = NULL,
+  mutation.run = FALSE
 )
 }
 \arguments{

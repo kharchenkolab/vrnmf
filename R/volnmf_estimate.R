@@ -165,7 +165,7 @@ volnmf_estimate <- function(B, C, R, Q,
                             wvol = NULL, delta = 1e-8, n.iter = 1e+4, err.cut = 1e-8,
                             vol.iter = 1e+2, c.iter = 1e+2,
                             C.constraint = "col", C.bound = 1, R.constraint = "pos",
-                            verbose = TRUE, record = 100, Canchor = NULL, Ctrue = NULL){
+                            verbose = TRUE, record = 100, Canchor = NULL, Ctrue = NULL, mutation.run = FALSE){
 
   iter <- 1
   err <- 1e+5
@@ -225,7 +225,6 @@ volnmf_estimate <- function(B, C, R, Q,
 
     err <- sum((C - C.prev)^2) / sum(C^2)
     eigens <- eigen(R %*% t(R))$values
-    mutation.run <- FALSE
     aff <- 1
     if (mutation.run == TRUE){
       rownames(C) <- colnames(rate.rec)
