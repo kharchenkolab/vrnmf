@@ -17,3 +17,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Author: Ruslan Soldatov <ruslansoldatov@gmail.com>
+Maintainer: Ruslan Soldatov <ruslansoldatov@gmail.com>
