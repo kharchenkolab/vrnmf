@@ -45,7 +45,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                         vol.iter = 1e+2, c.iter = 1e+1,
                         C.constraint = "col", C.bound = 1, R.constraint = "pos", R.majorate = FALSE,
                         C.init = NULL, R.init = NULL, Q.init = NULL, anchor = NULL, Ctrue = NULL,
-                        verbose = TRUE, record = 100, verbose.nmf = FALSE, record.nmf = NULL){
+                        verbose = TRUE, record = 100, verbose.nmf = FALSE, record.nmf = NULL, mutation.run = FALSE){
 
   #B <- NULL; n.comp <- 14; n.reduce <- n.comp; volnmf <- NULL;
   #domain <- "covariance"; volf <- 'logdet';
@@ -120,7 +120,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                   wvol = wvol, delta = delta, n.iter = n.iter, err.cut = err.cut,
                                   vol.iter = vol.iter, c.iter = c.iter,
                                   C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
-                                  verbose = verbose, record = record, Ctrue = Ctrue )
+                                  verbose = verbose, record = record, Ctrue = Ctrue, mutation.run = mutation.run )
   cat('done'); cat('\n')
   return( list( C = vol.solution$C, R = vol.solution$R, Q = vol.solution$Q,
                 C.init = C.init, R.init = R.init, Q.init = Q.init,

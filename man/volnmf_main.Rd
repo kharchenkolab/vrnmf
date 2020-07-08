@@ -32,7 +32,8 @@ volnmf_main(
   verbose = TRUE,
   record = 100,
   verbose.nmf = FALSE,
-  record.nmf = NULL
+  record.nmf = NULL,
+  mutation.run = FALSE
 )
 }
 \arguments{
