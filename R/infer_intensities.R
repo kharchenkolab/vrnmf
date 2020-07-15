@@ -28,7 +28,7 @@ infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
 
 
 
-#' Infer a matrix of non-negative intensities in NMF with offset/nmf-offset
+#' Infer a matrix of non-negative intensities in NMF with offset/nmf-offset.
 #'
 #' \code{factor_intensities} estimates a non-negative matrix \code{D} that optimizes the objective function \eqn{F = ||X - C*D - offset||^2},
 #' where offset is either column-specific offset or a "1-rank nmf term": product of row vector and column vector

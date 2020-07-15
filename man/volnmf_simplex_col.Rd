@@ -11,7 +11,8 @@ volnmf_simplex_col(
   bound = 1,
   extrapolate = TRUE,
   err.cut = 1e-10,
-  n.iter = 10000
+  n.iter = 10000,
+  qmax = 100
 )
 }
 \arguments{
