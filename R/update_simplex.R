@@ -30,7 +30,7 @@ volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRU
   C.update <- C <- C.prev
   q <- c(1,(1+sqrt(5))/5)
   obj <- vector()
-  while(err > err.cut & iter < n.iter*10){
+  while(err > err.cut & iter < n.iter){
     G <- C.update %*% S - K
     Chat <- C.update - G / Lip
     C.prev <- C
@@ -43,7 +43,7 @@ volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRU
       C.update <- C + extr * (C - C.prev)
     }
 
-    obj <- c(obj, sqrt(sum((C-C0)^2)) )
+    obj <- c(obj, sqrt(sum((C-C.prev)^2))/sqrt(sum(C^2)) )
     iter <- iter + 1
     q[iter+1] <- min(qmax, (1 + sqrt(1 + 4 * q[iter]^2))/2 )
   }

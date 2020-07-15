@@ -10,7 +10,8 @@ volnmf_logdet(
   R,
   R.constraint = "pos",
   majorate = FALSE,
-  nesterov = FALSE,
+  extrapolate = TRUE,
+  qmax = 100,
   w.vol = 0.1,
   delta = 1,
   err.cut = 0.001,
@@ -25,7 +26,7 @@ Matrix R serves as initialization.}
 
 \item{majorate}{A boolean. Majorate logdet each iteration (by default FALSE).}
 
-\item{nesterov}{A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).}
+\item{extrapolate}{A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).}
 
 \item{w.vol}{A numeric. Volume (logdet) weight in objective function.}
 

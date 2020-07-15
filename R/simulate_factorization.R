@@ -16,7 +16,7 @@
 #'
 #' \code{C}, \code{D} - factorization matrices.
 sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0.4,
-                      condition = TRUE, noise = 0e-4){
+                      condition = FALSE, noise = 0e-4){
 
   # sample matrices entries from a distribution
   if (distr == "unif"){
@@ -48,7 +48,7 @@ sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0
   }
 
   # condition matrix if requested
-  if (!is.null(condition)){
+  if (condition == TRUE){
     svR <- svd(R)
     lams <- rep(1,length(svR$d))
     R1 <- svR$u %*% diag(lams) %*% t(svR$v)

@@ -18,6 +18,10 @@ volnmf_estimate(
   err.cut = 1e-08,
   vol.iter = 100,
   c.iter = 100,
+  extrapolate = TRUE,
+  accelerate = TRUE,
+  acc.C = 4/5,
+  acc.R = 3/4,
   C.constraint = "col",
   C.bound = 1,
   R.constraint = "pos",
@@ -50,6 +54,14 @@ volnmf_estimate(
 \item{vol.iter}{An integer. Number of iterations to update volume-regularized matrix \code{R} at each alternating step.}
 
 \item{c.iter}{An integer. Number of iterations to update simplex matrix \code{C} at each alternating step.}
+
+\item{extrapolate}{A numeric. Do Nesterov extrapolation inside blocks of R and C optimization (by default TRUE).}
+
+\item{accelerate}{A numeric. Do acceleration each update after R and C blocks estimated via Nesterov-like extrapolation.}
+
+\item{acc.C}{A numeric. Acceleration parameter of matrix C.}
+
+\item{acc.R}{A numeric. Acceleration parameter of matrix R.}
 
 \item{C.constraint}{A character. Constraint either sum of columns ("col") or sum of rows ("row) to be equal to \code{C.bound} (By default "col").}
 
