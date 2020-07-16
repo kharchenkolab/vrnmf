@@ -1,30 +1,22 @@
----
-title: "AnforFree algorithm"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{AnchorVolume}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-  
+# AnforFree algorithm
+
 ## Introduction  
   
-  Generally, structured matrix factorization problem is formulated as a decomposition of original matrix $X$ in a product of unknown non-negative matrix $C$ and matrix $D$ of lower rank: 
+  Generally, structured matrix factorization problem is formulated as a decomposition of original matrix <img src="https://render.githubusercontent.com/render/math?math=X"> in a product of unknown non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=C"> and matrix <img src="https://render.githubusercontent.com/render/math?math=D"> of lower rank: 
   
     
 <img src="https://render.githubusercontent.com/render/math?math=\begin{aligned}X = C \cdot D \end{aligned}">
 
-  $$
-  X = C \cdot D
-$$
-  In practice, if $X$ has significantly more rows than columns or if observations are noisy and represent statistical sampling than reformulation of the problem in "covariance domain" simplifies inference:
+  In practice, if <img src="https://render.githubusercontent.com/render/math?math=X"> has significantly more rows than columns or if observations are noisy and represent statistical sampling than reformulation of the problem in "covariance domain" simplifies inference:
+  
+<img src="https://render.githubusercontent.com/render/math?math=\begin{aligned}Y = C \cdot E \cdot C^{T},\end{aligned}">
   
   $$
   Y = C \cdot E \cdot C^{T},
 $$
-  where $Y = X \cdot X^{T}, E = D \cdot D^{T}.$
+  where <img src="https://render.githubusercontent.com/render/math?math=Y = X \cdot X^{T}, E = D \cdot D^{T}.">
   
-  The goal of _AnchorFree_ approach is to tri-factorize matrix $Y$ in a product of matrices $C$ and $E$. Under a relatively mild assumption on spread of column vectors of matrix $C$, matrix $E$ has minimum volume across all possible factorizations. _AnchorFree_ seeks to find a factorization pair of matrices $(C,E)$ such that column vectors of $C$ represent unit simplex and matrix $E$ has minimum determinant (as a proxy of volume) using alternating linear programming. 
+  The goal of _AnchorFree_ approach is to tri-factorize matrix <img src="https://render.githubusercontent.com/render/math?math=Y"> in a product of matrices <img src="https://render.githubusercontent.com/render/math?math=C"> and <img src="https://render.githubusercontent.com/render/math?math=E">. Under a relatively mild assumption on spread of column vectors of matrix <img src="https://render.githubusercontent.com/render/math?math=C">, matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum volume across all possible factorizations. _AnchorFree_ seeks to find a factorization pair of matrices <img src="https://render.githubusercontent.com/render/math?math=(C, E)"> such that column vectors of <img src="https://render.githubusercontent.com/render/math?math=C"> represent unit simplex and matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum determinant (as a proxy of volume) using alternating linear programming. 
 
 ## Application
 
@@ -43,7 +35,7 @@ Application of the method is examplified below for a simulated dataset. For that
   ## [1] "X.noise" "X"       "C"       "D"
   ```
 
-Summary below shows that the original matrix `X` of the size $192 \cdot 3000$ is a product of two matrices of lower rank 10:
+Summary below shows that the original matrix `X` of the size <img src="https://render.githubusercontent.com/render/math?math=192 \cdot 3000"> is a product of two matrices of lower rank 10:
   
   
   ```r
