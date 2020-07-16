@@ -72,6 +72,6 @@ apply(cor(simnmf$C, C), 1, max)
 Having inferred `C`, the second matrix `D` can be obtained throught linear regression with constraints or using the function `infer_intensities()`:
   
   ```{r}
-D <- infer_intensities(C, simnmf$X)
+#D <- infer_intensities(C, simnmf$X)
 ```
 
