@@ -10,10 +10,7 @@
   In practice, if <img src="https://render.githubusercontent.com/render/math?math=X"> has significantly more rows than columns or if observations are noisy and represent statistical sampling than reformulation of the problem in "covariance domain" simplifies inference:
   
 <img src="https://render.githubusercontent.com/render/math?math=\begin{aligned}Y = C \cdot E \cdot C^{T},\end{aligned}">
-  
-  $$
-  Y = C \cdot E \cdot C^{T},
-$$
+
   where <img src="https://render.githubusercontent.com/render/math?math=Y = X \cdot X^{T}, E = D \cdot D^{T}.">
   
   The goal of _AnchorFree_ approach is to tri-factorize matrix <img src="https://render.githubusercontent.com/render/math?math=Y"> in a product of matrices <img src="https://render.githubusercontent.com/render/math?math=C"> and <img src="https://render.githubusercontent.com/render/math?math=E">. Under a relatively mild assumption on spread of column vectors of matrix <img src="https://render.githubusercontent.com/render/math?math=C">, matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum volume across all possible factorizations. _AnchorFree_ seeks to find a factorization pair of matrices <img src="https://render.githubusercontent.com/render/math?math=(C, E)"> such that column vectors of <img src="https://render.githubusercontent.com/render/math?math=C"> represent unit simplex and matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum determinant (as a proxy of volume) using alternating linear programming. 
@@ -96,13 +93,13 @@ Comparison of original matrix `simnmf$C` and inferred matrix `vol.anchor$C` show
   
   
   ```r
-  C <- vol.anchor$C
+  C <- vol.anchor$C*vol$col.factors
   apply(cor(simnmf$C, C), 1, max)
   ```
   
   ```
-  ##  [1] 0.9777554 0.9750203 0.9792922 0.9779889 0.9802875 0.9818999 0.9833044 0.9738819 0.9752943
-  ## [10] 0.9783594
+  ##  [1] 0.9999967 1.0000000 1.0000000 0.9993503 1.0000000 1.0000000 1.0000000 0.9999061 1.0000000
+  ## [10] 0.9999527
   ```
 
 Having inferred `C`, the second matrix `D` can be obtained throught linear regression with constraints or using the function `infer_intensities()`:
