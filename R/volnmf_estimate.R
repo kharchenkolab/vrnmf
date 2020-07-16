@@ -43,11 +43,11 @@
 #' \code{rec} a list of objects that record and store state of matrices each \code{record} iterations.
 #' @export
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
-                        do.nmf=TRUE, iter.nmf = 1e+3,
+                        do.nmf=TRUE, iter.nmf = 1e+2,
                         domain = "covariance", volf = 'logdet',
-                        wvol = NULL, delta = 1e-8, n.iter = 2e+3, err.cut = 1e-10,
-                        vol.iter = 1e+2, c.iter = 1e+1,
-                        extrapolate = TRUE, accelerate = TRUE, acc.C = 4/5, acc.R = 3/4,
+                        wvol = NULL, delta = 1e-8, n.iter = 5e+2, err.cut = 1e-16,
+                        vol.iter = 2e+1, c.iter = 2e+1,
+                        extrapolate = TRUE, accelerate = FALSE, acc.C = 4/5, acc.R = 3/4,
                         C.constraint = "col", C.bound = 1, R.constraint = "pos", R.majorate = FALSE,
                         C.init = NULL, R.init = NULL, Q.init = NULL, anchor = NULL, Ctrue = NULL,
                         verbose = TRUE, record = 100, verbose.nmf = FALSE, record.nmf = NULL, mutation.run = FALSE){
