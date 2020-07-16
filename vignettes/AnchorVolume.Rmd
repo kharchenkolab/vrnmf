@@ -11,6 +11,9 @@ vignette: >
   
   Generally, structured matrix factorization problem is formulated as a decomposition of original matrix $X$ in a product of unknown non-negative matrix $C$ and matrix $D$ of lower rank: 
   
+    
+<img src="https://render.githubusercontent.com/render/math?math=\begin{aligned}X = C \cdot D \end{aligned}">
+
   $$
   X = C \cdot D
 $$
