@@ -21,7 +21,7 @@ infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
   inten <- do.call(cbind, parallel::mclapply(1:nr, function(i){
     ft <- quadprog::solve.QP(D, dmat[i, ], Amat, bvec)
     ft$solution
-  },mc.cores = 20))
+  },mc.cores = n.cores))
   rownames(inten) <- paste("comp",1:ncol(C),sep="")
   return(inten)
 }
