@@ -49,7 +49,7 @@ volnmf_main(
 
 \item{n.comp}{An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.}
 
-\item{n.reduce}{An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{vol$P} (by default equal to \code{n.comp}).}
+\item{n.reduce}{An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{volP} (by default equal to \code{n.comp}).}
 
 \item{do.nmf}{A boolean. Estimate standard solution with \code{w.vol=0} as initialization before applying volume regularization (by default \code{TRUE}).}
 
@@ -110,5 +110,5 @@ List of objects:
 \code{volnmf_main} enables volume-regularized factorization of a matrix \code{B} using the following objective function:
 \eqn{F = ||B*Q - C*R||^2 + w.vol*volume(R)}. Matrix \code{C} is required to be non-negative and having either column or row vectors on the simplex.
 Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
-The latter option is used to decompose co-occurence matrix \code{vol$P}.
+The latter option is used to decompose co-occurence matrix \code{vol_P}.
 }

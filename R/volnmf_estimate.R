@@ -3,13 +3,13 @@
 #' \code{volnmf_main} enables volume-regularized factorization of a matrix \code{B} using the following objective function:
 #' \eqn{F = ||B*Q - C*R||^2 + w.vol*volume(R)}. Matrix \code{C} is required to be non-negative and having either column or row vectors on the simplex.
 #' Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
-#' The latter option is used to decompose co-occurence matrix \code{vol$P}.
+#' The latter option is used to decompose co-occurence matrix \code{vol_P}.
 #'
 #' @param vol An output object of \code{\link{vol_preprocess()}}.
 #' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.
 #' @param volnmf An output object of \code{volnmf.main}. An option is useful to re-estimate solution using different parameters (by default NULL).
 #' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.
-#' @param n.reduce An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{vol$P} (by default equal to \code{n.comp}).
+#' @param n.reduce An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{volP} (by default equal to \code{n.comp}).
 #' @param do.nmf A boolean. Estimate standard solution with \code{w.vol=0} as initialization before applying volume regularization (by default \code{TRUE}).
 #' @param iter.nmf An integer. Number of iterations to get solution with \code{w.vol=0} if the former requested (by default \code{1,000}).
 #' @param domain A character. Optimize unitary rotation matrix \code{Q} ("covariance") or keep it as identity matrix (as in standard NMF). By default "covariance".
