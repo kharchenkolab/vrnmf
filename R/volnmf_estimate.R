@@ -6,7 +6,7 @@
 #' The latter option is used to decompose co-occurence matrix \code{vol$P}.
 #'
 #' @param vol An output object of \code{\link{vol_preprocess()}}.
-#' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{vol$P = B*t(B)}.
+#' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.
 #' @param volnmf An output object of \code{volnmf.main}. An option is useful to re-estimate solution using different parameters (by default NULL).
 #' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.
 #' @param n.reduce An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{vol$P} (by default equal to \code{n.comp}).

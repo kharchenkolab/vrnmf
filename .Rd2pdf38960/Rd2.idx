@@ -1,0 +1,10 @@
+\indexentry{AnchorFree@\texttt  {AnchorFree}|hyperpage}{1}
+\indexentry{vol\_preprocess()@\texttt  {vol\_preprocess()}|hyperindexformat{\textit}}{2}
+\indexentry{factor\_intensities@\texttt  {factor\_intensities}|hyperpage}{3}
+\indexentry{infer\_intensities@\texttt  {infer\_intensities}|hyperpage}{3}
+\indexentry{projection\_onto\_simplex@\texttt  {projection\_onto\_simplex}|hyperpage}{4}
+\indexentry{simnmf@\texttt  {simnmf}|hyperpage}{5}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!simnmf@\texttt  {simnmf}|hyperpage}{5}
+\indexentry{sim\_factors@\texttt  {sim\_factors}|hyperpage}{5}
+\indexentry{volnmf\_det@\texttt  {volnmf\_det}|hyperpage}{6}
+\indexentry{volnmf\_estimate@\texttt  {volnmf\_estimate}|hyperpage}{7}
