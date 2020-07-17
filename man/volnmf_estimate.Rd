@@ -33,7 +33,7 @@ volnmf_estimate(
 )
 }
 \arguments{
-\item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{vol$P = B*t(B)}.}
+\item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.}
 
 \item{C, R, Q}{Numeric matrices. Initial matrices for optimiztion.}
 
