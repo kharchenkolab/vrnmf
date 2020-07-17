@@ -10,12 +10,11 @@
   
 <img src="https://render.githubusercontent.com/render/math?math=Y = C \cdot E \cdot C^{T},">
 
-  where <img src="https://render.githubusercontent.com/render/math?math=Y = X \cdot X^{T}, E = D \cdot D^{T}.">
+where <img src="https://render.githubusercontent.com/render/math?math=Y = X \cdot X^{T}, E = D \cdot D^{T}.">
   
   Under a relatively mild assumption on spread of column (row) vectors of matrix <img src="https://render.githubusercontent.com/render/math?math=C"> that belong to column (row) unit simplex, matrix <img src="https://render.githubusercontent.com/render/math?math=E"> has minimum volume across all possible factorizations. _Vrnmf_, as compared to _AnchorFree_, considers noisy version of the problem. _Vrnmf_ seeks to find a factorization pair of matrices <img src="https://render.githubusercontent.com/render/math?math=(C,E)"> that balances goodness of fit of <img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2}"> and volume fo matrix <img src="https://render.githubusercontent.com/render/math?math=E">. The method uses alternating optimization of the following objective function:
   
 <img src="https://render.githubusercontent.com/render/math?math=\|Y-C \cdot E \cdot C^{T}\|_{F}^{2} %2B \lambda \cdot Volume(E).">
-
 
 ## Application in "covariance" domain
 
@@ -52,13 +51,13 @@ As a first step, input matrix `X` is preprocessed using function `vol_preprocess
   vol <- vol_preprocess(t(simnmf$X))
   ```
 
-Next, `vrnmf` function decomposes co-occurence matrix into matrices `C` and `E` of rank `n.comp = 10` and using weight of volume `wvol = 1e-2`:
+Next, `vrnmf` function decomposes co-occurence matrix into matrices `C` and `E` of rank `n.comp = 10` and using weight of volume `wvol = 2e-2` (and additional options of intra-block Nesterov extrapolation `extrapolate` and inter-block Nesterov-style `accelerate`):
   
   
   ```r
-  volres <- volnmf_main(vol, n.comp = 10,
-                      wvol = 2e-2, n.iter = 3e+3, vol.iter = 1e+2, c.iter = 1e+1, 
-                      verbose = FALSE)
+  volres <- volnmf_main(vol, n.comp = 10, wvol = 2e-2, 
+                      n.iter = 3e+3, vol.iter = 1e+1, c.iter = 1e+1, 
+                      extrapolate = TRUE, accelerate = TRUE, verbose = FALSE)
   #> run standard nmf.. done
   #> run volume-regularized nmf.. done
   ```
@@ -67,11 +66,10 @@ The output `volres` contains predicted matrix `C` and other auxiliary informatio
 
 ```r
 names(volres)
-#>  [1] "C"      "R"      "Q"      "C.init" "R.init" "Q.init" "C.rand" "R.rand" "Q.rand"
-#> [10] "rec"
+#>  [1] "C"      "R"      "Q"      "C.init" "R.init" "Q.init" "C.rand" "R.rand" "Q.rand" "rec"
 
 str(volres$C)
-#>  num [1:192, 1:10] 0 0.008842 0.000631 0.011839 0.007681 ...
+#>  num [1:192, 1:10] 0.012967 0 0.000464 0.002328 0 ...
 ```
 
 Comparison of original matrix `simnmf$C` and inferred matrix `volres$C` rescaled back by `vol$col.factors` shows that they have highly similar pairs of column vectors:
@@ -80,8 +78,8 @@ Comparison of original matrix `simnmf$C` and inferred matrix `volres$C` rescaled
   ```r
   C <- volres$C*vol$col.factors
   apply(cor(simnmf$C, C), 1, max)
-  #>  [1] 0.9637397 0.9763412 0.9865479 0.9939831 0.9866109 0.9941673 0.9967397 0.9710295
-  #>  [9] 0.9930741 0.9887075
+  #>  [1] 0.9638703 0.9760804 0.9851034 0.9940353 0.9865532 0.9939367 0.9970672 0.9696916 0.9928067
+  #> [10] 0.9885614
   ```
 
 Having inferred `C`, the second matrix `D` can be obtained throught linear regression with constraints or using the function `infer_intensities()`:

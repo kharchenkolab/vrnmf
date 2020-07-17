@@ -14,8 +14,8 @@ Imports:
     quadprog (>= 1.5),
     parallel (>= 3.5.1)
 Suggests: 
-    knitr,
-    rmarkdown
+    knitr (>= 1.28),
+    rmarkdown (>= 2.1)
 VignetteBuilder: knitr
 Author: Ruslan Soldatov <ruslansoldatov@gmail.com>
 Maintainer: Ruslan Soldatov <ruslansoldatov@gmail.com>

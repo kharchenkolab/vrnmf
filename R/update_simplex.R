@@ -12,7 +12,7 @@
 #' @return An updated matrix \code{C}.
 #' @export
 volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRUE,
-                               err.cut = 1e-10, n.iter = 1e+4){
+                               err.cut = 1e-10, n.iter = 1e+4, qmax = 1e+2){
   if (is.null(C.prev)){
     ft <- lm( t(X) ~ t(R) - 1) # estimate in a closed form!
     C.prev <- t(ft$coefficients)
@@ -27,11 +27,12 @@ volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRU
 
   err <- 1e+6
   iter <- 1
-  C <- C.prev
+  C.update <- C <- C.prev
   q <- c(1,(1+sqrt(5))/5)
+  obj <- vector()
   while(err > err.cut & iter < n.iter){
-    G <- C %*% S - K
-    Chat <- C - G / Lip
+    G <- C.update %*% S - K
+    Chat <- C.update - G / Lip
     C.prev <- C
     C <- do.call(cbind, lapply(1:ncol(C), function(i){
       projection_onto_simplex(Chat[, i], bound)
@@ -39,11 +40,14 @@ volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRU
 
     if (extrapolate == TRUE){
       extr <- (q[iter] - 1) / q[iter+1]
-      C <- C + extr * (C - C.prev)
+      C.update <- C + extr * (C - C.prev)
     }
+
+    obj <- c(obj, sqrt(sum((C-C.prev)^2))/sqrt(sum(C^2)) )
     iter <- iter + 1
-    q[iter+1] <- (1 + sqrt(1 + 4 * q[iter]^2))/2
+    q[iter+1] <- min(qmax, (1 + sqrt(1 + 4 * q[iter]^2))/2 )
   }
+
   return(C)
 }
 
@@ -84,6 +88,10 @@ projection_onto_simplex <- function(unproj, bound){
   qcum <- cumsum(q)
   mu <- (qcum - bound) / 1:length(qcum)
   cond1 <- (mu[-length(mu)] - q[-1]) > 0
-  ind <- which.max(cond1)
+  if (max(cond1) == 0) {
+    ind <- length(mu)
+  }else{
+    ind <- which.max(cond1)
+  }
   return( pmax(0, unproj - mu[ind]) )
 }

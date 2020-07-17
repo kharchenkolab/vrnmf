@@ -11,7 +11,7 @@ sim_factors(
   simplex = "col",
   distr = "unif",
   frac.zeros = 0.4,
-  condition = TRUE,
+  condition = FALSE,
   noise = 0
 )
 }

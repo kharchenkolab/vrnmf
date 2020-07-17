@@ -7,51 +7,54 @@
 #' Matrix R serves as initialization.
 #' @param R.constraint A character. Set up ('pos') or not ('no') non-negative constraints on matrix \code{R} (by default 'pos').
 #' @param majorate A boolean. Majorate logdet each iteration (by default FALSE).
-#' @param nesterov A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).
+#' @param extrapolate A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).
 #' @param w.vol A numeric. Volume (logdet) weight in objective function.
 #' @param delta A numeric. Determinant pseudocount in objective function.
 #' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.
 #' @param n.iter An integer. Number of iterations.
 #' @return An updated matrix \code{R}.
 #' @export
-volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, nesterov = FALSE,
+volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, extrapolate = TRUE, qmax = 100,
                           w.vol = 1e-1, delta = 1, err.cut = 1e-3, n.iter = 1e+3){
 
-  W <- t(R)
+  W.update <- W <- t(R)
   H <- t(C)
   FM <- solve(t(W) %*% (W) + delta * diag(1,nrow(W)))
 
   iter <- 1
   err <- 1e+5
+  q <- c(1,(1+sqrt(5))/5)
   #obj <- vector(); obj.violent <- 0
   while (err > err.cut & iter < n.iter){
     W.prev <- W
-    Y <- W
     if (majorate == TRUE){
-      FM <- solve(t(Y)%*%Y + delta*diag(1,nrow(Y)) )
+      Y <- W.prev
+      FM <- solve(t(Y) %*% Y + delta * diag(1, nrow(Y)) )
     }
 
     if (R.constraint == "pos"){
       Lip <- sqrt(sum((H %*% t(H) + w.vol * FM)^2))
-      gradF <- W %*% (H %*% t(H) + w.vol*FM) - t(X) %*% t(H)
-      W <- W - gradF/Lip
+      gradF <- W.update %*% (H %*% t(H) + w.vol*FM) - t(X) %*% t(H)
+      W <- W.update - gradF/Lip
       W[W < 0] <- 0
     }else{
       W <- t(X) %*% t(H) %*% solve(H %*% t(H) + w.vol * FM)
     }
 
-    nesterov <- FALSE
-    if (nesterov==TRUE){ # does not work - fix it.
-      beta <- 0.1
-      Wfast <- W + beta*(W-W.prev)
-      obj[iter] <-  sum((t(X)-W%*%H)^2) + w.vol*sum(diag(FM%*%(t(W)%*%W)))
-      if (iter>=2){
-        if (obj[iter] < obj[iter-1]){
-          W <- Wfast
-        }else{
-          obj.violent <- obj.violent + 1
-        }
-      }
+    if (extrapolate == TRUE){
+      extr <- (q[iter] - 1) / q[iter+1]
+      W.update <- W + extr*(W-W.prev)
+      # dow warm restart?
+      #obj[iter] <-  sum((t(X)-W%*%H)^2) + w.vol*sum(diag(FM%*%(t(W)%*%W)))
+      #if (iter>=2){
+      #  if (obj[iter] < obj[iter-1]){
+      #    W <- Wfast
+      #  }else{
+      #    obj.violent <- obj.violent + 1
+      #  }
+      #}
+    }else{
+      W.update <- W
     }
 
     #func1 <- sum((t(X) - W%*%H)^2)
@@ -62,6 +65,7 @@ volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, nest
 
     err <- sum((W-W.prev)^2)/sum(W^2)
     iter <- iter + 1
+    q[iter+1] <- min(qmax, (1 + sqrt(1 + 4 * q[iter]^2))/2 )
   }
   #cat(paste('done.. ',iter,' iterations ',err,' error\n'))
   #cat(paste('violations.. ',obj.violent,'\n'))

@@ -11,15 +11,19 @@ volnmf_main(
   n.comp = 3,
   n.reduce = n.comp,
   do.nmf = TRUE,
-  iter.nmf = 1000,
+  iter.nmf = 100,
   domain = "covariance",
   volf = "logdet",
   wvol = NULL,
   delta = 1e-08,
-  n.iter = 2000,
-  err.cut = 1e-10,
-  vol.iter = 100,
-  c.iter = 10,
+  n.iter = 500,
+  err.cut = 1e-16,
+  vol.iter = 20,
+  c.iter = 20,
+  extrapolate = TRUE,
+  accelerate = FALSE,
+  acc.C = 4/5,
+  acc.R = 3/4,
   C.constraint = "col",
   C.bound = 1,
   R.constraint = "pos",
@@ -39,13 +43,13 @@ volnmf_main(
 \arguments{
 \item{vol}{An output object of \code{\link{vol_preprocess()}}.}
 
-\item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{vol$P = B*t(B)}.}
+\item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.}
 
 \item{volnmf}{An output object of \code{volnmf.main}. An option is useful to re-estimate solution using different parameters (by default NULL).}
 
 \item{n.comp}{An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.}
 
-\item{n.reduce}{An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{vol$P} (by default equal to \code{n.comp}).}
+\item{n.reduce}{An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{volP} (by default equal to \code{n.comp}).}
 
 \item{do.nmf}{A boolean. Estimate standard solution with \code{w.vol=0} as initialization before applying volume regularization (by default \code{TRUE}).}
 
@@ -66,6 +70,14 @@ volnmf_main(
 \item{vol.iter}{An integer. Number of iterations to update volume-regularized matrix \code{R} at each alternating step.}
 
 \item{c.iter}{An integer. Number of iterations to update simplex matrix \code{C} at each alternating step.}
+
+\item{extrapolate}{A numeric. Do Nesterov extrapolation inside blocks of R and C optimization (by default TRUE).}
+
+\item{accelerate}{A numeric. Do acceleration each update after R and C blocks estimated via Nesterov-like extrapolation.}
+
+\item{acc.C}{A numeric. Acceleration parameter of matrix C.}
+
+\item{acc.R}{A numeric. Acceleration parameter of matrix R.}
 
 \item{C.constraint}{A character. Constraint either sum of columns ("col") or sum of rows ("row) to be equal to \code{C.bound} (By default "col").}
 
@@ -98,5 +110,5 @@ List of objects:
 \code{volnmf_main} enables volume-regularized factorization of a matrix \code{B} using the following objective function:
 \eqn{F = ||B*Q - C*R||^2 + w.vol*volume(R)}. Matrix \code{C} is required to be non-negative and having either column or row vectors on the simplex.
 Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
-The latter option is used to decompose co-occurence matrix \code{vol$P}.
+The latter option is used to decompose co-occurence matrix \code{vol_P}.
 }
