@@ -12,6 +12,7 @@
 #' @param n.reduce An integer. Dimensional reduction of matrix B (number of columns) if taken as a square root decomposition of \code{volP} (by default equal to \code{n.comp}).
 #' @param do.nmf A boolean. Estimate standard solution with \code{w.vol=0} as initialization before applying volume regularization (by default \code{TRUE}).
 #' @param iter.nmf An integer. Number of iterations to get solution with \code{w.vol=0} if the former requested (by default \code{1,000}).
+#' @param seed An integer. Fix seed.
 #' @param domain A character. Optimize unitary rotation matrix \code{Q} ("covariance") or keep it as identity matrix (as in standard NMF). By default "covariance".
 #' @param volf A character. Function that approximate volume. Can have values of "logdet" or "det" (by default "logdet").
 #' @param wvol A numeric. A weight of volume-regularized term \code{volume(R)}.

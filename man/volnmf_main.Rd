@@ -56,6 +56,8 @@ volnmf_main(
 
 \item{iter.nmf}{An integer. Number of iterations to get solution with \code{w.vol=0} if the former requested (by default \code{1,000}).}
 
+\item{seed}{An integer. Fix seed.}
+
 \item{domain}{A character. Optimize unitary rotation matrix \code{Q} ("covariance") or keep it as identity matrix (as in standard NMF). By default "covariance".}
 
 \item{volf}{A character. Function that approximate volume. Can have values of "logdet" or "det" (by default "logdet").}
