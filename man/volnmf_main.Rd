@@ -12,6 +12,7 @@ volnmf_main(
   n.reduce = n.comp,
   do.nmf = TRUE,
   iter.nmf = 100,
+  seed = NULL,
   domain = "covariance",
   volf = "logdet",
   wvol = NULL,

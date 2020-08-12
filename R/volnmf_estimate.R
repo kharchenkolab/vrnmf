@@ -43,7 +43,7 @@
 #' \code{rec} a list of objects that record and store state of matrices each \code{record} iterations.
 #' @export
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
-                        do.nmf=TRUE, iter.nmf = 1e+2,
+                        do.nmf=TRUE, iter.nmf = 1e+2, seed  = NULL,
                         domain = "covariance", volf = 'logdet',
                         wvol = NULL, delta = 1e-8, n.iter = 5e+2, err.cut = 1e-16,
                         vol.iter = 2e+1, c.iter = 2e+1,
@@ -71,6 +71,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
   }
 
   if (is.null(Q.init)) Q.init <- diag(1,nrow=n.reduce,ncol=n.comp)
+  if (!is.null(seed)) set.seed(seed)
 
   ### initialize matrices
   if (!is.null(anchor)){   # initial matrices come from AnchorFree algorithm
