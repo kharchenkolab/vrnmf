@@ -62,11 +62,11 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
   # prepare matrices for QP
   D <- t(C) %*% C
   dmat <- X %*% C
-  if (qp.exact == TRUE){
+  #if (qp.exact == TRUE){
     sv <- svd(D)
     R <- t(sv$u %*% diag(sqrt(sv$d)))
     R1 <- t(solve(R))
-  }
+  #}
 
 
   iter <- 1
