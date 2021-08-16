@@ -15,7 +15,7 @@ AnchorFree(
 )
 }
 \arguments{
-\item{vol}{An output object of \code{\link{vol_preprocess()}}. The method factorizes co-occurence matrix \code{vol$P}.}
+\item{vol}{An output object of vol_preprocess(). The method factorizes co-occurence matrix \code{vol$P}.}
 
 \item{n.comp}{An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}. (default=3)}
 

@@ -5,7 +5,7 @@
 #'
 #' Implementation closely follows (Fu X \emph{et al.}, IEEE Trans Pattern Anal Mach Intell., 2019).
 #'
-#' @param vol An output object of \code{\link{vol_preprocess()}}. The method factorizes co-occurence matrix \code{vol$P}.
+#' @param vol An output object of vol_preprocess(). The method factorizes co-occurence matrix \code{vol$P}.
 #' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}. (default=3)
 #' @param init A numeric matrix. Initial matrix \code{M}. (default=3)
 #' @param init.type A character. A strategy to randomly initialize matrix \code{M}. (default="diag") Options are to
