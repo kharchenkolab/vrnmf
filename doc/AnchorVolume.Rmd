@@ -1,5 +1,5 @@
 ---
-title: "AnchorFree algorithm"
+title: "AnforFree algorithm"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{AnchorVolume}

@@ -1,4 +1,18 @@
-# Volume_regularized_NMF
+---
+title: "volume_regularized_NMF"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{volume_regularized_NMF}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 ## Introduction  
   
@@ -20,74 +34,58 @@ where <img src="https://render.githubusercontent.com/render/math?math=Y = X \cdo
 
 Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate a dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and the dataset:
   
-  
-  ```r
-  library(vrnmf)
-  
-  data(simnmf)
-  
-  names(simnmf)
-  #> [1] "X.noise" "X"       "C"       "D"
-  ```
+  ```{r}
+library(vrnmf)
+
+data(simnmf)
+
+names(simnmf)
+```
 
 Summary below shows that the original matrix `X` of the size <img src="https://render.githubusercontent.com/render/math?math=192 \cdot 3000"> is a product of two matrices of lower rank 10:
   
-  
-  ```r
-  str(simnmf$X)
-  #>  num [1:192, 1:3000] 0.000493 0.000695 0.000347 0.000248 0.000699 ...
-  
-  str(simnmf$C)
-  #>  num [1:192, 1:10] 0.00387 0.01099 0.00302 0 0.008 ...
-  
-  str(simnmf$D)
-  #>  num [1:10, 1:3000] 0.03793 0.001 0.00138 0.00229 0.001 ...
-  ```
+  ```{r}
+str(simnmf$X)
+
+str(simnmf$C)
+
+str(simnmf$D)
+```
 
 As a first step, input matrix `X` is preprocessed using function `vol_preprocess()` to estimate and re-scale co-occurence matrix `Y = X*t(X)` and its singular value decomposition:
   
-  
-  ```r
-  vol <- vol_preprocess(t(simnmf$X))
-  ```
+  ```{r}
+vol <- vol_preprocess(t(simnmf$X))
+```
 
 Next, `vrnmf` function decomposes co-occurence matrix into matrices `C` and `E` of rank `n.comp = 10` and using weight of volume `wvol = 2e-2` (and additional options of intra-block Nesterov extrapolation `extrapolate` and inter-block Nesterov-style `accelerate`):
   
-  
-  ```r
-  volres <- volnmf_main(vol, n.comp = 10, wvol = 2e-2, 
+  ```{r}
+volres <- volnmf_main(vol, n.comp = 10, wvol = 2e-2, 
                       n.iter = 3e+3, vol.iter = 1e+1, c.iter = 1e+1, 
                       extrapolate = TRUE, accelerate = TRUE, verbose = FALSE)
-  #> run standard nmf.. done
-  #> run volume-regularized nmf.. done
-  ```
+```
 
 The output `volres` contains predicted matrix `C` and other auxiliary information:
-
-```r
+```{r}
 names(volres)
-#>  [1] "C"      "R"      "Q"      "C.init" "R.init" "Q.init" "C.rand" "R.rand" "Q.rand" "rec"
 
 str(volres$C)
-#>  num [1:192, 1:10] 0.012967 0 0.000464 0.002328 0 ...
 ```
 
 Comparison of original matrix `simnmf$C` and inferred matrix `volres$C` rescaled back by `vol$col.factors` shows that they have highly similar pairs of column vectors:
   
-  
-  ```r
-  C <- volres$C*vol$col.factors
-  apply(cor(simnmf$C, C), 1, max)
-  #>  [1] 0.9638703 0.9760804 0.9851034 0.9940353 0.9865532 0.9939367 0.9970672 0.9696916 0.9928067
-  #> [10] 0.9885614
-  ```
+  ```{r}
+C <- volres$C*vol$col.factors
+apply(cor(simnmf$C, C), 1, max)
+
+```
 
 Having inferred `C`, the second matrix `D` can be obtained throught linear regression with constraints or using the function `infer_intensities()`:
   
-  
-  ```r
-  D <- infer_intensities(C, simnmf$X)
-  ```
+  ```{r}
+D <- infer_intensities(C, simnmf$X)
+```
 
 ## Structural and algorithmic parameters
 

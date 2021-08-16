@@ -13,7 +13,23 @@ A more general formulation of the problem that accounts for noise in matrix X, s
 
 <img src="https://render.githubusercontent.com/render/math?math=F = \| X-CD \|_{F}^{2} %2B \lambda \cdot Vol(D)"> 
 
-We provide implementation of _vrnmf_ approach and devise its reformulation in covariance domain. A detailed walkthrough is available at https://github.com/kharchenkolab/vrnmf/blob/master/vignettes/volume_regularized_NMF.md.
+We provide implementation of `vrnmf` approach and devise its reformulation in covariance domain.
+
+
+## Walkthrough
+
+### Volume-regularized NMF:
+
+* HTML version
+
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/tree/master/doc/AnchorVolume.md)
+
+### Anchorfree Algorithm:
+
+* HTML version
+
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/tree/master/doc/volume_regularized_NMF.mds)
+
 
 ## Installation 
 
