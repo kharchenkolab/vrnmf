@@ -5,7 +5,7 @@
 #' Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
 #' The latter option is used to decompose co-occurence matrix \code{vol_P}.
 #'
-#' @param vol An output object of \code{\link{vol_preprocess()}}.
+#' @param vol An output object of vol_preprocess().
 #' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.
 #' @param volnmf An output object of \code{volnmf.main}. An option is useful to re-estimate solution using different parameters (by default NULL).
 #' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.
@@ -26,13 +26,15 @@
 #' @param acc.C A numeric. Acceleration parameter of matrix C.
 #' @param acc.R A numeric. Acceleration parameter of matrix R.
 #' @param C.constraint A character. Constraint either sum of columns ("col") or sum of rows ("row) to be equal to \code{C.bound} (By default "col").
-#' @param  C.bound A numeric. A simplex constraint on matrix C vectors.
+#' @param C.bound A numeric. A simplex constraint on matrix C vectors.
 #' @param R.constraint A character. Set up non-negativity ("pos") constraint on elements of \code{R} (by default "pos", alternative "no").
-#' @param  R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
-#' @param  C.init,R.init,Q.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
-#' @param  anchor An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).
+#' @param R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
+#' @param C.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
+#' @param R.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
+#' @param Q.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
+#' @param anchor An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).
 #' @param verbose A boolean. Print per-iteration information (by default FALSE)
-#' @param  record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
 #' @return List of objects:
 #'
 #' \code{C, R, Q} Factorization matrices.
@@ -148,7 +150,9 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
 #'
 #' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.
-#' @param C,R,Q Numeric matrices. Initial matrices for optimiztion.
+#' @param C Numeric matrices. Initial matrices for optimiztion.
+#' @param R Numeric matrices. Initial matrices for optimiztion.
+#' @param Q Numeric matrices. Initial matrices for optimiztion.
 #' @param domain A character. Optimize unitary rotation matrix \code{Q} ("covariance") or keep it as identity matrix (as in standard NMF). By default "covariance".
 #' @param volf A character. Function that approximate volume. Can have values of "logdet" or "det" (by default "logdet").
 #' @param R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
@@ -163,10 +167,10 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' @param acc.C A numeric. Acceleration parameter of matrix C.
 #' @param acc.R A numeric. Acceleration parameter of matrix R.
 #' @param C.constraint A character. Constraint either sum of columns ("col") or sum of rows ("row) to be equal to \code{C.bound} (By default "col").
-#' @param  C.bound A numeric. A simplex constraint on matrix C vectors.
+#' @param C.bound A numeric. A simplex constraint on matrix C vectors.
 #' @param R.constraint A character. Set up non-negativity ("pos") constraint on elements of \code{R} (by default "pos", alternative "no").
 #' @param verbose A boolean. Print per-iteration information (by default FALSE)
-#' @param  record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
 #' @return List of objects:
 #'
 #' \code{C, R, Q}, \code{E} Factorization matrices.

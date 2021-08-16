@@ -35,7 +35,11 @@ volnmf_estimate(
 \arguments{
 \item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.}
 
-\item{C, R, Q}{Numeric matrices. Initial matrices for optimiztion.}
+\item{C}{Numeric matrices. Initial matrices for optimiztion.}
+
+\item{R}{Numeric matrices. Initial matrices for optimiztion.}
+
+\item{Q}{Numeric matrices. Initial matrices for optimiztion.}
 
 \item{domain}{A character. Optimize unitary rotation matrix \code{Q} ("covariance") or keep it as identity matrix (as in standard NMF). By default "covariance".}
 

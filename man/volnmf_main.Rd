@@ -42,7 +42,7 @@ volnmf_main(
 )
 }
 \arguments{
-\item{vol}{An output object of \code{\link{vol_preprocess()}}.}
+\item{vol}{An output object of vol_preprocess().}
 
 \item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.}
 
@@ -90,7 +90,11 @@ volnmf_main(
 
 \item{R.majorate}{A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).}
 
-\item{C.init, R.init, Q.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
+\item{C.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
+
+\item{R.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
+
+\item{Q.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
 
 \item{anchor}{An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).}
 
