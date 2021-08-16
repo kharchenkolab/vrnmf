@@ -19,8 +19,11 @@ volnmf_logdet(
 )
 }
 \arguments{
-\item{C, X, R}{Numeric Matrices. Matrices involved in objective function.
-Matrix R serves as initialization.}
+\item{C}{Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.}
+
+\item{X}{Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.}
+
+\item{R}{Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.}
 
 \item{R.constraint}{A character. Set up ('pos') or not ('no') non-negative constraints on matrix \code{R} (by default 'pos').}
 

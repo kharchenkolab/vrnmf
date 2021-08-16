@@ -17,11 +17,11 @@ AnchorFree(
 \arguments{
 \item{vol}{An output object of \code{\link{vol_preprocess()}}. The method factorizes co-occurence matrix \code{vol$P}.}
 
-\item{n.comp}{An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.}
+\item{n.comp}{An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}. (default=3)}
 
-\item{init}{A numeric matrix. Initial matrix \code{M} (by default \code{NULL}).}
+\item{init}{A numeric matrix. Initial matrix \code{M}. (default=3)}
 
-\item{init.type}{A character. A strategy to randomly initialize matrix \code{M}. Options are to
+\item{init.type}{A character. A strategy to randomly initialize matrix \code{M}. (default="diag") Options are to
 
 1) generate diagonal unit matrix ("diag"),
 
@@ -37,11 +37,11 @@ or sample entries from:
 
 6) normal distribution \code{N(0,1)}.}
 
-\item{n.iter}{An integer. Number of iterations (by default 30).}
+\item{n.iter}{An integer. Number of iterations. (default=30)}
 
-\item{err.cut}{A numeric. Relative error in determinant between iterations to stop algorithm (now is not used).}
+\item{err.cut}{A numeric. Relative error in determinant between iterations to stop algorithm (now is not used). (default=1e-30)}
 
-\item{verbose}{A boolean. Print per-iteration information (by default FALSE)}
+\item{verbose}{A boolean. Print per-iteration information (default=FALSE)}
 }
 \value{
 List of objects:

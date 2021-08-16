@@ -6,9 +6,9 @@
 #' Implementation closely follows (Fu X \emph{et al.}, IEEE Trans Pattern Anal Mach Intell., 2019).
 #'
 #' @param vol An output object of \code{\link{vol_preprocess()}}. The method factorizes co-occurence matrix \code{vol$P}.
-#' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.
-#' @param init A numeric matrix. Initial matrix \code{M} (by default \code{NULL}).
-#' @param init.type A character. A strategy to randomly initialize matrix \code{M}. Options are to
+#' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}. (default=3)
+#' @param init A numeric matrix. Initial matrix \code{M}. (default=3)
+#' @param init.type A character. A strategy to randomly initialize matrix \code{M}. (default="diag") Options are to
 #'
 #' 1) generate diagonal unit matrix ("diag"),
 #'
@@ -23,9 +23,9 @@
 #' 5) uniform distribution \code{[0.9,1.1]} ("similar"),
 #'
 #' 6) normal distribution \code{N(0,1)}.
-#' @param n.iter An integer. Number of iterations (by default 30).
-#' @param err.cut A numeric. Relative error in determinant between iterations to stop algorithm (now is not used).
-#' @param verbose A boolean. Print per-iteration information (by default FALSE)
+#' @param n.iter An integer. Number of iterations. (default=30)
+#' @param err.cut A numeric. Relative error in determinant between iterations to stop algorithm (now is not used). (default=1e-30)
+#' @param verbose A boolean. Print per-iteration information (default=FALSE)
 #' @return List of objects:
 #'
 #' \code{C}, \code{E} Factorization matrices.

@@ -22,7 +22,9 @@ factor_intensities(
 )
 }
 \arguments{
-\item{C, X}{Numeric matrices.}
+\item{C}{Numeric matrices.}
+
+\item{X}{Numeric matrices.}
 }
 \value{
 Fitted matrix \code{D}.

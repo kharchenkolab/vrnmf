@@ -7,11 +7,13 @@
 infer_intensities(C, X, esign = "pos", n.cores = 1)
 }
 \arguments{
-\item{C, X}{Numeric matrices.}
+\item{C}{Numeric matrices.}
 
-\item{esign}{A character. Keep elements of matrix \code{D} non-negative ("pos") or not ("all). By default "pos".}
+\item{X}{Numeric matrices.}
 
-\item{n.cores}{An integer. Number of cores to use (by default 1).}
+\item{esign}{A character. Keep elements of matrix \code{D} non-negative ("pos") or not ("all). (default="pos")}
+
+\item{n.cores}{An integer. Number of cores to use. (default=1)}
 }
 \value{
 Fitted matrix \code{D}.

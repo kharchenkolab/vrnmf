@@ -16,18 +16,24 @@ sim_factors(
 )
 }
 \arguments{
-\item{m, n, r}{Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
+\item{m}{Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
 and matrix \code{D} has a size of \code{r*n}.}
 
-\item{simplex}{A character. Either columns ("col") or rows ("row") of matrix \code{C} are projected onto unit simplex.}
+\item{n}{Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
+and matrix \code{D} has a size of \code{r*n}.}
 
-\item{distr}{A character. Distribution to simulate matrix entries: "unif" for uniform and "exp" for exponential distributions.}
+\item{r}{Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
+and matrix \code{D} has a size of \code{r*n}.}
 
-\item{frac.zeros}{A numeric. Fraction of zeros in matrix \code{C}. It promotes sufficient scattering of matrix column/row vectors.}
+\item{simplex}{A character. Either columns ("col") or rows ("row") of matrix \code{C} are projected onto unit simplex. (default="col")}
 
-\item{condition}{A boolean. Generate more well-conditioned matrix \code{R}.}
+\item{distr}{A character. Distribution to simulate matrix entries: "unif" for uniform and "exp" for exponential distributions. (default="unif")}
 
-\item{noise}{A numeric. Standard deviation of gaussian noise to add.}
+\item{frac.zeros}{A numeric. Fraction of zeros in matrix \code{C}. It promotes sufficient scattering of matrix column/row vectors. (default=0.4)}
+
+\item{condition}{A boolean. Generate more well-conditioned matrix \code{R}. (default=FALSE)}
+
+\item{noise}{A numeric. Standard deviation of gaussian noise to add. (default=0e-4)}
 }
 \value{
 List of simulated matrices:
@@ -40,3 +46,4 @@ List of simulated matrices:
 \code{sim_factors} simulates non-negative factorization matrices \code{C} and \code{D}
 under a variaty of conditions to explore factorization \eqn{X = C*D + noise}.
 }
+\keyword{internal}

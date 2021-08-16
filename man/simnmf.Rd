@@ -11,6 +11,6 @@ An object of class \code{list} of length 4.
 simnmf
 }
 \description{
-A dataset containing original, noisy and decomposition matrices.
+A dataset containing original, noisy and decomposition matrices. Created with the internal function 'sim_factors()'
 }
 \keyword{datasets}

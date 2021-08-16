@@ -3,18 +3,23 @@
 #' \code{sim_factors} simulates non-negative factorization matrices \code{C} and \code{D}
 #' under a variaty of conditions to explore factorization \eqn{X = C*D + noise}.
 #'
-#' @param m,n,r Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
+#' @param m Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
 #' and matrix \code{D} has a size of \code{r*n}.
-#' @param simplex A character. Either columns ("col") or rows ("row") of matrix \code{C} are projected onto unit simplex.
-#' @param distr A character. Distribution to simulate matrix entries: "unif" for uniform and "exp" for exponential distributions.
-#' @param  frac.zeros A numeric. Fraction of zeros in matrix \code{C}. It promotes sufficient scattering of matrix column/row vectors.
-#' @param condition A boolean. Generate more well-conditioned matrix \code{R}.
-#' @param noise A numeric. Standard deviation of gaussian noise to add.
+#' @param n Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
+#' and matrix \code{D} has a size of \code{r*n}.
+#' @param r Integers. Size of matrices. Matrix \code{C} has a size of \code{m*r}
+#' and matrix \code{D} has a size of \code{r*n}.
+#' @param simplex A character. Either columns ("col") or rows ("row") of matrix \code{C} are projected onto unit simplex. (default="col")
+#' @param distr A character. Distribution to simulate matrix entries: "unif" for uniform and "exp" for exponential distributions. (default="unif")
+#' @param  frac.zeros A numeric. Fraction of zeros in matrix \code{C}. It promotes sufficient scattering of matrix column/row vectors. (default=0.4)
+#' @param condition A boolean. Generate more well-conditioned matrix \code{R}. (default=FALSE)
+#' @param noise A numeric. Standard deviation of gaussian noise to add. (default=0e-4)
 #' @return List of simulated matrices:
 #'
 #' \code{X.noise}, \code{X} - noisy and original matrix \code{X} to decompose.
 #'
 #' \code{C}, \code{D} - factorization matrices.
+#' @keywords internal
 sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0.4,
                       condition = FALSE, noise = 0e-4){
 

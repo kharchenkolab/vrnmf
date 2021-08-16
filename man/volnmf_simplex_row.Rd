@@ -7,8 +7,11 @@
 volnmf_simplex_row(X, R, C.prev = NULL, meq = 1)
 }
 \arguments{
-\item{X, R, C.prev}{Numeric Matrices. Matrices involved in the objective function.
-Matrix \code{C.prev} serves as initialization (by default NULL).}
+\item{X}{Numeric Matrices. Matrices involved in the objective function.}
+
+\item{R}{Numeric Matrices. Matrices involved in the objective function.}
+
+\item{C.prev}{Numeric Matrices. Matrices involved in the objective function. Matrix \code{C.prev} serves as initialization. (default=NULL)}
 
 \item{meq}{An integer 0 or 1. Require equality (\code{meq=1}) or inequality (\code{meq=0}) constratint on rows (by default 1).}
 }

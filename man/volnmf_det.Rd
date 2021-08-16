@@ -16,18 +16,21 @@ volnmf_det(
 )
 }
 \arguments{
-\item{C, X, R}{Numeric Matrices. Matrices involved in objective function.
-Matrix R serves as initialization.}
+\item{C}{Numeric Matrices. Matrices involved in objective function. Matrix R serves as initialization.}
 
-\item{posit}{A boolean. Set up (TRUE) or not (FALSE) non-negative constraints on matrix \code{R} (by default FALSE).}
+\item{X}{Numeric Matrices. Matrices involved in objective function. Matrix R serves as initialization.}
 
-\item{w.vol}{A numeric. Volume (det) weight in objective function.}
+\item{R}{Numeric Matrices. Matrices involved in objective function. Matrix R serves as initialization.}
 
-\item{eigen.cut}{A numeric.}
+\item{posit}{A boolean. Set up (TRUE) or not (FALSE) non-negative constraints on matrix \code{R}. (default=TRUE)}
 
-\item{err.cut}{A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.}
+\item{w.vol}{A numeric. Volume (det) weight in objective function. (default=0.1)}
 
-\item{n.iter}{An integer. Number of iterations.}
+\item{eigen.cut}{A numeric. (default=1e-16)}
+
+\item{err.cut}{A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}. (default=1e-3)}
+
+\item{n.iter}{An integer. Number of iterations. (default=1e+3)}
 }
 \value{
 An updated matrix \code{R}.
