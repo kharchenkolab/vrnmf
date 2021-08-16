@@ -15,15 +15,34 @@ A more general formulation of the problem that accounts for noise in matrix X, s
 
 We provide implementation of _vrnmf_ approach and devise its reformulation in covariance domain. A detailed walkthrough is available at https://github.com/kharchenkolab/vrnmf/blob/master/vignettes/volume_regularized_NMF.md.
 
-## Installation instructions
+## Installation 
 
-```{r setup}
-install.packages("devtools")
-devtools::install_github("kharchenkolab/vrnmf")
-library(vrnmf)
+
+To install the stable version from CRAN, use:
+
+```R
+install.packages('vrnmf')
 ```
 
+
+To install the latest version of vrnmf, use:
+
+```R
+install.packages('devtools')
+devtools::install_github('kharchenkolab/vrnmf')
+```
+
+
 ## References
+
+The R package can be cited as:
+
+```
+
+
+```
+
+
 <a id="1">[1]</a> 
 K. Huang, N. D. Sidiropoulos and A. Swami.
 Non-Negative Matrix Factorization Revisited: Uniqueness and Algorithm for Symmetric Decomposition.

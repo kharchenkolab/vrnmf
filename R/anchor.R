@@ -136,8 +136,8 @@ AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
     err <- (detM - detM.prev) / detM
 
     if (verbose == TRUE){
-      cat( paste("iteration:", iter, "det:", detM, "prev. det:", detM.prev, "error:", err) )
-      cat('\n')
+      message( paste("iteration:", iter, "det:", detM, "prev. det:", detM.prev, "error:", err) )
+      message('\n')
     }
     M.prev <- M
     detM.prev <- detM
@@ -149,7 +149,7 @@ AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
     Ccov <- solve(t(C) %*% C)
     E <- Ccov %*% (t(C) %*% Pclean %*% C) %*% Ccov
     Ppred <- C %*% E %*% t(C)
-  }else{
+  } else{
     C <- NA; Ccov <- NA; E <- NA; Ppred <- NA
   }
 

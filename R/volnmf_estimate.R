@@ -107,7 +107,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 
   C.rand <- C.init; R.rand <- R.init; Q.rand <- Q.init
   if (do.nmf == TRUE){
-    cat('run standard nmf.. ')
+    message('run standard nmf.. ')
     nmf.solution <- volnmf_estimate(B, C = C.init, R = R.init, Q = Q.init,
                                     domain = domain, volf = volf,
                                     wvol = 0, delta = delta, n.iter = iter.nmf, err.cut = err.cut,
@@ -116,13 +116,14 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                     extrapolate = extrapolate, accelerate = accelerate, acc.C = acc.C, acc.R = acc.R,
                                     C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
                                     verbose = verbose.nmf, record = record.nmf, Ctrue = Ctrue)
-    cat('done'); cat('\n')
+    message('done')
+    message('\n')
     C.init <- nmf.solution$C; R.init <- nmf.solution$R; Q.init <- nmf.solution$Q
   }
   if (is.null(wvol)) wvol <- 0
 
   # for logdet: wvol = 0.006, for det: wvol = 5e-11 or 1e-22?
-  cat('run volume-regularized nmf.. ')
+  message('run volume-regularized nmf.. ')
   vol.solution <- volnmf_estimate(B, C = C.init, R = R.init, Q = Q.init,
                                   domain = domain, volf = volf, R.majorate = R.majorate,
                                   wvol = wvol, delta = delta, n.iter = n.iter, err.cut = err.cut,
@@ -130,7 +131,8 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                   extrapolate = extrapolate, accelerate = accelerate, acc.C = acc.C, acc.R = acc.R,
                                   C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
                                   verbose = verbose, record = record, Ctrue = Ctrue, mutation.run = mutation.run )
-  cat('done'); cat('\n')
+  message('done')
+  message('\n')
   return( list( C = vol.solution$C, R = vol.solution$R, Q = vol.solution$Q,
                 C.init = C.init, R.init = R.init, Q.init = Q.init,
                 C.rand = C.rand, R.rand = R.rand, Q.rand = Q.rand,
@@ -292,14 +294,20 @@ volnmf_estimate <- function(B, C, R, Q,
 
     if (verbose==TRUE & !is.null(record)){
       if (iter %% record == 0){
-        cat(paste("iteration", iter, "\n"))
-        cat(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
-        cat(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
+        message(paste("iteration", iter, "\n"))
+        message(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
+        message(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
         #cat(paste("Fraction R>0: ", sum(R > -1e-10)/length(R),"\n"))
-        cat(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
-        cat(paste("Mean affinity:",mean(aff),"\n"))
-        cat("Affinities: "); cat('\n'); cat(aff); cat('\n')
-        cat("Eigenvalues of R%*%t(R):"); cat('\n'); cat(eigens); cat("\n")
+        message(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
+        message(paste("Mean affinity:",mean(aff),"\n"))
+        message("Affinities: ")
+        message('\n')
+        message(aff)
+        message('\n')
+        message("Eigenvalues of R%*%t(R):")
+        message('\n')
+        message(eigens)
+        message("\n")
       }
     }
 
