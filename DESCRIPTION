@@ -1,13 +1,13 @@
 Package: vrnmf
-Title: Volume-regularized structured matrix factorization.
-Version: 0.0.0.9000
-Authors@R: person("Ruslan", "Soldatov", email = "ruslansoldatov@gmail.com", role = c("aut", "cre"))
+Title: Volume-regularized structured matrix factorization
+Version: 1.0.0
+Authors@R: person("Ruslan", "Soldatov", email = "ruslansoldatov@gmail.com", role = c("aut"), person("Peter", "Kharchenko", email = "peter_kharchenko@hms.harvard.edu", role = "aut"), person("Evan", "Biederstedt", email="evan.biederstedt@gmail.com", role=c("cre", "aut")))
 Description: The package implements a set of routines to perform structured matrix factorization with minimum volume constraints. 
-Depends: R (>= 3.5.1)
 License: GPL-3
 Encoding: UTF-8
+Depends: 
+    R (>= 3.5.1)
 LazyData: true
-RoxygenNote: 7.1.0
 Imports: 
     ica (>= 1.0),
     lpSolveAPI (>= 5.5.2.0),
@@ -16,4 +16,9 @@ Imports:
 Suggests: 
     knitr (>= 1.28),
     rmarkdown (>= 2.1)
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
+URL: https://github.com/kharchenkolab/vrnmf
+BugReports: https://github.com/kharchenkolab/vrnmf/issues
+Author: Ruslan Soldatov [aut], Peter Kharchenko [aut], Simon Steiger [ctb], Evan Biederstedt [cre, aut]
+Maintainer: Evan Biederstedt <evan.biederstedt@gmail.com>

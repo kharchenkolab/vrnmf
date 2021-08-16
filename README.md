@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/kharchenkolab/vrnmf.svg?branch=master)](https://travis-ci.com/kharchenkolab/vrnmf)
+
 # vrnmf
 Volume-regularized NMF.
 
