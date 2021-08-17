@@ -9,6 +9,7 @@
 #' @param extrapolate A boolean. Use extrapolation after local approximation (by default TRUE).
 #' @param err.cut A numeric. Stop iterations if relative error between iterations is less than \code{err.cut} (parameter is not active now).
 #' @param n.iter An integer. Number of iterations (by default 1,000).
+#' @param qmax A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.
 #' @return An updated matrix \code{C}.
 #' @export
 volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRUE,
