@@ -5,7 +5,7 @@
 #' Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
 #' The latter option is used to decompose co-occurence matrix \code{vol_P}.
 #'
-#' @param vol An output object of \code{\link{vol_preprocess()}}.
+#' @param vol An output object of vol_preprocess().
 #' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.
 #' @param volnmf An output object of \code{volnmf.main}. An option is useful to re-estimate solution using different parameters (by default NULL).
 #' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.
@@ -26,17 +26,19 @@
 #' @param acc.C A numeric. Acceleration parameter of matrix C.
 #' @param acc.R A numeric. Acceleration parameter of matrix R.
 #' @param C.constraint A character. Constraint either sum of columns ("col") or sum of rows ("row) to be equal to \code{C.bound} (By default "col").
-#' @param  C.bound A numeric. A simplex constraint on matrix C vectors.
+#' @param C.bound A numeric. A simplex constraint on matrix C vectors.
 #' @param R.constraint A character. Set up non-negativity ("pos") constraint on elements of \code{R} (by default "pos", alternative "no").
-#' @param  R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
-#' @param  C.init,R.init,Q.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
-#' @param  anchor An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).
+#' @param R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
+#' @param C.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
+#' @param R.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
+#' @param Q.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
+#' @param anchor An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).
 #' @param Ctrue A matrix. Correct matrix C if known. Useful for benchmark.
 #' @param verbose A boolean. Print per-iteration information (by default FALSE).
-#' @param  record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
-#' @param verbose A boolean. Print per-iteration information for standard NMF (by default FALSE).
-#' @param  record A numeric. Record parameters every 'record' iterations for standard NMF (by default \code{NULL}).
-#' @param  mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).
+#' @param record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param verbose.nmf A boolean. Print per-iteration information for standard NMF (by default FALSE).
+#' @param record.nmf A numeric. Record parameters every 'record' iterations for standard NMF (by default \code{NULL}).
+#' @param mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).
 #' @return List of objects:
 #'
 #' \code{C, R, Q} Factorization matrices.
@@ -46,6 +48,11 @@
 #' \code{C.rand, R.rand, Q.rand} Random initialization matrices for NMF optimization \code{(w.vol=0)}.
 #'
 #' \code{rec} a list of objects that record and store state of matrices each \code{record} iterations.
+#' @examples 
+#' small_example <- vrnmf:::sim_factors(5, 5, 5)
+#' vol <- vol_preprocess(t(small_example$X))
+#' volnmf_main(vol)
+#'
 #' @export
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
                         do.nmf=TRUE, iter.nmf = 1e+2, seed  = NULL,
@@ -111,7 +118,7 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 
   C.rand <- C.init; R.rand <- R.init; Q.rand <- Q.init
   if (do.nmf == TRUE){
-    cat('run standard nmf.. ')
+    message('run standard nmf.. ')
     nmf.solution <- volnmf_estimate(B, C = C.init, R = R.init, Q = Q.init,
                                     domain = domain, volf = volf,
                                     wvol = 0, delta = delta, n.iter = iter.nmf, err.cut = err.cut,
@@ -120,13 +127,14 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                     extrapolate = extrapolate, accelerate = accelerate, acc.C = acc.C, acc.R = acc.R,
                                     C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
                                     verbose = verbose.nmf, record = record.nmf, Ctrue = Ctrue)
-    cat('done'); cat('\n')
+    message('done')
+    message('\n')
     C.init <- nmf.solution$C; R.init <- nmf.solution$R; Q.init <- nmf.solution$Q
   }
   if (is.null(wvol)) wvol <- 0
 
   # for logdet: wvol = 0.006, for det: wvol = 5e-11 or 1e-22?
-  cat('run volume-regularized nmf.. ')
+  message('run volume-regularized nmf.. ')
   vol.solution <- volnmf_estimate(B, C = C.init, R = R.init, Q = Q.init,
                                   domain = domain, volf = volf, R.majorate = R.majorate,
                                   wvol = wvol, delta = delta, n.iter = n.iter, err.cut = err.cut,
@@ -134,7 +142,8 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
                                   extrapolate = extrapolate, accelerate = accelerate, acc.C = acc.C, acc.R = acc.R,
                                   C.constraint = C.constraint, C.bound = C.bound, R.constraint = R.constraint,
                                   verbose = verbose, record = record, Ctrue = Ctrue, mutation.run = mutation.run )
-  cat('done'); cat('\n')
+  message('done')
+  message('\n')
   return( list( C = vol.solution$C, R = vol.solution$R, Q = vol.solution$Q,
                 C.init = C.init, R.init = R.init, Q.init = Q.init,
                 C.rand = C.rand, R.rand = R.rand, Q.rand = Q.rand,
@@ -150,7 +159,9 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
 #'
 #' @param B A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.
-#' @param C,R,Q Numeric matrices. Initial matrices for optimiztion.
+#' @param C Numeric matrices. Initial matrices for optimiztion.
+#' @param R Numeric matrices. Initial matrices for optimiztion.
+#' @param Q Numeric matrices. Initial matrices for optimiztion.
 #' @param domain A character. Optimize unitary rotation matrix \code{Q} ("covariance") or keep it as identity matrix (as in standard NMF). By default "covariance".
 #' @param volf A character. Function that approximate volume. Can have values of "logdet" or "det" (by default "logdet").
 #' @param R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
@@ -165,13 +176,13 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' @param acc.C A numeric. Acceleration parameter of matrix C.
 #' @param acc.R A numeric. Acceleration parameter of matrix R.
 #' @param C.constraint A character. Constraint either sum of columns ("col") or sum of rows ("row) to be equal to \code{C.bound} (By default "col").
-#' @param  C.bound A numeric. A simplex constraint on matrix C vectors.
+#' @param C.bound A numeric. A simplex constraint on matrix C vectors.
 #' @param R.constraint A character. Set up non-negativity ("pos") constraint on elements of \code{R} (by default "pos", alternative "no").
 #' @param verbose A boolean. Print per-iteration information (by default FALSE)
-#' @param  record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
-#' @param Canchor A matrix. A matrix of anchor components (unused currently).
+#' @param record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param Canchor A matrix. A matrix of anchor components (unused currently). (default=NULL)
 #' @param Ctrue A matrix. Correct matrix C if known. Useful for benchmark.
-#' @param  mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).
+#' @param mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns). (default=FALSE)
 #' @return List of objects:
 #'
 #' \code{C, R, Q}, \code{E} Factorization matrices.
@@ -201,7 +212,7 @@ volnmf_estimate <- function(B, C, R, Q,
   ){
     if (domain == "covariance"){
       X <- B %*% Q
-    }else{
+    } else{
       X <- B
     }
 
@@ -209,7 +220,7 @@ volnmf_estimate <- function(B, C, R, Q,
     err.prev <- sum((X - C.update %*% R)^2)
     if (volf == "logdet"){
       vol.prev <- log(det(R %*% t(R) + delta * diag(1, nrow(R))))
-    }else if (volf == "det"){
+    } else if (volf == "det"){
       vol.prev <- det(R %*% t(R))
     }
     R.prev <- R
@@ -218,14 +229,14 @@ volnmf_estimate <- function(B, C, R, Q,
       R <- volnmf_logdet(C.update, X, R.update, R.constraint = R.constraint, extrapolate = extrapolate, majorate = R.majorate,
                          w.vol = wvol, delta = delta, err.cut = 1e-100, n.iter = vol.iter)
 
-    }else if (volf == "det"){
+    } else if (volf == "det"){
       R <- volnmf_det(C.update, X, R.update, posit=FALSE, w.vol=wvol, eigen.cut=1e-20, err.cut = 1e-100, n.iter = vol.iter)
     }
 
     err.post <- sum((X - C.update %*% R)^2)
     if (volf == "logdet"){
       vol.post <- log(det(R %*% t(R)+delta * diag(1, nrow(R))))
-    }else if (volf == "det"){
+    } else if (volf == "det"){
       vol.post <- det(R %*% t(R))
     }
     rvol[iter] <- vol.post
@@ -236,7 +247,7 @@ volnmf_estimate <- function(B, C, R, Q,
     if (C.constraint == "col"){
       C <- volnmf_simplex_col(X, R, C.prev = C.update, bound = C.bound, extrapolate = extrapolate,
                                err.cut = 1e-100, n.iter = c.iter)
-    }else{
+    } else{
       C <- volnmf_simplex_row(X, R, C.prev = C.update, meq = 1)
     }
     err.post.C <- sum((X - C %*% R.update)^2)
@@ -257,7 +268,7 @@ volnmf_estimate <- function(B, C, R, Q,
         C.update <- C
         R.update <- R
       }
-    }else{
+    } else{
       C.update <- C
       R.update <- R
     }
@@ -299,14 +310,20 @@ volnmf_estimate <- function(B, C, R, Q,
 
     if (verbose==TRUE & !is.null(record)){
       if (iter %% record == 0){
-        cat(paste("iteration", iter, "\n"))
-        cat(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
-        cat(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
+        message(paste("iteration", iter, "\n"))
+        message(paste("Before R update.. ","fit err:",err.prev,'vol:',wvol*vol.prev,'total:',err.prev + wvol*vol.prev,"\n" ))
+        message(paste("After  R update.. ","fit err:",err.post,'vol:',wvol*vol.post,'total:',err.post + wvol*vol.post,"\n" ))
         #cat(paste("Fraction R>0: ", sum(R > -1e-10)/length(R),"\n"))
-        cat(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
-        cat(paste("Mean affinity:",mean(aff),"\n"))
-        cat("Affinities: "); cat('\n'); cat(aff); cat('\n')
-        cat("Eigenvalues of R%*%t(R):"); cat('\n'); cat(eigens); cat("\n")
+        message(paste("After  C update.. ","fit err:",err.post.C,'vol:',wvol*vol.post,'total:',err.post.C + wvol*vol.post,"\n" ))
+        message(paste("Mean affinity:",mean(aff),"\n"))
+        message("Affinities: ")
+        message('\n')
+        message(aff)
+        message('\n')
+        message("Eigenvalues of R%*%t(R):")
+        message('\n')
+        message(eigens)
+        message("\n")
       }
     }
 

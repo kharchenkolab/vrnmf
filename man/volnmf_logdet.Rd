@@ -19,14 +19,19 @@ volnmf_logdet(
 )
 }
 \arguments{
-\item{C, X, R}{Numeric Matrices. Matrices involved in objective function.
-Matrix R serves as initialization.}
+\item{C}{Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.}
+
+\item{X}{Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.}
+
+\item{R}{Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.}
 
 \item{R.constraint}{A character. Set up ('pos') or not ('no') non-negative constraints on matrix \code{R} (by default 'pos').}
 
 \item{majorate}{A boolean. Majorate logdet each iteration (by default FALSE).}
 
 \item{extrapolate}{A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).}
+
+\item{qmax}{A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.}
 
 \item{w.vol}{A numeric. Volume (logdet) weight in objective function.}
 

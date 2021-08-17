@@ -3,8 +3,9 @@
 #' \code{volnmf_logdet} finds matrix \code{R} that minimizes objective
 #' \code{||X-C*R||^2 + w.vol*log(det(R)+delta)}.
 #'
-#' @param C,X,R Numeric Matrices. Matrices involved in objective function.
-#' Matrix R serves as initialization.
+#' @param C Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.
+#' @param X Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.
+#' @param R Numeric Matrices. Matrices involved in objective function.Matrix R serves as initialization.
 #' @param R.constraint A character. Set up ('pos') or not ('no') non-negative constraints on matrix \code{R} (by default 'pos').
 #' @param majorate A boolean. Majorate logdet each iteration (by default FALSE).
 #' @param extrapolate A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).
@@ -83,13 +84,14 @@ volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, extr
 #' \code{volnmf_det} finds matrix \code{R} that minimizes objective
 #' \code{||X-C*R||^2 + w.vol*det(R)}
 #'
-#' @param C,X,R Numeric Matrices. Matrices involved in objective function.
-#' Matrix R serves as initialization.
-#' @param posit A boolean. Set up (TRUE) or not (FALSE) non-negative constraints on matrix \code{R} (by default FALSE).
-#' @param w.vol A numeric. Volume (det) weight in objective function.
-#' @param eigen.cut A numeric. Threshold on eigenvalue of SVD eigenvectors.
-#' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.
-#' @param n.iter An integer. Number of iterations.
+#' @param C Numeric Matrices. Matrices involved in objective function. Matrix R serves as initialization.
+#' @param X Numeric Matrices. Matrices involved in objective function. Matrix R serves as initialization.
+#' @param R Numeric Matrices. Matrices involved in objective function. Matrix R serves as initialization.
+#' @param posit A boolean. Set up (TRUE) or not (FALSE) non-negative constraints on matrix \code{R}. (default=TRUE)
+#' @param w.vol A numeric. Volume (det) weight in objective function. (default=0.1)
+#' @param eigen.cut A numeric. Threshold on eigenvalue of SVD eigenvectors. (default=1e-16)
+#' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}. (default=1e-3)
+#' @param n.iter An integer. Number of iterations. (default=1e+3)
 #' @return An updated matrix \code{R}.
 #' @export
 volnmf_det <- function(C, X, R, posit=FALSE,
@@ -125,7 +127,7 @@ volnmf_det <- function(C, X, R, posit=FALSE,
       }else{
         bvec <- rep(-1e+6, nrow(Qi))
       }
-      ft <- solve.QP(Dmat = Qi, dvec = fi, Amat = Amat, bvec = bvec)
+      ft <- quadprog::solve.QP(Dmat = Qi, dvec = fi, Amat = Amat, bvec = bvec)
       R[i,] <- ft$solution
     }
 

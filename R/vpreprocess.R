@@ -10,22 +10,32 @@
 #' @return A list of objects that include normalized matrix \code{X.process}, row and column normalization factors \code{row.factors} and \code{col.factors},
 #' covariance matrix \code{P0}, covariance matrix \code{P} normalized to maximum value \code{pfactor},
 #' orthonormal basis \code{U} and vector of eigenvalues \code{eigens}.
+#' @examples 
+#' small_example <- vrnmf:::sim_factors(5, 5, 5)
+#' vol <- vol_preprocess(t(small_example$X))
+#'
 #' @export
 vol_preprocess <- function(X, col.norm = "sd", row.norm = NULL, pfactor = NULL){
-  row.factors <- rep(1,nrow(X))
-  col.factors <- rep(1,ncol(X))
+  row.factors <- rep(1, nrow(X))
+  col.factors <- rep(1, ncol(X))
 
   if (!is.null(col.norm)){
-    if (col.norm == "sd") col.factors <- apply(X,2,sd)
+    if (col.norm == "sd"){
+      col.factors <- apply(X,2,sd)
+    } 
   }
 
   if (!is.null(row.norm)) {
-    if (row.norm == "sd") row.factors <- apply(X,1,sd)
+    if (row.norm == "sd") {
+      row.factors <- apply(X,1,sd)
+    }
   }
 
   X.process <- t(t(X) / col.factors) / row.factors
   P0 <- t(X.process)%*%X.process
-  if (is.null(pfactor)) pfactor <- max(P0)
+  if (is.null(pfactor)) {
+    pfactor <- max(P0)
+  } 
   P <- P0 / pfactor # how to normalize P to avoid inf problems in AchorFree?
   dimr <- svd(P)
 

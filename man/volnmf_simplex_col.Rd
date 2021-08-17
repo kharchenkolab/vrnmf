@@ -16,16 +16,21 @@ volnmf_simplex_col(
 )
 }
 \arguments{
-\item{X, R, C.prev}{Numeric Matrices. Matrices involved in the objective function.
-Matrix \code{C.prev} serves as initialization (by default NULL).}
+\item{X}{Numeric Matrices. Matrices involved in the objective function.}
 
-\item{bound}{A numeric. Equality constraint on columns of matrix \code{C} (by default 1).}
+\item{R}{Numeric Matrices. Matrices involved in the objective function.}
 
-\item{extrapolate}{A boolean. Use extrapolation after local approximation (by default TRUE).}
+\item{C.prev}{Numeric Matrices. Matrices involved in the objective function. Matrix \code{C.prev} serves as initialization. (default=NULL)}
 
-\item{err.cut}{A numeric. Stop iterations if relative error between iterations is less than \code{err.cut} (parameter is not active now).}
+\item{bound}{A numeric. Equality constraint on columns of matrix \code{C}. (default=1)}
 
-\item{n.iter}{An integer. Number of iterations (by default 1,000).}
+\item{extrapolate}{A boolean. Use extrapolation after local approximation. (default=TRUE)}
+
+\item{err.cut}{A numeric. Stop iterations if relative error between iterations is less than \code{err.cut} (parameter is not active now). (default=1e-10)}
+
+\item{n.iter}{An integer. Number of iterations. (default=1000)}
+
+\item{qmax}{A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.}
 }
 \value{
 An updated matrix \code{C}.

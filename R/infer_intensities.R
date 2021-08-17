@@ -1,12 +1,15 @@
+
 #' Infer a matrix of non-negative intensities in NMF
 #'
 #' \code{infer_intensities} estimates a non-negative matrix \code{D} that optimizes the objective function \eqn{F = ||X - C*D||^2}
 #' using per-row quadratic programming.
 #'
-#' @param C,X Numeric matrices.
-#' @param esign A character. Keep elements of matrix \code{D} non-negative ("pos") or not ("all). By default "pos".
-#' @param n.cores An integer. Number of cores to use (by default 1).
+#' @param C Numeric matrices.
+#' @param X Numeric matrices.
+#' @param esign A character. Keep elements of matrix \code{D} non-negative ("pos") or not ("all). (default="pos")
+#' @param n.cores An integer. Number of cores to use. (default=1)
 #' @return Fitted matrix \code{D}.
+#' 
 #' @export
 infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
   X <- t(X)
@@ -32,7 +35,8 @@ infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
 #'
 #' \code{factor_intensities} estimates a non-negative matrix \code{D} that optimizes the objective function \eqn{F = ||X - C*D - offset||^2},
 #' where offset is either column-specific offset or a "1-rank nmf term": product of row vector and column vector
-#' @param C,X Numeric matrices.
+#' @param C Numeric matrices.
+#' @param X Numeric matrices.
 #' @param fit.nmf A boolean. Fit both intensities and spectrum of the offset residuals.
 #' @param fit.factor A boolean. Fit only spectrum of the offset residuals (keep intensities constant across samples).
 #' @param qp.exact A boolean. Estimate intensities using exact quadratic programming (qp.exact = TRUE) or inexact QP via gradient decent with extrapolation (qp.exact = FALSE).
@@ -104,8 +108,9 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
       if (iter > 1) dmat <- (X - X.offset) %*% C
       #dmat1 <- dmat%*%t(R1)
       fctr <- as.numeric(spec.offset.update%*%C1)
+      nr <- nrow(X)
       inten <- do.call(cbind, parallel::mclapply(1:nr, function(i) {
-        ft1 <- nnls(R, X.offset.const[i,] - int.offset.update[i]*fctr)
+        ft1 <- nnls::nnls(R, X.offset.const[i,] - int.offset.update[i]*fctr)
         ft1$x
       }, mc.cores = 1, mc.preschedule = TRUE))
     }
@@ -200,9 +205,9 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
       q[iter+1] <- 1 + q.factor
     }else if (extrapolate.convex == TRUE){
       q[iter+1] <- (1+sqrt(1+4*q[iter]^2))/2
-    }else if (extrapolate.majorate == TRUE){
-      q[iter + 1] <- min(q.upper, q[iter + 1] * rate.q.up)
-    }
+    } ##else if (extrapolate.majorate == TRUE){
+    ##  q[iter + 1] <- min(q.upper, q[iter + 1] * rate.q.up)
+    ##}
 
   }
 

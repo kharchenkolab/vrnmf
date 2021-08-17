@@ -42,7 +42,7 @@ volnmf_main(
 )
 }
 \arguments{
-\item{vol}{An output object of \code{\link{vol_preprocess()}}.}
+\item{vol}{An output object of vol_preprocess().}
 
 \item{B}{A numeric matrix. A matrix to factorize (by default NULL). If not given than matrix \code{B} is taken to be a square root decomposition of \eqn{P = B*t(B)}.}
 
@@ -90,13 +90,25 @@ volnmf_main(
 
 \item{R.majorate}{A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).}
 
-\item{C.init, R.init, Q.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
+\item{C.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
+
+\item{R.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
+
+\item{Q.init}{Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).}
 
 \item{anchor}{An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).}
 
-\item{verbose}{A boolean. Print per-iteration information (by default FALSE)}
+\item{Ctrue}{A matrix. Correct matrix C if known. Useful for benchmark.}
+
+\item{verbose}{A boolean. Print per-iteration information (by default FALSE).}
 
 \item{record}{A numeric. Record parameters every 'record' iterations (by default \code{NULL}).}
+
+\item{verbose.nmf}{A boolean. Print per-iteration information for standard NMF (by default FALSE).}
+
+\item{record.nmf}{A numeric. Record parameters every 'record' iterations for standard NMF (by default \code{NULL}).}
+
+\item{mutation.run}{A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).}
 }
 \value{
 List of objects:
@@ -114,4 +126,10 @@ List of objects:
 \eqn{F = ||B*Q - C*R||^2 + w.vol*volume(R)}. Matrix \code{C} is required to be non-negative and having either column or row vectors on the simplex.
 Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
 The latter option is used to decompose co-occurence matrix \code{vol_P}.
+}
+\examples{
+small_example <- vrnmf:::sim_factors(5, 5, 5)
+vol <- vol_preprocess(t(small_example$X))
+volnmf_main(vol)
+
 }

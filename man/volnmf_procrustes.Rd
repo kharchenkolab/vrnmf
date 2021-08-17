@@ -7,7 +7,9 @@
 volnmf_procrustes(A, B)
 }
 \arguments{
-\item{A, B}{Numeric Matrices. Orthonormal transformation convert matrix \code{B} in matrix \code{A}.}
+\item{A}{Numeric Matrices. Orthonormal transformation convert matrix \code{B} in matrix \code{A}.}
+
+\item{B}{Numeric Matrices. Orthonormal transformation convert matrix \code{B} in matrix \code{A}.}
 }
 \value{
 An optimal orthonormal tranformation matrix \code{Q}.

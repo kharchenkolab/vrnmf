@@ -1,3 +1,8 @@
+#' @importFrom stats cor lm rexp rnorm runif sd
+#' @importFrom graphics abline par points
+NULL
+
+#'
 #' Non-negative tri-factorization of co-occurence matrix using minimum volume approach.
 #'
 #' \code{AnchorFree} method tri-factorizes (co-occurence) matrix in a product  \eqn{P ~ C*E*t(C)} of non-negative matrices \eqn{C} and \eqn{E}
@@ -5,10 +10,10 @@
 #'
 #' Implementation closely follows (Fu X \emph{et al.}, IEEE Trans Pattern Anal Mach Intell., 2019).
 #'
-#' @param vol An output object of \code{\link{vol_preprocess()}}. The method factorizes co-occurence matrix \code{vol$P}.
-#' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}.
-#' @param init A numeric matrix. Initial matrix \code{M} (by default \code{NULL}).
-#' @param init.type A character. A strategy to randomly initialize matrix \code{M}. Options are to
+#' @param vol An output object of vol_preprocess(). The method factorizes co-occurence matrix \code{vol$P}.
+#' @param n.comp An integer. Number of components to extract (by default 3). Defines number of columns in matrix \eqn{C}. (default=3)
+#' @param init A numeric matrix. Initial matrix \code{M}. (default=3)
+#' @param init.type A character. A strategy to randomly initialize matrix \code{M}. (default="diag") Options are to
 #'
 #' 1) generate diagonal unit matrix ("diag"),
 #'
@@ -23,9 +28,9 @@
 #' 5) uniform distribution \code{[0.9,1.1]} ("similar"),
 #'
 #' 6) normal distribution \code{N(0,1)}.
-#' @param n.iter An integer. Number of iterations (by default 30).
-#' @param err.cut A numeric. Relative error in determinant between iterations to stop algorithm (now is not used).
-#' @param verbose A boolean. Print per-iteration information (by default FALSE)
+#' @param n.iter An integer. Number of iterations. (default=30)
+#' @param err.cut A numeric. Relative error in determinant between iterations to stop algorithm (now is not used). (default=1e-30)
+#' @param verbose A boolean. Print per-iteration information (default=FALSE)
 #' @return List of objects:
 #'
 #' \code{C}, \code{E} Factorization matrices.
@@ -35,6 +40,11 @@
 #' \code{M}, \code{detM} auxiliary matrix \code{M} and its determinant.
 #'
 #' \code{init.type} type of initialization of matrix \code{M} that was used.
+#' @examples 
+#' small_example <- vrnmf:::sim_factors(5, 5, 5)
+#' vol <- vol_preprocess(t(small_example$X))
+#' vol.anchor <- AnchorFree(vol)
+#'
 #' @export
 AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
                        n.iter = 30, err.cut = 1e-30, verbose = FALSE){
@@ -136,8 +146,8 @@ AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
     err <- (detM - detM.prev) / detM
 
     if (verbose == TRUE){
-      cat( paste("iteration:", iter, "det:", detM, "prev. det:", detM.prev, "error:", err) )
-      cat('\n')
+      message( paste("iteration:", iter, "det:", detM, "prev. det:", detM.prev, "error:", err) )
+      message('\n')
     }
     M.prev <- M
     detM.prev <- detM
@@ -149,7 +159,7 @@ AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
     Ccov <- solve(t(C) %*% C)
     E <- Ccov %*% (t(C) %*% Pclean %*% C) %*% Ccov
     Ppred <- C %*% E %*% t(C)
-  }else{
+  } else{
     C <- NA; Ccov <- NA; E <- NA; Ppred <- NA
   }
 

@@ -1,27 +1,80 @@
+[![Build Status](https://travis-ci.com/kharchenkolab/vrnmf.svg?branch=master)](https://travis-ci.com/kharchenkolab/vrnmf)
+
 # vrnmf
 Volume-regularized NMF.
 
-Package implements a set of methods to perform non-negative matrix decomposition with minimum volume contraints. A general problem is to decompose a non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=X_{nm}"> in a product of non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=C_{nr}"> and matrix <img src="https://render.githubusercontent.com/render/math?math=D_{rm}"> of lower rank r: <img src="https://render.githubusercontent.com/render/math?math=X = C\cdot D">. In case of additional non-negativity constraint on matrix <img src="https://render.githubusercontent.com/render/math?math=D"> the problem is known as NMF. 
+vrnmf implements a set of methods to perform non-negative matrix decomposition with minimum volume contraints. A general problem is to decompose a non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=X_{nm}"> in a product of non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=C_{nr}"> and matrix <img src="https://render.githubusercontent.com/render/math?math=D_{rm}"> of lower rank r: <img src="https://render.githubusercontent.com/render/math?math=X = C\cdot D">. In case of additional non-negativity constraints on the matrix <img src="https://render.githubusercontent.com/render/math?math=D">, the problem is known as NMF. 
 
-This problem, and NMF as a particualr case, is not identifiable in general case, meaning that there are potentially many different solutions that deliver the same decomposition quality [[1]](#1). It makes interpretation of factorized matrices challenging and limits applications of NMF to instrumental dimensionality reduction. However, recent theoretical advances showed that the issue can be overcome under a relatively mild assumption on "spread" of column vectors of C known as sufficient spreading [[2-3]](#2): if matrix C is non-negative and has sufficiently spread column vectors than volume minimization of a matrix D delivers a correct and unique, up to a scale and permutation, solution (C, D). 
+This problem, and NMF as a particualr case, is not identifiable in the general case, meaning that there are potentially many different solutions that deliver the same decomposition quality [[1]](#1). This both makes interpretation of factorized matrices challenging and limits applications of NMF to instrumental dimensionality reduction. However, recent theoretical advances have shown that the issue can be overcome under a relatively mild assumption based on "spread". That is, the column vectors of C are known as "sufficiently spread"[[2-3]](#2) if the matrix C is non-negative and the matrix C has sufficiently spread column vectors then the volume minimization of a matrix D delivers a correct and unique, up to a scale and permutation, solution (C, D). 
 
-_AnhorFree_ approach enables efficient estimation of matrix C by reformulating the problem in covariance domain following by application of volume minimization criterion [[4]](#4). A short walkthrough can be found at https://github.com/kharchenkolab/vrnmf/blob/master/vignettes/AnchorVolume.md.
+The _AnchorFree_ approach enables efficient estimation of matrix C by reformulating the problem in covariance domain following by application of volume minimization criterion [[4]](#4). A short walkthrough can be found [here](https://github.com/kharchenkolab/vrnmf/tree/master/doc/volume_regularized_NMF.md)
 
 A more general formulation of the problem that accounts for noise in matrix X, such that only approximately <img src="https://render.githubusercontent.com/render/math?math=X \approx CD">, is called volume-regularized NMF (_vrnmf_). To balance goodness of matrix approximation and matrix D volume, _vrnmf_ minimizes the following objective function [[5-6]](#2):
 
 <img src="https://render.githubusercontent.com/render/math?math=F = \| X-CD \|_{F}^{2} %2B \lambda \cdot Vol(D)"> 
 
-We provide implementation of _vrnmf_ approach and devise its reformulation in covariance domain. A detailed walkthrough is available at https://github.com/kharchenkolab/vrnmf/blob/master/vignettes/volume_regularized_NMF.md.
+We provide implementation of `vrnmf` approach and devise its reformulation in covariance domain.
 
-## Installation instructions
 
-```{r setup}
-install.packages("devtools")
-devtools::install_github("kharchenkolab/vrnmf")
-library(vrnmf)
+
+
+## Walkthrough
+
+### Volume-regularized NMF:
+
+* [HTML version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/kharchenkolab/vrnmf/blob/devel/doc/volume_regularized_NMF.html)
+
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/tree/master/doc/AnchorVolume.md)
+
+### Anchorfree Algorithm:
+
+* [HTML version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/kharchenkolab/vrnmf/blob/devel/doc/AnchorVolume.html)
+
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/tree/master/doc/volume_regularized_NMF.md)
+
+
+## Installation 
+
+
+To install the stable version from CRAN, use:
+
+```R
+install.packages('vrnmf')
 ```
 
+
+To install the latest version of vrnmf, use:
+
+```R
+install.packages('devtools')
+devtools::install_github('kharchenkolab/vrnmf')
+```
+
+
 ## References
+
+#### R package
+
+The R package can be cited as:
+
+```
+Ruslan Soldatov, Peter Kharchenko and Evan Biederstedt (2021). vrnmf:
+Volume-regularized structured matrix factorization. R package version
+1.0.0. https://github.com/kharchenkolab/vrnmf
+```
+
+#### Publication
+
+If you find this software useful for your research, please cite the corresponding [paper](https://science.sciencemag.org/content/early/2021/08/11/science.aba7408):
+
+```
+Vladimir B. Seplyarskiy Ruslan A. Soldatov, et al. 
+Population sequencing data reveal a compendium of mutational processes in the human germ line.
+Science, 12 Aug 2021. doi: 10.1126/science.aba7408
+```
+
+#### README references
+
 <a id="1">[1]</a> 
 K. Huang, N. D. Sidiropoulos and A. Swami.
 Non-Negative Matrix Factorization Revisited: Uniqueness and Algorithm for Symmetric Decomposition.

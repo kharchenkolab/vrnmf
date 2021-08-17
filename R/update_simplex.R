@@ -3,12 +3,13 @@
 #' \code{volnmf_simplex_col} finds non-negative matrix \code{C} that minimizes the objective \code{||X-C*R||^2}
 #' under constraints that columns of C equal to 1 using local approximation with extrapolation.
 #'
-#' @param X,R,C.prev Numeric Matrices. Matrices involved in the objective function.
-#' Matrix \code{C.prev} serves as initialization (by default NULL).
-#' @param bound A numeric. Equality constraint on columns of matrix \code{C} (by default 1).
-#' @param extrapolate A boolean. Use extrapolation after local approximation (by default TRUE).
-#' @param err.cut A numeric. Stop iterations if relative error between iterations is less than \code{err.cut} (parameter is not active now).
-#' @param n.iter An integer. Number of iterations (by default 1,000).
+#' @param X Numeric Matrices. Matrices involved in the objective function. 
+#' @param R Numeric Matrices. Matrices involved in the objective function. 
+#' @param C.prev Numeric Matrices. Matrices involved in the objective function. Matrix \code{C.prev} serves as initialization. (default=NULL)
+#' @param bound A numeric. Equality constraint on columns of matrix \code{C}. (default=1)
+#' @param extrapolate A boolean. Use extrapolation after local approximation. (default=TRUE)
+#' @param err.cut A numeric. Stop iterations if relative error between iterations is less than \code{err.cut} (parameter is not active now). (default=1e-10)
+#' @param n.iter An integer. Number of iterations. (default=1000)
 #' @param qmax A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.
 #' @return An updated matrix \code{C}.
 #' @export
@@ -57,8 +58,9 @@ volnmf_simplex_col <- function(X, R, C.prev = NULL, bound = 1, extrapolate = TRU
 #' \code{volnmf_simplex_row} finds non-negative matrix \code{C} that minimizes the objective \code{||X-C*R||^2}
 #' under constraints that rows of C equal to 1 using per-row quadratic programming.
 #'
-#' @param X,R,C.prev Numeric Matrices. Matrices involved in the objective function.
-#' Matrix \code{C.prev} serves as initialization (by default NULL).
+#' @param X Numeric Matrices. Matrices involved in the objective function. 
+#' @param R Numeric Matrices. Matrices involved in the objective function. 
+#' @param C.prev Numeric Matrices. Matrices involved in the objective function. Matrix \code{C.prev} serves as initialization. (default=NULL)
 #' @param meq An integer 0 or 1. Require equality (\code{meq=1}) or inequality (\code{meq=0}) constratint on rows (by default 1).
 #' @return An updated matrix \code{C}.
 #' @export
