@@ -98,9 +98,17 @@ volnmf_main(
 
 \item{anchor}{An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).}
 
-\item{verbose}{A boolean. Print per-iteration information (by default FALSE)}
+\item{Ctrue}{A matrix. Correct matrix C if known. Useful for benchmark.}
+
+\item{verbose}{A boolean. Print per-iteration information (by default FALSE).}
 
 \item{record}{A numeric. Record parameters every 'record' iterations (by default \code{NULL}).}
+
+\item{verbose.nmf}{A boolean. Print per-iteration information for standard NMF (by default FALSE).}
+
+\item{record.nmf}{A numeric. Record parameters every 'record' iterations for standard NMF (by default \code{NULL}).}
+
+\item{mutation.run}{A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).}
 }
 \value{
 List of objects:

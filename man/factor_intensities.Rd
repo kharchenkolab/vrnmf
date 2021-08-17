@@ -25,6 +25,30 @@ factor_intensities(
 \item{C}{Numeric matrices.}
 
 \item{X}{Numeric matrices.}
+
+\item{fit.nmf}{A boolean. Fit both intensities and spectrum of the offset residuals.}
+
+\item{fit.factor}{A boolean. Fit only spectrum of the offset residuals (keep intensities constant across samples).}
+
+\item{qp.exact}{A boolean. Estimate intensities using exact quadratic programming (qp.exact = TRUE) or inexact QP via gradient decent with extrapolation (qp.exact = FALSE).}
+
+\item{n.iter}{An integer. Number of iterations.}
+
+\item{qp.iter}{= 1e+1 An integer. Number of iterations of inexact QP.}
+
+\item{rel.error.cutoff}{A numeric. Relative error cutoff between iterations to stop iterations.}
+
+\item{extrapolate}{A boolean. Use Nesterov-like extrapolation at each iteration.}
+
+\item{extrapolate.const}{A boolean. Use extrapolation scheme that adds a constant extrapolation q.factor (described below) at each iteration.}
+
+\item{extrapolate.convex}{A boolean. Use Nesterov extrapolation scheme.}
+
+\item{q.factor}{A numeric. Specification of a a constant extrapolation factor used in case of extrapolate.const = T.}
+
+\item{verbose}{A boolean.  Print per-iteration information (by default TRUE).}
+
+\item{n.cores}{An integer. Number of cores to use.}
 }
 \value{
 Fitted matrix \code{D}.

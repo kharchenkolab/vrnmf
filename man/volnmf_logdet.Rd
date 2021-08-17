@@ -31,6 +31,8 @@ volnmf_logdet(
 
 \item{extrapolate}{A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).}
 
+\item{qmax}{A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.}
+
 \item{w.vol}{A numeric. Volume (logdet) weight in objective function.}
 
 \item{delta}{A numeric. Determinant pseudocount in objective function.}

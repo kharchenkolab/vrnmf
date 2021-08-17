@@ -76,6 +76,12 @@ volnmf_estimate(
 \item{verbose}{A boolean. Print per-iteration information (by default FALSE)}
 
 \item{record}{A numeric. Record parameters every 'record' iterations (by default \code{NULL}).}
+
+\item{Canchor}{A matrix. A matrix of anchor components (unused currently). (default=NULL)}
+
+\item{Ctrue}{A matrix. Correct matrix C if known. Useful for benchmark.}
+
+\item{mutation.run}{A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns). (default=FALSE)}
 }
 \value{
 List of objects:

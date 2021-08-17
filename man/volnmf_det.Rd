@@ -26,7 +26,7 @@ volnmf_det(
 
 \item{w.vol}{A numeric. Volume (det) weight in objective function. (default=0.1)}
 
-\item{eigen.cut}{A numeric. (default=1e-16)}
+\item{eigen.cut}{A numeric. Threshold on eigenvalue of SVD eigenvectors. (default=1e-16)}
 
 \item{err.cut}{A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}. (default=1e-3)}
 

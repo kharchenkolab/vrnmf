@@ -29,6 +29,8 @@ volnmf_simplex_col(
 \item{err.cut}{A numeric. Stop iterations if relative error between iterations is less than \code{err.cut} (parameter is not active now). (default=1e-10)}
 
 \item{n.iter}{An integer. Number of iterations. (default=1000)}
+
+\item{qmax}{A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.}
 }
 \value{
 An updated matrix \code{C}.

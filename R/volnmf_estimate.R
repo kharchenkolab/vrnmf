@@ -33,8 +33,12 @@
 #' @param R.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
 #' @param Q.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
 #' @param anchor An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).
-#' @param verbose A boolean. Print per-iteration information (by default FALSE)
+#' @param Ctrue A matrix. Correct matrix C if known. Useful for benchmark.
+#' @param verbose A boolean. Print per-iteration information (by default FALSE).
 #' @param record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param verbose.nmf A boolean. Print per-iteration information for standard NMF (by default FALSE).
+#' @param record.nmf A numeric. Record parameters every 'record' iterations for standard NMF (by default \code{NULL}).
+#' @param mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).
 #' @return List of objects:
 #'
 #' \code{C, R, Q} Factorization matrices.
@@ -171,6 +175,9 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' @param R.constraint A character. Set up non-negativity ("pos") constraint on elements of \code{R} (by default "pos", alternative "no").
 #' @param verbose A boolean. Print per-iteration information (by default FALSE)
 #' @param record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param Canchor A matrix. A matrix of anchor components (unused currently). (default=NULL)
+#' @param Ctrue A matrix. Correct matrix C if known. Useful for benchmark.
+#' @param mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns). (default=FALSE)
 #' @return List of objects:
 #'
 #' \code{C, R, Q}, \code{E} Factorization matrices.
@@ -200,7 +207,7 @@ volnmf_estimate <- function(B, C, R, Q,
   ){
     if (domain == "covariance"){
       X <- B %*% Q
-    }else{
+    } else{
       X <- B
     }
 
@@ -208,7 +215,7 @@ volnmf_estimate <- function(B, C, R, Q,
     err.prev <- sum((X - C.update %*% R)^2)
     if (volf == "logdet"){
       vol.prev <- log(det(R %*% t(R) + delta * diag(1, nrow(R))))
-    }else if (volf == "det"){
+    } else if (volf == "det"){
       vol.prev <- det(R %*% t(R))
     }
     R.prev <- R
@@ -217,14 +224,14 @@ volnmf_estimate <- function(B, C, R, Q,
       R <- volnmf_logdet(C.update, X, R.update, R.constraint = R.constraint, extrapolate = extrapolate, majorate = R.majorate,
                          w.vol = wvol, delta = delta, err.cut = 1e-100, n.iter = vol.iter)
 
-    }else if (volf == "det"){
+    } else if (volf == "det"){
       R <- volnmf_det(C.update, X, R.update, posit=FALSE, w.vol=wvol, eigen.cut=1e-20, err.cut = 1e-100, n.iter = vol.iter)
     }
 
     err.post <- sum((X - C.update %*% R)^2)
     if (volf == "logdet"){
       vol.post <- log(det(R %*% t(R)+delta * diag(1, nrow(R))))
-    }else if (volf == "det"){
+    } else if (volf == "det"){
       vol.post <- det(R %*% t(R))
     }
     rvol[iter] <- vol.post
@@ -235,7 +242,7 @@ volnmf_estimate <- function(B, C, R, Q,
     if (C.constraint == "col"){
       C <- volnmf_simplex_col(X, R, C.prev = C.update, bound = C.bound, extrapolate = extrapolate,
                                err.cut = 1e-100, n.iter = c.iter)
-    }else{
+    } else{
       C <- volnmf_simplex_row(X, R, C.prev = C.update, meq = 1)
     }
     err.post.C <- sum((X - C %*% R.update)^2)
@@ -256,7 +263,7 @@ volnmf_estimate <- function(B, C, R, Q,
         C.update <- C
         R.update <- R
       }
-    }else{
+    } else{
       C.update <- C
       R.update <- R
     }

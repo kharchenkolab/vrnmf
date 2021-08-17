@@ -1,0 +1,14 @@
+AnchorFree	AnchorFree
+factor_intensities	factor_intensities
+infer_intensities	infer_intensities
+projection_onto_simplex	projection_onto_simplex
+simnmf	simnmf
+sim_factors	sim_factors
+volnmf_det	volnmf_det
+volnmf_estimate	volnmf_estimate
+volnmf_logdet	volnmf_logdet
+volnmf_main	volnmf_main
+volnmf_procrustes	volnmf_procrustes
+volnmf_simplex_col	volnmf_simplex_col
+volnmf_simplex_row	volnmf_simplex_row
+vol_preprocess	vol_preprocess

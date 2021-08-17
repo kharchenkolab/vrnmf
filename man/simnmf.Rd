@@ -5,12 +5,18 @@
 \alias{simnmf}
 \title{Simulated example of noiseless non-negative matrix factorization.}
 \format{
-An object of class \code{list} of length 4.
+A list of 4 items.
+\describe{
+  \item{X.noise}{noise matrix}
+  \item{X}{original matrix}
+  \item{C}{left decomposition matrix}
+  \item{D}{right decomposition matrix}
+}
 }
 \usage{
 simnmf
 }
 \description{
-A dataset containing original, noisy and decomposition matrices. Created with the internal function 'sim_factors()'
+A dataset containing original, noisy and decomposition matrices.
 }
 \keyword{datasets}
