@@ -22,15 +22,11 @@ We provide implementation of `vrnmf` approach and devise its reformulation in co
 
 ### Volume-regularized NMF:
 
-* [HTML version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/kharchenkolab/vrnmf/blob/devel/doc/volume_regularized_NMF.html)
-
-* [Markdown version](https://github.com/kharchenkolab/vrnmf/tree/master/doc/AnchorVolume.md)
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/blob/master/doc/AnchorVolume.md)
 
 ### Anchorfree Algorithm:
 
-* [HTML version](https://htmlpreview.github.io/?https://raw.githubusercontent.com/kharchenkolab/vrnmf/blob/devel/doc/AnchorVolume.html)
-
-* [Markdown version](https://github.com/kharchenkolab/vrnmf/tree/master/doc/volume_regularized_NMF.md)
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/blob/master/doc/volume_regularized_NMF.md)
 
 
 ## Installation 
