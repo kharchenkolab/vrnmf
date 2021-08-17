@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
 ## -----------------------------------------------------------------------------
 library(vrnmf)
 
-data(simnmf)
+simnmf <- simulatedNMF::simnmf
 
 names(simnmf)
 
