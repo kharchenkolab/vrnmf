@@ -1,3 +1,8 @@
+#' @importFrom stats cor lm rexp rnorm runif sd
+#' @importFrom graphics abline par points
+NULL
+
+#'
 #' Non-negative tri-factorization of co-occurence matrix using minimum volume approach.
 #'
 #' \code{AnchorFree} method tri-factorizes (co-occurence) matrix in a product  \eqn{P ~ C*E*t(C)} of non-negative matrices \eqn{C} and \eqn{E}

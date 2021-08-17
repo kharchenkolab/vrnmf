@@ -1,3 +1,4 @@
+
 #' Infer a matrix of non-negative intensities in NMF
 #'
 #' \code{infer_intensities} estimates a non-negative matrix \code{D} that optimizes the objective function \eqn{F = ||X - C*D||^2}
@@ -106,8 +107,9 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
       if (iter > 1) dmat <- (X - X.offset) %*% C
       #dmat1 <- dmat%*%t(R1)
       fctr <- as.numeric(spec.offset.update%*%C1)
+      nr <- nrow(X)
       inten <- do.call(cbind, parallel::mclapply(1:nr, function(i) {
-        ft1 <- nnls(R, X.offset.const[i,] - int.offset.update[i]*fctr)
+        ft1 <- nnls::nnls(R, X.offset.const[i,] - int.offset.update[i]*fctr)
         ft1$x
       }, mc.cores = 1, mc.preschedule = TRUE))
     }
@@ -202,9 +204,9 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
       q[iter+1] <- 1 + q.factor
     }else if (extrapolate.convex == TRUE){
       q[iter+1] <- (1+sqrt(1+4*q[iter]^2))/2
-    }else if (extrapolate.majorate == TRUE){
-      q[iter + 1] <- min(q.upper, q[iter + 1] * rate.q.up)
-    }
+    } ##else if (extrapolate.majorate == TRUE){
+    ##  q[iter + 1] <- min(q.upper, q[iter + 1] * rate.q.up)
+    ##}
 
   }
 

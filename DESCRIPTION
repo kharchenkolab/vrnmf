@@ -9,10 +9,13 @@ Depends:
     R (>= 3.5.1)
 LazyData: true
 Imports: 
+    graphics,
     ica (>= 1.0),
     lpSolveAPI (>= 5.5.2.0),
+    nnls,
+    parallel (>= 3.5.1),
     quadprog (>= 1.5),
-    parallel (>= 3.5.1)
+    stats
 Suggests: 
     knitr (>= 1.28),
     rmarkdown (>= 2.1)

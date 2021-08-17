@@ -1,3 +1,4 @@
+
 #' Simulate matrices to explores \code{vrnmf}
 #'
 #' \code{sim_factors} simulates non-negative factorization matrices \code{C} and \code{D}
