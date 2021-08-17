@@ -165,6 +165,9 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
 #' @param R.constraint A character. Set up non-negativity ("pos") constraint on elements of \code{R} (by default "pos", alternative "no").
 #' @param verbose A boolean. Print per-iteration information (by default FALSE)
 #' @param  record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param Canchor A matrix. A matrix of anchor components (unused currently).
+#' @param Ctrue A matrix. Correct matrix C if known. Useful for benchmark.
+#' @param  mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).
 #' @return List of objects:
 #'
 #' \code{C, R, Q}, \code{E} Factorization matrices.
