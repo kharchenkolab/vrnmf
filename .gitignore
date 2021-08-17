@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 vrnmf*.tar.gz
+vrnmf.Rcheck
