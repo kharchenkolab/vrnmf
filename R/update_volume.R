@@ -8,6 +8,7 @@
 #' @param R.constraint A character. Set up ('pos') or not ('no') non-negative constraints on matrix \code{R} (by default 'pos').
 #' @param majorate A boolean. Majorate logdet each iteration (by default FALSE).
 #' @param extrapolate A boolean. Use Nesterov acceleration (by default FALSE, currently is not supported).
+#' @param qmax A numeric. Maximum asymptotic (1 - 1/qmax) of extrapolation step.
 #' @param w.vol A numeric. Volume (logdet) weight in objective function.
 #' @param delta A numeric. Determinant pseudocount in objective function.
 #' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.
