@@ -31,8 +31,12 @@
 #' @param  R.majorate A boolean. Majorate logdet each iteration of \code{volnmf_logdet()} (by default FALSE).
 #' @param  C.init,R.init,Q.init Numeric matrices. Initialization of matrices \code{C, R, Q} (by default \code{NULL}).
 #' @param  anchor An output object of \code{AnchorFree()}. Object is used optionally to initialize matrices (by default \code{NULL}).
-#' @param verbose A boolean. Print per-iteration information (by default FALSE)
+#' @param Ctrue A matrix. Correct matrix C if known. Useful for benchmark.
+#' @param verbose A boolean. Print per-iteration information (by default FALSE).
 #' @param  record A numeric. Record parameters every 'record' iterations (by default \code{NULL}).
+#' @param verbose A boolean. Print per-iteration information for standard NMF (by default FALSE).
+#' @param  record A numeric. Record parameters every 'record' iterations for standard NMF (by default \code{NULL}).
+#' @param  mutation.run A boolean. Assess goodness of solution using reflection test if mutation.run=TRUE (applicable only to analysis of mutation patterns).
 #' @return List of objects:
 #'
 #' \code{C, R, Q} Factorization matrices.
