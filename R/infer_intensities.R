@@ -33,6 +33,18 @@ infer_intensities <- function(C, X, esign = "pos", n.cores = 1){
 #' \code{factor_intensities} estimates a non-negative matrix \code{D} that optimizes the objective function \eqn{F = ||X - C*D - offset||^2},
 #' where offset is either column-specific offset or a "1-rank nmf term": product of row vector and column vector
 #' @param C,X Numeric matrices.
+#' @param fit.nmf A boolean. Fit both intensities and spectrum of the offset residuals.
+#' @param fit.factor A boolean. Fit only spectrum of the offset residuals (keep intensities constant across samples).
+#' @param qp.exact A boolean. Estimate intensities using exact quadratic programming (qp.exact = TRUE) or inexact QP via gradient decent with extrapolation (qp.exact = FALSE).
+#' @param n.iter An integer. Number of iterations.
+#' @param qp.iter = 1e+1 An integer. Number of iterations of inexact QP.
+#' @param rel.error.cutoff A numeric. Relative error cutoff between iterations to stop iterations.
+#' @param extrapolate A boolean. Use Nesterov-like extrapolation at each iteration.
+#' @param extrapolate.const A boolean. Use extrapolation scheme that adds a constant extrapolation q.factor (described below) at each iteration.
+#' @param extrapolate.convex A boolean. Use Nesterov extrapolation scheme.
+#' @param q.factor A numeric. Specification of a a constant extrapolation factor used in case of extrapolate.const = T.
+#' @param verbose A boolean.  Print per-iteration information (by default TRUE).
+#' @param n.cores An integer. Number of cores to use.
 #' @return Fitted matrix \code{D}.
 #' @export
 factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exact = FALSE,
