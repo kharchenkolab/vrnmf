@@ -2,7 +2,9 @@ Package: vrnmf
 Title: Volume-Regularized Structured Matrix Factorization
 Version: 1.0.0
 Authors@R: c(person("Ruslan", "Soldatov", email = "ruslansoldatov@gmail.com", role = c("aut")), person("Peter", "Kharchenko", email = "peter_kharchenko@hms.harvard.edu", role = "aut"), person("Evan", "Biederstedt", email="evan.biederstedt@gmail.com", role=c("cre", "aut")))
-Description: The package implements a set of routines to perform structured matrix factorization with minimum volume constraints. 
+Description: Implements a set of routines to perform structured matrix factorization with minimum volume constraints. The NMF procedure decomposes a matrix X into a product C * D. Given conditions such that the matrix C is non-negative and has sufficiently spread columns, then volume minimization of a matrix D delivers a correct and unique, up to a scale and permutation, solution (C, D). This package provides both an implementation of volume-regularized NMF and "anchor-free" NMF, whereby the standard NMF problem is reformulated in the covariance domain. This algorithm was applied in Vladimir B. Seplyarskiy Ruslan A. Soldatov, et al. "Population sequencing data reveal a compendium of mutational processes in the human germ line". Science, 12 Aug 2021. <doi:10.1126/science.aba7408>. This package interacts with data available through the 'simulatedNMF' package, which is available in a 'drat' repository. To access this data package, see the instructions at <https://github.com/kharchenkolab/vrnmf>. The size of the 'simulatedNMF' package is approximately 8 MB.
+License: GPL-3
+Copyright: See the file COPYRIGHTS for various conos copyright details
 License: GPL-3
 Encoding: UTF-8
 Depends: 
@@ -20,7 +22,6 @@ Suggests:
     knitr (>= 1.28),
     rmarkdown (>= 2.1),
     testthat
-VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 URL: https://github.com/kharchenkolab/vrnmf
 BugReports: https://github.com/kharchenkolab/vrnmf/issues

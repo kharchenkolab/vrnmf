@@ -14,6 +14,25 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Prelimary: Loading Simulated Data
+
+We have pre-generated a dataset of simulated NMF matrices that you can load as a list directly using the package `simulatedNMF`, which is available through a `drat` repository on GitHub. Note that the size of the 'simulatedNMF' package is approximately 8 MB. This package may be installed as follows:
+
+
+```r
+install.packages('simulatedNMF', repos='https://kharchenkolab.github.io/drat/', type='source')
+```
+
+(Please see the [drat documentation](https://dirk.eddelbuettel.com/code/drat.html) for more comprehensive explanations and vignettes regarding `drat` repositories.)
+
+
+The following command load this dataset for the following tutorial:
+
+```r
+simnmf <- simulatedNMF::simnmf
+```
+
+
 ## Introduction  
   
   Generally, structured matrix factorization problem is formulated as a decomposition of original matrix <img src="https://render.githubusercontent.com/render/math?math=X"> in a product of unknown non-negative matrix <img src="https://render.githubusercontent.com/render/math?math=C"> and matrix <img src="https://render.githubusercontent.com/render/math?math=D"> of lower rank: 
@@ -31,12 +50,12 @@ knitr::opts_chunk$set(
 
 ## Application
 
-Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate a dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and the dataset:
+Application of the method is examplified below for a simulated dataset. For that, we will use dataset with matrices `X`, its noisy version `X.noise` and decomposition matrices `C` and `D` such that `X = C*D` (to simulate a dataset with parameters of interest one can use function `sim_factors`). First, we upload the library and dataset:
   
   ```{r}
 library(vrnmf)
 
-data(simnmf)
+simnmf <- simulatedNMF::simnmf
 
 names(simnmf)
 ```

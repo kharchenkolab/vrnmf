@@ -127,7 +127,7 @@ volnmf_det <- function(C, X, R, posit=FALSE,
       }else{
         bvec <- rep(-1e+6, nrow(Qi))
       }
-      ft <- solve.QP(Dmat = Qi, dvec = fi, Amat = Amat, bvec = bvec)
+      ft <- quadprog::solve.QP(Dmat = Qi, dvec = fi, Amat = Amat, bvec = bvec)
       R[i,] <- ft$solution
     }
 
