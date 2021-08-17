@@ -87,7 +87,7 @@ volnmf_logdet <- function(C, X, R, R.constraint = "pos",  majorate = FALSE, extr
 #' Matrix R serves as initialization.
 #' @param posit A boolean. Set up (TRUE) or not (FALSE) non-negative constraints on matrix \code{R} (by default FALSE).
 #' @param w.vol A numeric. Volume (det) weight in objective function.
-#' @param eigen.cut A numeric.
+#' @param eigen.cut A numeric. Threshold on eigenvalue of SVD eigenvectors.
 #' @param err.cut A numeric. Stop algorithm if relative erro in R between iteration is less than \code{err.cut}.
 #' @param n.iter An integer. Number of iterations.
 #' @return An updated matrix \code{R}.
