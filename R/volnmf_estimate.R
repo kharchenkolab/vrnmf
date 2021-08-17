@@ -48,6 +48,11 @@
 #' \code{C.rand, R.rand, Q.rand} Random initialization matrices for NMF optimization \code{(w.vol=0)}.
 #'
 #' \code{rec} a list of objects that record and store state of matrices each \code{record} iterations.
+#' @examples 
+#' small_example <- vrnmf:::sim_factors(5, 5, 5)
+#' vol <- vol_preprocess(t(small_example$X))
+#' volnmf_main(vol)
+#'
 #' @export
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
                         do.nmf=TRUE, iter.nmf = 1e+2, seed  = NULL,

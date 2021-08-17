@@ -127,3 +127,9 @@ List of objects:
 Matrix \code{R} can optionally have non-negativity constraint. Matrix \code{Q} can optionally be identity matrix or any unitary.
 The latter option is used to decompose co-occurence matrix \code{vol_P}.
 }
+\examples{
+small_example <- vrnmf:::sim_factors(5, 5, 5)
+vol <- vol_preprocess(t(small_example$X))
+volnmf_main(vol)
+
+}

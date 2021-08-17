@@ -7,7 +7,6 @@ License: GPL-3
 Encoding: UTF-8
 Depends: 
     R (>= 3.5.1)
-LazyData: true
 Imports: 
     graphics,
     ica (>= 1.0),

@@ -61,3 +61,9 @@ such that matrix \eqn{E} has mininum volume and columns of matrix \eqn{C} equal 
 \details{
 Implementation closely follows (Fu X \emph{et al.}, IEEE Trans Pattern Anal Mach Intell., 2019).
 }
+\examples{
+small_example <- vrnmf:::sim_factors(5, 5, 5)
+vol <- vol_preprocess(t(small_example$X))
+vol.anchor <- AnchorFree(vol)
+
+}
