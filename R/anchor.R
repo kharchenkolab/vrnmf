@@ -66,7 +66,7 @@ AnchorFree <- function(vol, n.comp = 3, init = NULL, init.type = "diag",
     }else if (init.type == "normal"){
       M <- matrix(rnorm(n.comp*n.comp, 0, 1), nrow = n.comp, ncol = n.comp)
     }else if (init.type == "ica" | init.type == "ica.pos"){
-      ic <- ica::icafast(B, nc = n.comp, fun = fun)
+      ic <- ica::icafast(B, nc = n.comp)
       icM <- t(t(ic$S) + (t(solve(t(ic$M))) %*% apply(B, 2, mean))[,1])
       sgn <- apply(icM,2,function(x) sign(sum(sign(x) * x^2)))
       icM <- t(t(icM) * sgn)

@@ -48,10 +48,6 @@
 #' \code{C.rand, R.rand, Q.rand} Random initialization matrices for NMF optimization \code{(w.vol=0)}.
 #'
 #' \code{rec} a list of objects that record and store state of matrices each \code{record} iterations.
-#' @examples 
-#' small_example <- vrnmf:::sim_factors(5, 5, 5)
-#' vol <- vol_preprocess(t(small_example$X))
-#' volres <- volnmf_main(vol)
 #'
 #' @export
 volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.comp,
@@ -73,8 +69,10 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
   #anchor = NULL;
   #frac.zero = 0.3; verbose = TRUE; record = 100
   
-  if (mutation.run==FALSE){
-    rate.rec <- xcompl <- vol <- NULL
+  if (mutation.run==FALSE) {
+    rate.rec <- NULL
+    xcompl <- NULL
+    vol <- NULL
   }
 
   # matrix B
@@ -211,7 +209,12 @@ volnmf_estimate <- function(B, C, R, Q,
   eigens <- 1
   R.update <- R; C.update <- C
   tot.update.prev <- tot.update <- 0
-
+  if (mutation.run==FALSE) {
+    rate.rec <- NULL
+    xcompl <- NULL
+    vol <- NULL
+  }
+  
   while (iter < n.iter & err > err.cut #& (min(eigens) > 1e-16 | iter<3)
   ){
     if (domain == "covariance"){
