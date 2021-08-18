@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/kharchenkolab/vrnmf.svg?branch=master)](https://travis-ci.com/kharchenkolab/vrnmf)
+[![<kharchenkolab>](https://circleci.com/gh/kharchenkolab/vrnmf.svg?style=svg)](https://app.circleci.com/pipelines/github/kharchenkolab/vrnmf)
 
 # vrnmf
 Volume-regularized NMF.

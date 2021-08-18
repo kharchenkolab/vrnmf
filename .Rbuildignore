@@ -9,3 +9,4 @@ CHANGELOG.md
 ^vignettes\*.md$
 ^vignettes\figure$
 data-raw
+^\.circleci$
