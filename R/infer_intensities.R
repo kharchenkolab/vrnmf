@@ -177,6 +177,8 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
       int.offset.update <- int.offset + extr*(int.offset - int.offset.old)
     }
 
+    op <- par(no.readonly = TRUE)
+    on.exit(par(op))
 
     if (verbose == TRUE & iter %% 5 == 0){
       X.offset <- as.matrix(int.offset)%*%t(as.matrix(spec.offset))
@@ -186,7 +188,8 @@ factor_intensities <- function (C, X, fit.nmf = TRUE, fit.factor = FALSE, qp.exa
       sbio <- c(sbio, sum(X.bio))
       soff <- c(soff, sum(X.offset))
 
-      par(mfrow=c(2,1),mar=c(2,2,0.5,0.5))
+      temppar <- par(mfrow=c(2,1),mar=c(2,2,0.5,0.5))
+      on.exit(par(temppar))
       plot(1:length(objs), objs, cex = 0.5)
       plot(1:length(sbio), sbio, cex = 0.5, col = "darkred", ylim=c(min(c(sbio,soff)),max(c(sbio,soff))))
       points(1:length(soff), soff, cex = 0.5, col = "darkgreen")
