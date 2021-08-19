@@ -41,7 +41,7 @@ NULL
 #'
 #' \code{init.type} type of initialization of matrix \code{M} that was used.
 #' @examples 
-#' small_example <- vrnmf:::sim_factors(5, 5, 5)
+#' small_example <- sim_factors(5, 5, 5)
 #' vol <- vol_preprocess(t(small_example$X))
 #' vol.anchor <- AnchorFree(vol)
 #'

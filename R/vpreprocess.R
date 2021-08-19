@@ -11,7 +11,7 @@
 #' covariance matrix \code{P0}, covariance matrix \code{P} normalized to maximum value \code{pfactor},
 #' orthonormal basis \code{U} and vector of eigenvalues \code{eigens}.
 #' @examples 
-#' small_example <- vrnmf:::sim_factors(5, 5, 5)
+#' small_example <- sim_factors(5, 5, 5)
 #' vol <- vol_preprocess(t(small_example$X))
 #'
 #' @export

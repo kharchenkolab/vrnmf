@@ -46,4 +46,3 @@ List of simulated matrices:
 \code{sim_factors} simulates non-negative factorization matrices \code{C} and \code{D}
 under a variaty of conditions to explore factorization \eqn{X = C*D + noise}.
 }
-\keyword{internal}
