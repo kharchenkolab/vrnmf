@@ -308,8 +308,12 @@ volnmf_estimate <- function(B, C, R, Q,
     }
     aff.mean[iter] <- mean(aff)
 
+    op <- par(no.readonly = TRUE)
+    on.exit(par(op))
+
     if (verbose == TRUE & (iter %% 100 == 0)){
-      par(mfrow=c(2,1),mar=c(4,4,1,1))
+      temppar <- par(mfrow=c(2,1),mar=c(4,4,1,1))
+      on.exit(par(temppar))
       plot(1:iter, rvol, pch=19, cex=0.1, xlab="iteration", ylab="Vol")
       #if (!is.null(vol.ref)) {abline(h=vol.ref,col="red",lwd=1)}
       cmax <- aff.mean[length(aff.mean)]

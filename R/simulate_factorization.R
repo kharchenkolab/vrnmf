@@ -20,7 +20,8 @@
 #' \code{X.noise}, \code{X} - noisy and original matrix \code{X} to decompose.
 #'
 #' \code{C}, \code{D} - factorization matrices.
-#' @keywords internal
+#' 
+#' @export
 sim_factors <- function(m, n, r, simplex = "col", distr = "unif", frac.zeros = 0.4,
                       condition = FALSE, noise = 0e-4){
 

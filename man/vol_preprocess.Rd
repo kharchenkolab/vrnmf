@@ -25,7 +25,7 @@ orthonormal basis \code{U} and vector of eigenvalues \code{eigens}.
 \code{vol_preprocess} Routine normalizes the data (as requested), estimates covariance and SVD decomposition.
 }
 \examples{
-small_example <- vrnmf:::sim_factors(5, 5, 5)
+small_example <- sim_factors(5, 5, 5)
 vol <- vol_preprocess(t(small_example$X))
 
 }
