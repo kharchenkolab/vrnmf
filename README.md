@@ -1,5 +1,7 @@
 [![<kharchenkolab>](https://circleci.com/gh/kharchenkolab/vrnmf.svg?style=svg)](https://app.circleci.com/pipelines/github/kharchenkolab/vrnmf)
-
+[![CRAN status](https://www.r-pkg.org/badges/version/vrnmf)](https://cran.r-project.org/package=vrnmf)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/vrnmf)](https://cran.r-project.org/package=vrnmf)
+  
 # vrnmf
 Volume-regularized NMF.
 
