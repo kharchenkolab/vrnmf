@@ -55,14 +55,14 @@ devtools::install_github('kharchenkolab/vrnmf')
 The R package can be cited as:
 
 ```
-Ruslan Soldatov, Peter Kharchenko and Evan Biederstedt (2021). vrnmf:
+Ruslan Soldatov, Peter Kharchenko, Viktor Petukhov, and Evan Biederstedt (2021). vrnmf:
 Volume-regularized structured matrix factorization. R package version
-1.0.0. https://github.com/kharchenkolab/vrnmf
+1.0.1. https://github.com/kharchenkolab/vrnmf
 ```
 
 #### Publication
 
-If you find this software useful for your research, please cite the corresponding [paper](https://science.sciencemag.org/content/early/2021/08/11/science.aba7408):
+If you find this software useful for your research, please cite the corresponding [paper](https://www.science.org/doi/10.1126/science.aba7408):
 
 ```
 Vladimir B. Seplyarskiy Ruslan A. Soldatov, et al. 
