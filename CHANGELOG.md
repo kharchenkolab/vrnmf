@@ -1,3 +1,9 @@
+
+## [1.0.2] - 2022-Feb-24
+
+- Fixed bug associated with `vol <- NULL`
+
+
 ## [1.0.1] - 2022-01-13
 
 ### Added

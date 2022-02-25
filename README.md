@@ -8,7 +8,7 @@ The R package `vrnmf` implements a set of methods to perform non-negative matrix
 
 This problem, and NMF as a particular case, is not identifiable in the general case, meaning that there are potentially many different solutions that deliver the same decomposition quality [[1]](#1). This both makes interpretation of factorized matrices challenging and limits applications of NMF to instrumental dimensionality reduction. However, recent theoretical advances have shown that the issue can be overcome under a relatively mild assumption based on "spread". That is, the column vectors of C are known as "sufficiently spread"[[2-3]](#2) if the matrix C is non-negative and the matrix C has sufficiently spread column vectors then the volume minimization of a matrix D delivers a correct and unique, up to a scale and permutation, solution (C, D). 
 
-The _AnchorFree_ approach enables efficient estimation of matrix C by reformulating the problem in the covariance domain using the application of the volume minimization criterion [[4]](#4). A short walkthrough can be found [here](https://github.com/kharchenkolab/vrnmf/blob/master/doc/volume_regularized_NMF.md)
+The _AnchorFree_ approach enables efficient estimation of matrix C by reformulating the problem in the covariance domain using the application of the volume minimization criterion [[4]](#4). A short walkthrough can be found [here](https://github.com/kharchenkolab/vrnmf/blob/main/doc/volume_regularized_NMF.md)
 
 A more general formulation of the problem that accounts for noise in matrix X, such that only approximately <img src="https://render.githubusercontent.com/render/math?math=X \approx CD">, is called volume-regularized NMF (_vrnmf_). To balance goodness of matrix approximation and matrix D volume, _vrnmf_ minimizes the following objective function [[5-6]](#2):
 
@@ -23,11 +23,11 @@ We provide implementation of `vrnmf` approach and devise its reformulation in co
 
 ### Volume-regularized NMF:
 
-* [Markdown version](https://github.com/kharchenkolab/vrnmf/blob/master/doc/AnchorVolume.md)
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/blob/main/doc/AnchorVolume.md)
 
 ### Anchorfree Algorithm:
 
-* [Markdown version](https://github.com/kharchenkolab/vrnmf/blob/master/doc/volume_regularized_NMF.md)
+* [Markdown version](https://github.com/kharchenkolab/vrnmf/blob/main/doc/volume_regularized_NMF.md)
 
 
 ## Installation 
@@ -57,7 +57,7 @@ The R package can be cited as:
 ```
 Ruslan Soldatov, Peter Kharchenko, Viktor Petukhov, and Evan Biederstedt (2021). vrnmf:
 Volume-regularized structured matrix factorization. R package version
-1.0.1. https://github.com/kharchenkolab/vrnmf
+1.0.2. https://github.com/kharchenkolab/vrnmf
 ```
 
 #### Publication

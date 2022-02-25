@@ -72,12 +72,8 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
   if (mutation.run==FALSE) {
     rate.rec <- NULL
     xcompl <- NULL
-    vol <- NULL
   }
 
-  if (!mutation.run){
-    rate.rec <- xcompl <- vol <- NULL
-  }
   
   # matrix B
   if (is.null(B)){
@@ -137,7 +133,9 @@ volnmf_main <- function(vol, B = NULL, volnmf = NULL, n.comp = 3, n.reduce = n.c
     message('\n')
     C.init <- nmf.solution$C; R.init <- nmf.solution$R; Q.init <- nmf.solution$Q
   }
-  if (is.null(wvol)) wvol <- 0
+  if (is.null(wvol)) {
+    wvol <- 0
+  } 
 
   # for logdet: wvol = 0.006, for det: wvol = 5e-11 or 1e-22?
   message('run volume-regularized nmf.. ')
@@ -308,8 +306,8 @@ volnmf_estimate <- function(B, C, R, Q,
     }
     aff.mean[iter] <- mean(aff)
 
-    op <- par(no.readonly = TRUE)
-    on.exit(par(op))
+    ##op <- par(no.readonly = TRUE)
+    ##on.exit(par(op))
 
     if (verbose == TRUE & (iter %% 100 == 0)){
       temppar <- par(mfrow=c(2,1),mar=c(4,4,1,1))
