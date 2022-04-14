@@ -65,7 +65,7 @@ Volume-regularized structured matrix factorization. R package version
 If you find this software useful for your research, please cite the corresponding [paper](https://www.science.org/doi/10.1126/science.aba7408):
 
 ```
-Vladimir B. Seplyarskiy Ruslan A. Soldatov, et al. 
+Vladimir B. Seplyarskiy, Ruslan A. Soldatov, et al. 
 Population sequencing data reveal a compendium of mutational processes in the human germ line.
 Science, 12 Aug 2021. doi: 10.1126/science.aba7408
 ```
